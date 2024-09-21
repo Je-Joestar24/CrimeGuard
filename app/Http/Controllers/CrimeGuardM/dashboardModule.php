@@ -1,0 +1,769 @@
+<?php
+
+namespace App\Http\Controllers\crimeguardm;
+
+use App\Http\Controllers\Controller;
+use App\Models\Addresses;
+use App\Models\Incidents;
+use App\Models\incidentSuspects;
+use App\Models\incidentVictims;
+use App\Models\OfficerCredential;
+use App\Models\RankChangedReports;
+use App\Models\Suspects;
+use App\Models\TransferReports;
+use App\Models\User;
+use App\Models\Victims;
+use Carbon\Carbon;
+use DateTime;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class dashboardModule extends Controller
+{
+    //
+    public function generateLine(Request $request)
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+
+        $defautlD = Carbon::now();
+        $defaultDate = $defautlD->subDays((29))->toDateString();
+        $data = [];
+
+        /* For Line Graph data */
+        $dates = [];
+
+        if ($request->has('date_start')) {
+            $start = $request->input('date_start') != "" ? $request->input('date_start') : $defaultDate;
+        } else {
+            $start = $defaultDate;
+        }
+
+        if ($request->has('date_end')) {
+            $end = $request->input('date_end') != "" ? $request->input('date_end') : Carbon::now()->toDateString();
+        } else {
+            $end = Carbon::now()->toDateString();
+        }
+
+        $startC = Carbon::parse($start);
+        $endC = Carbon::parse($end);
+        $data['date'] = [$request->input('date_start'), $request->input('date_end')];
+        $difference = $endC->diffInDays($startC);
+
+
+        for ($i = $difference; $i >= 0; $i--) {
+            $date = $endC->copy()->subDays($i);
+            $temporary['date'] = $date->toDateString();
+            $temporary['count'] = Incidents::where('date_reported', '=', $date->format('Y-m-d'))
+                ->whereNull('incidents.archived_at')
+                ->whereNull('incidents.archived_by');
+            if ($request->has('incident_type') && $request->input('incident_type') != -1) {
+                $temporary['count'] = $temporary['count']->where('incidents.incident_type', $request->input('incident_type'));
+            }
+            if ($request->has('status') && $request->input('status') != '') {
+                $temporary['count'] = $temporary['count']
+                    ->where('status', '=', $request->input('status'))
+                    ->count();
+            } else {
+                $temporary['count'] = $temporary['count']->where('status', '!=', 'respond')
+                    ->where('status', '!=', 'report')->count();
+            }
+
+            array_push($dates, $temporary);
+        }
+
+        $data['data']['linegraph'] = $dates;
+        $data['response'] = 'Success';
+
+        return response()->json($data);
+    }
+
+    /* Predictive */
+    public function generatePredictedLine(Request $request)
+    {
+        date_default_timezone_set('Asia/Manila');
+
+        $startDate = Carbon::create(2024, 1, 1);
+        $endDate = Carbon::now();
+
+        $userStartDate = $request->input('date_start') ?? $startDate->toDateString();
+        $userEndDate = $request->input('date_end') ?? $endDate->toDateString();
+
+        $userStartC = Carbon::parse($userStartDate);
+        $userEndC = Carbon::parse($userEndDate);
+
+        $historicalData = Incidents::selectRaw('DATE(date_reported) as date, COUNT(*) as count')
+            ->whereBetween('date_reported', [$startDate->toDateString(), $endDate->toDateString()])
+            ->whereNull('archived_at')
+            ->whereNull('archived_by')
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $historicalCounts = [];
+        foreach ($historicalData as $data) {
+            $historicalCounts[$data->date] = $data->count;
+        }
+
+        $predictedData = [];
+        $totalDaysToPredict = $userEndC->diffInDays($userStartC);
+
+        for ($i = 0; $i <= $totalDaysToPredict; $i++) {
+            $currentDate = $userStartC->copy()->addDays($i);
+            $predictedCount = $this->predictDailyCount($currentDate, $historicalCounts);
+            $predictedData[] = [
+                'date' => $currentDate->toDateString(),
+                'count' => $predictedCount
+            ];
+        }
+
+        $responseData = [
+            'data' => [
+                'linegraph' => $predictedData,
+            ],
+            'response' => 'Success'
+        ];
+
+        return response()->json($responseData);
+    }
+
+    private function predictDailyCount($date, $historicalCounts)
+    {
+        if (isset($historicalCounts[$date->toDateString()])) {
+            return $historicalCounts[$date->toDateString()];
+        }
+
+        $totalHistoricalDays = count($historicalCounts);
+        if ($totalHistoricalDays < 1) {
+            return 0;
+        }
+
+        $dayOfWeek = $date->dayOfWeek;
+        $historicalDayCounts = [];
+        foreach ($historicalCounts as $histDate => $count) {
+            $histDateObj = Carbon::parse($histDate);
+            if ($histDateObj->dayOfWeek == $dayOfWeek) {
+                $historicalDayCounts[] = $count;
+            }
+        }
+
+        if (count($historicalDayCounts) > 0) {
+            return round(array_sum($historicalDayCounts) / count($historicalDayCounts));
+        }
+
+        return round(array_sum($historicalCounts) / $totalHistoricalDays);
+    }
+
+
+    /* victims */
+    public function victimsPieGender(Request $request)
+    {
+        $data = [];
+        try {
+
+            $male = Victims::where('gender', 'male')->count();
+            $female = Victims::where('gender', 'female')->count();
+            $data['data'] = [
+                'male' => $male,
+                'female' => $female
+            ];
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    public function victimsAge(Request $request)
+    {
+        $data = [];
+        try {
+
+            $children = Victims::where('age', '<=', '19')->count();
+            $adult = Victims::where('age', '>=', '20')->where('age', '<=', '59')->count();
+            $old = Victims::where('age', '>=', '60')->count();
+
+            $data['data'] = [
+                'children' => $children,
+                'adult' => $adult,
+                'old' => $old
+            ];
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+    /* victims */
+    public function suspectsPieGender(Request $request)
+    {
+        $data = [];
+        try {
+
+            $male = Suspects::where('gender', 'male')->count();
+            $female = Suspects::where('gender', 'female')->count();
+            $data['data'] = [
+                'male' => $male,
+                'female' => $female
+            ];
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    public function suspectsAge(Request $request)
+    {
+        $data = [];
+        try {
+
+            $children = Suspects::where('age', '<=', '19')->count();
+            $adult = Suspects::where('age', '>=', '20')->where('age', '<=', '59')->count();
+            $old = Suspects::where('age', '>=', '60')->count();
+
+            $data['data'] = [
+                'children' => $children,
+                'adult' => $adult,
+                'old' => $old
+            ];
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    /* filter Area */
+    public function victimsAgeArea(Request $request)
+    {
+        $data = [];
+        try {
+
+            $initial = incidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->join('victims', 'incident-victims.victim', '=', 'victims.id')
+                ->select('victims.id', 'victims.firstname', 'victims.lastname', 'victims.mobile_phone')
+                ->whereNull('victims.archived_at')
+                ->whereNull('victims.deleted_by')
+                ->whereNull('incidents.archived_at')
+                ->whereNull('incidents.archived_by');
+
+            if ($request->has('barangay')) {
+                $initial = $initial->where('incidents.barangay', $request->input('barangay'));
+            }
+            if ($request->has('village')) {
+                $initial = $initial->where('incidents.village', $request->input('village'));
+            }
+            if ($request->has('street')) {
+                $initial = $initial->where('incidents.street', $request->input('street'));
+            }
+            if ($request->has('city')) {
+                $initial = $initial->where('incidents.city', $request->input('city'));
+            }
+
+            $childrenQuery = clone $initial;
+            $adultQuery = clone $initial;
+            $oldQuery = clone $initial;
+
+            $children = $childrenQuery->where('victims.age', '<=', 20)->get();
+            $adult = $adultQuery->whereBetween('victims.age', [21, 59])->get();
+            $old = $oldQuery->where('victims.age', '>=', 60)->get();
+
+            $data['data'] = [
+                'children' => $children,
+                'adult' => $adult,
+                'old' => $old
+            ];
+
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    /* incidents */
+    public function topBarangays(Request $request)
+    {
+        $data = [];
+        try {
+
+
+            $barangay = Addresses::select('barangay')->where('barangay', '!=', NULL)->distinct()->orderBy('barangay', 'ASC')->get()->toArray();
+
+            for ($i = 0; $i < count($barangay); $i++) {
+                $barangay[$i]['count'] = Incidents::where('barangay', $barangay[$i]['barangay']);
+                if ($request->has('date_start') && $request->input('date_start') != '') $barangay[$i]['count'] = $barangay[$i]['count']->where('date_of_incident', '>=', $request->input('date_start'));
+                if ($request->has('date_end') && $request->input('date_end') != '') $barangay[$i]['count'] = $barangay[$i]['count']->where('date_of_incident', '<=', $request->input('date_end'));
+
+                if ($request->has('incident_type') && $request->input('incident_type') != -1) {
+                    $barangay[$i]['count'] = $barangay[$i]['count']->where('incidents.incident_type', $request->input('incident_type'));
+                }
+                if ($request->has('status') && $request->input('status') != '') {
+                    $barangay[$i]['count'] = $barangay[$i]['count']
+                        ->where('status', '=', $request->input('status'));
+                } else {
+                    $barangay[$i]['count'] = $barangay[$i]['count']->where('status', '!=', 'respond')
+                        ->where('status', '!=', 'report');
+                }
+                $barangay[$i]['count'] = $barangay[$i]['count']->count();
+            }
+
+            $newB = [];
+            for ($i = 0; $i < 4/* sort limit */; $i++) {
+                $index = $i;
+                for ($j = $i; $j < count($barangay); $j++)
+                    if ($barangay[$index]['count'] < $barangay[$j]['count'])
+                        $index = $j;
+
+                $temp = $barangay[$index];
+                $barangay[$index] = $barangay[$i];
+                $barangay[$i] = $temp;
+                array_push($newB, $barangay[$i]);
+            }
+            $data['data'] = $newB;
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    public function findBarangay(Request $request)
+    {
+
+
+        $data = [];
+        try {
+            $barangay = Addresses::select('barangay')->where('barangay', '!=', NULL)->distinct()->where('barangay', $request->input('barangay'))->get()->toArray();
+
+            if (count($barangay) >= 1) {
+                $data['response'] = 'Success';
+            } else {
+                $data['response'] = 'Error';
+            }
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+    public function displayCount()
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+
+        $data = [];
+
+        $data['data']['upper'] = [];
+        $data['data']['upper']['incidentCount'] = Incidents::where('status', '!=', 'report')->where('status', '!=', 'respond')->count();
+        $data['data']['upper']['clearedCount'] = Incidents::where('status', '=', 'clear')->count();
+        $data['data']['upper']['solvedCount'] = Incidents::where('status', '=', 'solved')->count();
+        $data['data']['upper']['underICount'] = Incidents::where('status', '=', 'Pending')->orWhere('status', '=', 'under investigation')->count();
+
+        $data['response'] = 'Success';
+
+        return response()->json($data);
+    }
+
+    public function displayReports()
+    {
+
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+        $data = [];
+
+        $data['data']['reportedIncidents'] = Incidents::/* where(function ($query) use ($currentDate) {
+            $query->where('status', '=', 'report')
+                ->orWhere('status', '=', 'respond');
+        })
+            -> */whereDate('date_reported',  $currentDate->format('Y-m-d'))
+            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+            ->get();
+
+        $data['response'] = 'Success';
+
+        return response()->json($data);
+    }
+
+    public function emergencyReports(Request $request)
+    {
+
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+        $data = [];
+
+        $init = Incidents::where('status', '=', 'report');
+        if (!$request->has('id')) $init = $init->where('report_type', 1);
+        else $init = $init->where('assigned_to', $request->input('id'));
+        $init = $init->whereDate('date_reported',  $currentDate->format('Y-m-d'))
+            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+            ->get();
+        $data['data']['reportedIncidents'] = $init;
+        $data['response'] = 'Success';
+
+        return response()->json($data);
+    }
+
+
+    public function heatMap(Request $request)
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+
+        $data['data'] = [];
+
+
+        try {
+            $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
+                ->select(
+                    'incidents.id',
+                    'incidents.message',
+                    'incidents.landmark',
+                    'incidents.location',
+                    'incidents.time_reported',
+                    'users.user_name',
+                    'users.email',
+                    'users.first_name',
+                    'users.last_name',
+                    'users.contact',
+                    'incidents.longitude',
+                    'incidents.latitude',
+                    'incidents.report_type'
+                )
+                ->where('incidents.status', '!=', 'report')
+                ->where('incidents.latitude', '>', 0)
+                ->where('incidents.longitude', '>', 0)
+                ->get();
+
+            foreach ($reports as $report) {
+                $cleaned = [
+                    'id' => $report['id'],
+                    'user_name' => $report['user_name'],
+                    'name' => $report['first_name'] . " " . $report["last_name"],
+                    'email' => $report['email'],
+                    'message' => $report['message'],
+                    'location' => $report['location'],
+                    'contact' => $report['contact'],
+                    'pos' => [
+                        'lat' => $report['latitude'],
+                        'lng' => $report['longitude']
+                    ],
+                    'time' => explode(' ', $report['time_reported'])[1],
+                    'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
+                    'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
+                    'report_type' => $report['report_type']
+                ];
+                array_push($data['data'], $cleaned);
+            }
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    public function citizenHeatMap(Request $request)
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+
+        $data['data'] = [];
+
+
+        try {
+            $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
+                ->join('incident-types', 'incidents.incident_type', '=', 'incident-types.id')
+                ->select(
+                    'incidents.id',
+                    'incidents.message',
+                    'incidents.landmark',
+                    'incidents.location',
+                    'incidents.time_reported',
+                    'users.user_name',
+                    'users.email',
+                    'users.first_name',
+                    'users.last_name',
+                    'users.contact',
+                    'incidents.longitude',
+                    'incidents.latitude',
+                    'incidents.report_type',
+                    //DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
+                    'incident-types.incident_name'
+                )
+                ->where('incidents.status', '!=', 'report')
+                ->where('incidents.status', '!=', 'reject')
+                ->where('incidents.incident_type', '!=', NULL)
+                ->where('incidents.latitude', '>', 0)
+                ->where('incidents.longitude', '>', 0)
+                ->get();
+
+            foreach ($reports as $report) {
+                $suspect = incidentSuspects::join('suspects', 'incident-suspects.suspect', '=', 'suspects.id')
+                    ->where('incident-suspects.incident', $report['id'])
+                    ->whereNull('suspects.archived_at')
+                    ->whereNull('suspects.deleted_by')->count();
+
+                $victims = IncidentVictims::join('victims', 'incident-victims.victim', '=', 'victims.id')
+                    ->whereNull('victims.archived_at')
+                    ->whereNull('victims.deleted_by')
+                    ->where('incident-victims.incident', $report['id'])->count();
+
+                $cleaned = [
+                    'id' => $report['id'],
+                    'user_name' => $report['user_name'],
+                    'name' => $report['incident_name'],
+                    'email' => $report['email'],
+                    'message' => $report['message'],
+                    'location' => $report['location'],
+                    'contact' => $report['contact'],
+                    'pos' => [
+                        'lat' => $report['latitude'],
+                        'lng' => $report['longitude']
+                    ],
+                    'suspects' => $suspect,
+                    'victims' => $victims,
+                    'time' => explode(' ', $report['time_reported'])[1],
+                    'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
+                    'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
+                    'report_type' => $report['report_type']
+                ];
+                array_push($data['data'], $cleaned);
+            }
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+
+    public function rankChangeReports(Request $request)
+    {
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+        $data = [];
+
+        $defaultDate = '0000-00-00 00:00:00';
+
+        $data = [];
+
+        try {
+            /* table data */
+            $query = RankChangedReports::leftJoin('users', 'rank-changed-reports.officer', '=', 'users.id')->select([
+                'users.id',
+                'users.last_name',
+                'users.first_name',
+                'users.user_name',
+                'users.email',
+                'rank-changed-reports.change_rank',
+                'rank-changed-reports.date_changed',
+            ])->orderBy(
+                'rank-changed-reports.date_changed',
+                'desc'
+            );
+            $data['table']['headers'] = [
+                'ID',
+                'LASTNAME',
+                'FIRSTNAME',
+                'USERNAME',
+                'EMAIL',
+                'RANK CHANGES',
+                'DATE'
+            ];
+            if ($request->has('date_start') && $request->input('date_start')) {
+                $query = $query->where('rank-changed-reports.created_at', '>=', $request->input('date_start') . (" " . ($request->input('time_start') ? $request->input('time_start') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+
+            if ($request->has('date_end') && $request->input('date_end')) {
+                $query = $query->where('rank-changed-reports.created_at', '<=', $request->input('date_end') . (" " . ($request->input('time_end') ? $request->input('time_end') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+            $stationInfo = OfficerCredential::join('police-station', 'officer-credentials.station', 'police-station.id')
+                ->select('police-station.name', 'police-station.location')
+                ->where('officer-credentials.user_id', $request->id)
+                ->first();
+
+            $data['station'] = $stationInfo;
+            /* Execute query and fetch data */
+            $data['table']['data'] = $query->get();
+
+            $tableBody = $query->orderBy('rank-changed-reports.created_at', 'desc')
+                ->get();
+            for ($i = 0; $i < count($tableBody); $i++) {
+                $tmp = explode(' ', $tableBody[$i]['change_rank']);
+                $tableBody[$i]['change_rank'] = 'from ' . $tmp[0] . ' to ' . $tmp[1];
+            }
+            $data['table']['data'] = $tableBody;
+
+
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+
+    public function areaTransferReports(Request $request)
+    {
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+        $data = [];
+
+        $defaultDate = '0000-00-00 00:00:00';
+
+        $data = [];
+
+        try {
+            /* table data */
+            $query = TransferReports::leftJoin('users', 'transfer-reports.officer', '=', 'users.id')->select([
+                'users.id',
+                'users.last_name',
+                'users.first_name',
+                'users.user_name',
+                'users.email',
+                'transfer-reports.transfer',
+                'transfer-reports.date_transferred',
+            ])->orderBy(
+                'transfer-reports.date_transferred',
+                'desc'
+            );
+            $data['table']['headers'] = [
+                'ID',
+                'LASTNAME',
+                'FIRSTNAME',
+                'USERNAME',
+                'EMAIL',
+                'STATION CHANGES',
+                'DATE'
+            ];
+            if ($request->has('date_start') && $request->input('date_start')) {
+                $query = $query->where('transfer-reports.created_at', '>=', $request->input('date_start') . (" " . ($request->input('time_start') ? $request->input('time_start') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+
+            if ($request->has('date_end') && $request->input('date_end')) {
+                $query = $query->where('transfer-reports.created_at', '<=', $request->input('date_end') . (" " . ($request->input('time_end') ? $request->input('time_end') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+            $stationInfo = OfficerCredential::join('police-station', 'officer-credentials.station', 'police-station.id')
+                ->select('police-station.name', 'police-station.location')
+                ->where('officer-credentials.user_id', $request->id)
+                ->first();
+
+            $data['station'] = $stationInfo;
+            /* Execute query and fetch data */
+            $data['table']['data'] = $query->get();
+
+            $tableBody = $query->orderBy('transfer-reports.created_at', 'desc')
+                ->get();
+            for ($i = 0; $i < count($tableBody); $i++) {
+                $tmp = explode(' ', $tableBody[$i]['transfer']);
+                $tableBody[$i]['transfer'] = 'from PP' . $tmp[0] . ' to PP' . $tmp[1];
+            }
+            $data['table']['data'] = $tableBody;
+
+
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+
+    public function generateOfficerAccounts(Request $request)
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = new DateTime();
+        $data = [];
+
+        /* Table headers */
+        $data['table']['headers'] = [
+            'last name',
+            'firstname',
+            'user name',
+            'email address',
+            'phone no.'
+        ];
+
+        $defaultDate = '0000-00-00 00:00:00';
+        try {
+
+
+            $stationInfo = OfficerCredential::join('police-station', 'officer-credentials.station', 'police-station.id')
+                ->select('police-station.name', 'police-station.location', 'officer-credentials.station')
+                ->where('officer-credentials.user_id', $request->id)
+                ->first();
+
+            /* table data */
+            $query = User::join('officer-credentials', 'officer-credentials.user_id', 'users.id')->select([
+                'users.first_name',
+                'users.last_name',
+                'users.user_name',
+                'users.email',
+                'users.contact',
+            ])
+                ->where('users.user_level', '=', '2')
+                ->where('officer-credentials.station', '=', $stationInfo['station']);
+
+            if ($request->has('date_start') && $request->input('date_start')) {
+                $query = $query->where('users.created_at', '>=', $request->input('date_start') . (" " . ($request->input('time_start') ? $request->input('time_start') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+
+            if ($request->has('date_end') && $request->input('date_end')) {
+                $query = $query->where('users.created_at', '<=', $request->input('date_end') . (" " . ($request->input('time_end') ? $request->input('time_end') . ":00" : explode(' ', $defaultDate)[1])));
+            }
+            $stationInfo2 = OfficerCredential::join('police-station', 'officer-credentials.station', 'police-station.id')
+                ->select('police-station.name', 'police-station.location')
+                ->where('officer-credentials.user_id', $request->id)
+                ->first();
+
+            $data['station'] = $stationInfo2;
+            /* Execute query and fetch data */
+            $data['table']['data'] = $query->get()->toArray();
+            $data['response'] = 'Success';
+            $data['table']['type'] = 1;
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+}
