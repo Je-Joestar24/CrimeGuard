@@ -214,6 +214,7 @@ class incidentModule extends Controller
                     'incidents.landmark',
                     'incidents.location',
                     'incidents.time_reported',
+                    'users.profile',
                     'users.user_name',
                     'users.email',
                     'users.first_name',
@@ -246,7 +247,8 @@ class incidentModule extends Controller
                     'time' => explode(' ', $report['time_reported'])[1],
                     'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
-                    'report_type' => $report['report_type']
+                    'report_type' => $report['report_type'],
+                    'profile' => $report['profile']
                 ];
                 array_push($data['data'], $cleaned);
             }
@@ -489,6 +491,7 @@ class incidentModule extends Controller
                     'users.user_name',
                     'incidents.status',
                     'users.email',
+                    'users.profile',
                     DB::raw("CONCAT(assign.first_name, ' ', assign.last_name) AS assigned_to"),
                     'incidents.rej_message'
                 );
@@ -501,6 +504,23 @@ class incidentModule extends Controller
                         ->orWhere('incidents.status', '=', 'respond')
                         ->orWhere('incidents.status', '=', 'reject');
                 }); */
+            }
+
+            
+            if ($request->has('search') && !empty($request->input('search'))) {
+                $searchTerm = $request->input('search');
+               $reports =$reports->where(function ($q) use ($searchTerm) {
+                    $q->where('users.first_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.last_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.user_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.email', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.contact', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.message', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.location', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.time_reported', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.status', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.rej_message', 'like', "%{$searchTerm}%");
+                });
             }
             $reports = $reports->whereDate('incidents.date_reported',  $currentDate->format('Y-m-d'))
                 ->get();
@@ -518,7 +538,8 @@ class incidentModule extends Controller
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
                     'status' => $report['status'],
                     'assigned_to' => $report['assigned_to'],
-                    'rej_message' => $report['rej_message']
+                    'rej_message' => $report['rej_message'],
+                    'profile' => $report['profile']
                 ];
                 array_push($data['data'], $cleaned);
             }
@@ -552,7 +573,7 @@ class incidentModule extends Controller
                 
                 /* 
                 ->where('incidents.date_reported', '>=', $thirtyDaysAgo) */;
-            if (isset($request) && isset($request['id'])) $incidents = $incidents->where('incident-reporting-persons.reporting_person', $request['id']);
+            if (isset($request) && isset($request['id'])) $incidents = $incidents->where('incidents.reported_by_user', $request['id']);
 
 
             $incidents = $incidents->orderBy('incidents.date_reported', 'desc')

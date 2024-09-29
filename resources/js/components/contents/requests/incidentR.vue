@@ -1,17 +1,35 @@
 <template>
-  
   <div class="flex justify-end">
     <div class="relative mt-1 my-2 inline">
-        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <!-- dark:text-gray-400 -->  
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-        </div>
-        <input type="text" id="table-search" class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search">
-        <!--  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 -->
+      <div
+        class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+      >
+        <svg
+          class="w-4 h-4 text-gray-500"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 20 20"
+        >
+          <!-- dark:text-gray-400 -->
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+          />
+        </svg>
+      </div>
+      <input
+       v-model="search" 
+        type="text"
+        class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Search"
+      />
+      <!--  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 -->
+    </div>
   </div>
-</div>
   <div
     class="font-semibold px-3 pt-2 shadow-md border-b-2 border-gray-400 rounded-t-sm"
   >
@@ -26,14 +44,15 @@
       v-for="el in arr"
       class="py-3 mb-1 border-b px-2"
       :class="{
-        'bg-green-300': (el['status'] != 'reject' && el['status'] != 'report'),
+        'bg-green-300': el['status'] != 'reject' && el['status'] != 'report',
         'bg-red-300': el['status'] == 'reject',
       }"
     >
       <div class="flex items-center space-x-4 rtl:space-x-reverse">
         <div class="flex-shrink-0">
           <svg
-            class="h-8 w-8"
+            v-if="el.profile == ''"
+            class="h-10 w-10 text-gray-500 my-auto"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -45,6 +64,12 @@
               d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
+          <img
+            v-if="el.profile != ''"
+            class="h-10 rounded-full border w-10 text-gray-500 my-auto"
+            :src="el.profile"
+            alt=""
+          />
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium text-gray-900">
@@ -113,12 +138,16 @@
             </svg>
           </button>
           <span
-            v-if="(el['status'] != 'reject' && el['status'] != 'report')"
+            v-if="el['status'] != 'reject' && el['status'] != 'report'"
             class="text-xs font-semibold bg-green-600 border rounded-full my-1 text-white border-green-600 px-1 py-0"
             >RESPONDED</span
           >
           <span
-            v-if="(el['status'] != 'reject' && el['status'] != 'report' && el['status'] != 'respond')"
+            v-if="
+              el['status'] != 'reject' &&
+              el['status'] != 'report' &&
+              el['status'] != 'respond'
+            "
             class="text-xs font-semibold bg-blue-600 border rounded-full my-1 text-white border-green-600 px-1 py-0"
             >ADDED</span
           >
@@ -187,7 +216,10 @@
       No Incident Reports
     </li>
   </ul>
-  <div v-if="cred && cred['user_level'] == 1" class="flex gap-3 mt-1 bg-green-50">
+  <div
+    v-if="cred && cred['user_level'] == 1"
+    class="flex gap-3 mt-1 bg-green-50"
+  >
     <rejected></rejected>
     <responded></responded>
   </div>
@@ -223,6 +255,7 @@ import assignTo from "./requestComponents/assignTo.vue";
 import incidentEditForm from "../tablecomponents/tableSubComponents/tableModals/modalForms/incidentEditForm.vue";
 import rejected from "./incidentRequests/rejected.vue";
 import responded from "./incidentRequests/responded.vue";
+import { watch } from "vue";
 
 export default {
   components: {
@@ -231,7 +264,7 @@ export default {
     incidentEditForm,
     assignTo,
     rejected,
-    responded
+    responded,
   },
   data() {
     return {
@@ -270,11 +303,12 @@ export default {
         url: "api/incidents/assign/item/request",
       },
       cred: null,
+      search: "",
     };
   },
   mounted() {
     (async () => {
-      await this.getData();
+      await this.getData({url: "api/incidents/report/list/Display", data: {search: ""}});
       this.cred = JSON.parse(localStorage.getItem("credentials"));
     })();
   },
@@ -296,8 +330,8 @@ export default {
       this.incidentAdd = !this.incidentAdd;
     },
     getTData(param, param1) {
-      this.getData();
-    },
+      this.getData({url: "api/incidents/report/list/Display", data: {search: ""}});
+    },/* 
     async getData() {
       this.header = [];
       this.data = [];
@@ -311,7 +345,7 @@ export default {
       if (data["response"] == "Success") {
         this.arr = await data["data"];
       }
-    },
+    }, */
     async respondData() {
       const send = this.respond;
 
@@ -321,7 +355,7 @@ export default {
       if (res == "Success") {
         await alert("Incident Responded.");
         this.toggleRespondModal("");
-        await this.getData("api/incidents/report/list/Display");
+        await this.getData({url: "api/incidents/report/list/Display", data: {search: ""}});
       } else {
         await alert("An error occured, please try again.");
       }
@@ -336,7 +370,7 @@ export default {
       if (res == "Success") {
         await alert("Incident Rejected.");
         this.toggleRejectModal("");
-        await this.getData("api/incidents/report/list/Display");
+        await this.getData({url: "api/incidents/report/list/Display", data: {search: ""}});
       } else {
         await alert("An error occured, please try again.");
       }
@@ -358,6 +392,19 @@ export default {
         await alert("An error occured, please try again.");
       }
     },
+    async getData(param) {
+      this.header = [];
+      this.data = [];
+      const data = await this.$store.dispatch("sendData", param);
+      if (data["response"] == "Success") {
+        this.arr = await data["data"];
+      }
+    },
+  },
+  watch: {
+    'search':function(newVal, oldVal){
+        this.getData({url: "api/incidents/report/list/Display", data: {search: newVal}});
+      }
   },
 };
 </script>

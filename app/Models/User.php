@@ -41,6 +41,8 @@ class User extends Authenticatable
         'archived_at',
         'accepted_by',
         'accepted_at',
+        'latitude',
+        'longitude'
     ];
     
 

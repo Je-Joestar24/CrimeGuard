@@ -37,9 +37,9 @@ export default {
   mounted() {
     //this.initializeMap()
     (async () => {
-      await this.generateData();
+      await this.generateData();/* 
       await this.loadGoogleMapsScript();
-      await this.initializeMap();
+      await this.initializeMap();  */
     })();
     //console.log(document.head)
   },

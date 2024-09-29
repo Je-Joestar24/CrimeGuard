@@ -23,7 +23,7 @@ class notificationModule extends Controller
 
         try {
             /* table data */
-            $data['list']['data'] = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
+            $notif = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
             ->select([
                 'incidents.id',
                 'users.id',
@@ -33,8 +33,22 @@ class notificationModule extends Controller
                 'incidents.message',
                 'incidents.location',
                 'incidents.time_reported'
-            ])->where('incidents.date_reported', $currentDate->format('Y-m-d'))
-            ->get();
+            ])->where('incidents.date_reported', $currentDate->format('Y-m-d'));
+
+            if ($request->has('search') && !empty($request->input('search'))) {
+                $searchTerm = $request->input('search');
+                $notif = $notif->where(function ($q) use ($searchTerm) {
+                    $q->where('users.first_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.last_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.user_name', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.email', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.message', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.location', 'like', "%{$searchTerm}%")
+                        ->orWhere('incidents.time_reported', 'like', "%{$searchTerm}%")
+                        ->orWhere('users.contact', 'like', "%{$searchTerm}%");
+                });
+            }
+            $data['list']['data'] = $notif->get();
             for($i = 0; $i < count($data['list']['data']) ; $i ++){
 
                 $dates = explode('-', explode(" ",$data['list']['data'][$i]['time_reported'])[0]);

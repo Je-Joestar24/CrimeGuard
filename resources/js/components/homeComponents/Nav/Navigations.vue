@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-screen-3xl flex flex-wrap items-center justify-between mx-auto md:p-4 md:px-20 lg:p-4 border-b border-blue-950 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3"
+    class="max-w-screen-3xl flex flex-wrap items-center justify-between mx-auto md:p-4 md:px-20 lg:p-4 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3"
   >
     <button class="flex space-x-3 rtl:space-x-reverse">
       <!-- <img src="img/CrimeGuard.png" class="h-8" alt="Flowbite Logo" /> -->

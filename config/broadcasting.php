@@ -27,7 +27,7 @@ return [
     | each available type of connection are provided inside this array.
     |
     */
-
+    /* 
     'connections' => [
 
         'pusher' => [
@@ -66,6 +66,24 @@ return [
             'driver' => 'null',
         ],
 
+    ], */
+
+    'pusher' => [
+        'driver' => 'pusher',
+        'key' => env('PUSHER_APP_KEY'),        // Your Pusher application key
+        'secret' => env('PUSHER_APP_SECRET'),  // Your Pusher secret
+        'app_id' => env('PUSHER_APP_ID'),      // Your Pusher app ID
+        'options' => [
+            'cluster' => env('PUSHER_APP_CLUSTER'),  // Pusher cluster (e.g., 'mt1')
+            'host' => env('PUSHER_HOST') ?: 'api-' . env('PUSHER_APP_CLUSTER', 'mt1') . '.pusher.com',  // Pusher API host
+            'port' => env('PUSHER_PORT', 443),  // Port to connect to Pusher (default is 443 for secure HTTPS connection)
+            'scheme' => env('PUSHER_SCHEME', 'https'),  // Scheme (usually HTTPS)
+            'encrypted' => true,  // Whether encryption is enabled (true for HTTPS)
+            'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',  // Use TLS if the scheme is HTTPS
+        ],
+        'client_options' => [
+            // Guzzle client options for customizing HTTP requests (optional)
+        ],
     ],
 
 ];

@@ -10,6 +10,7 @@ use App\Http\Controllers\crimeguardm\logsModule;
 use App\Http\Controllers\crimeGuardm\notificationModule;
 use App\Http\Controllers\crimeguardm\officerUsersModule;
 use App\Http\Controllers\CrimeGuardM\suspectsManipulation;
+use App\Http\Controllers\CrimeGuardM\trackuser;
 use App\Http\Controllers\crimeguardm\traillogModule;
 use App\Http\Controllers\CrimeGuardM\victimsModule;
 use App\Http\Controllers\crimeguardm\witnessModule;
@@ -200,7 +201,7 @@ Route::post('api/incidentNames/update/item/request', [incidentNamesModule::class
 
 Route::post('api/logs/list/Display', [logsModule::class, 'listDisplay'])->name('json');
 Route::post('api/activity/list/Display', [traillogModule::class, 'listDisplay'])->name('json');
-Route::get('api/notifications/list/Display', [notificationModule::class, 'listDisplay'])->name('json');
+Route::post('api/notifications/list/Display', [notificationModule::class, 'listDisplay'])->name('json');
 
 /* Component Display */
 /* dashboard components */
@@ -208,6 +209,8 @@ Route::get('api/dashboard/counts/Display', [dashboardModule::class, 'displayCoun
 Route::get('api/dashboard/lineraph/generate', [dashboardModule::class, 'generateLine'])->name('json');
 Route::get('api/dashboard/generate/reports', [dashboardModule::class, 'displayReports'])->name('json');
 Route::post('api/dashboard/generate/emergency/reports', [dashboardModule::class, 'emergencyReports'])->name('json');
+Route::get('api/stream-emergency-reports', [dashboardModule::class, 'emergencyReports0']);
+
 Route::post('api/dashboard/generate/victims/gender/pie', [dashboardModule::class, 'victimsPieGender'])->name('json');
 Route::post('api/dashboard/generate/victims/age/pie', [dashboardModule::class, 'victimsAge'])->name('json');
 /* suspect */
@@ -229,6 +232,11 @@ Route::post('api/incidents/citizen/view/display2', [incidentModule::class, 'inci
 
 /* report incident */
 Route::post('api/incidents/report/request', [incidentModule::class, 'reportIncident'])->name('json');
+
+/* tracker */
+Route::post('api/track/my/location/req', [trackuser::class, 'add'])->name('json');
+Route::post('api/track/location/map/req', [trackuser::class, 'usermarker'])->name('json');
+
 
 /* Clickable displays */
 

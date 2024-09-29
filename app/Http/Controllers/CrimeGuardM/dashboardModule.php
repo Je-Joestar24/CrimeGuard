@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\crimeguardm;
 
+use App\Events\IncidentReported;
 use App\Http\Controllers\Controller;
 use App\Models\Addresses;
 use App\Models\Incidents;
@@ -373,7 +374,7 @@ class dashboardModule extends Controller
         $data = [];
 
         $data['data']['upper'] = [];
-        $data['data']['upper']['incidentCount'] = Incidents::where('status', '!=', 'report')->where('status', '!=', 'respond')->count();
+        $data['data']['upper']['incidentCount'] = Incidents::where('status', '!=', 'report')->where('status', '!=', 'reject')->where('status', '!=', 'respond')->count();
         $data['data']['upper']['clearedCount'] = Incidents::where('status', '=', 'clear')->count();
         $data['data']['upper']['solvedCount'] = Incidents::where('status', '=', 'solved')->count();
         $data['data']['upper']['underICount'] = Incidents::where('status', '=', 'Pending')->orWhere('status', '=', 'under investigation')->count();
@@ -425,7 +426,94 @@ class dashboardModule extends Controller
 
         return response()->json($data);
     }
+/* 
+    public function emergencyReports0(Request $request)
+    {
+        // Set headers to keep the connection alive and mark it as a Server-Sent Event (SSE) response
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
 
+        // Set the timezone
+        date_default_timezone_set('Asia/Manila');
+        $currentDate = new DateTime();
+
+        // Loop to continually send data
+        while (true) {
+            // Query the incidents based on the request data
+            $init = Incidents::where('status', '=', 'report');
+
+            if (!$request->has('id')) {
+                $init = $init->where('report_type', 1);  // Report type 1 for general reports
+            } else {
+                $init = $init->where('assigned_to', $request->input('id'));  // Assigned to specific user
+            }
+
+            $init = $init->whereDate('date_reported', $currentDate->format('Y-m-d'))
+                ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+                ->get();
+
+            // Only send data if there are new incidents
+            if ($init->isNotEmpty()) {
+                $data['data']['reportedIncidents'] = $init;
+                $data['response'] = 'Success';
+
+                // Send the data to the client in the correct SSE format
+                echo "data: " . json_encode($data) . "\n\n";
+
+                // Flush the output buffer to ensure the client receives the data
+                ob_flush();
+                flush();
+            }
+
+            // Sleep for 5 seconds before checking for new incidents again
+            sleep(5);
+        }
+    } */
+    public function emergencyReports0(Request $request)
+    {
+        // Set the headers for SSE
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+    
+        // Prevent script timeout, so the connection stays open
+        set_time_limit(0);
+    
+        date_default_timezone_set('Asia/Manila');
+        $currentDate = new DateTime();
+    
+        while (true) {
+            // Fetch the incidents based on query parameters
+            $init = Incidents::where('status', '=', 'report');
+    
+            if (!$request->has('id')) {
+                $init = $init->where('report_type', 1);
+            } else {
+                $init = $init->where('assigned_to', $request->input('id'));
+            }
+    
+            $init = $init->whereDate('date_reported', $currentDate->format('Y-m-d'))
+                         ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+                         ->get();
+    
+            if ($init->isNotEmpty()) {
+                $data['data']['reportedIncidents'] = $init;
+                $data['response'] = 'Success';
+    
+                // Send data in the correct SSE format
+                echo "data: " . json_encode($data) . "\n\n";
+                
+                // Flush the buffer to send the response to the client immediately
+                ob_flush();
+                flush();
+            }
+    
+            // Sleep for 5 seconds before checking again
+            sleep(5);
+        }
+    }
+    
 
     public function heatMap(Request $request)
     {

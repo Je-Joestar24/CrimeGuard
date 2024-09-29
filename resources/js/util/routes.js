@@ -10,6 +10,7 @@ import Notif from "@/components/contents/Notif.vue";
 import Reports from "@/components/contents/Reports.vue";
 import Requests from "@/components/contents/Requests.vue"
 import archive from "@/components/contents/archive.vue";
+import Analytics from "@/components/contents/Analytics.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -51,6 +52,10 @@ const router = createRouter({
             {
                 path: 'Reports',
                 component: Reports
+            },
+            {
+                path: 'Analytics',
+                component: Analytics
             }
         ] }
     ]

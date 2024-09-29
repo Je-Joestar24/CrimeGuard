@@ -1,46 +1,7 @@
 <template>
   <div class="flex items-center">
     <div class="flex items-center ms-3">
-      <!-- 
-      <button
-        class="mr-3"
-        :class="{
-          'text-gray-300': $store.getters.theme,
-          'text-gray-200': !$store.getters.theme,
-        }"
-        @click="
-          $store.dispatch('changeTheme');
-          changeProf();
-        "
-      >
-        <svg
-          v-if="!$store.getters.theme"
-          class="h-8 w-8"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="darkgray"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
-          <circle cx="8" cy="12" r="3" />
-        </svg>
-        <svg
-          v-if="$store.getters.theme"
-          class="h-8 w-8"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
-          <circle cx="16" cy="12" r="3" />
-        </svg>
-      </button> -->
-      <div>
+    <div>
         <button
           type="button"
           class="flex text-sm rounded-full focus:ring-4"
@@ -53,7 +14,7 @@
         >
           <span class="sr-only">Open user menu</span>
 
-          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" :stroke="prof">
+          <svg v-if="info.profile == ''" class="h-8 w-8" fill="none" viewBox="0 0 24 24" :stroke="prof">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -61,6 +22,8 @@
               d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
+          <img v-if="info.profile != ''" class="h-10 rounded-full border w-10 text-gray-500 my-auto" :src="info.profile" alt="">
+          
         </button>
       </div>
       <div
@@ -81,7 +44,7 @@
             }"
             role="none"
           >
-            User
+            {{ info.user_name }}
           </p>
           <p
             class="text-sm font-medium truncate"
@@ -92,7 +55,7 @@
             role="none"
           >
             <!--  dark: -->
-            user@gmail.com
+           {{ info.email }}
           </p>
         </div>
         <ul class="py-1" role="none">
@@ -220,7 +183,25 @@ export default {
       prof: "darkgray",
       logout: false,
       profile: false,
+      info: {
+        user_name: "",
+        email: "",
+        contact: "",
+        profile: "",
+        rank: "",
+      },
+      id: -1,
     };
+  },
+  mounted() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.id = credentials.id;
+    this.generateData(this.id);
+  },
+  created() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.id = credentials.id;
+    this.generateData(this.id);
   },
   methods: {
     sendData() {
@@ -229,6 +210,22 @@ export default {
     },
     changeProf() {
       this.prof = "lightgray";
+    },
+    async generateData(rID) {
+      const send = await {
+        data: { id: rID },
+        url: "api/officer/basic/myaccount/view/request",
+      };
+
+      //console.log(send)
+      const data = await this.$store.dispatch("sendData", send);
+
+      if (data.response == "Success") {
+        this.info = data.data;
+        console.log(data.data)
+      } else {
+        alert();
+      }
     },
   },
   props: ["toggleProfile"],

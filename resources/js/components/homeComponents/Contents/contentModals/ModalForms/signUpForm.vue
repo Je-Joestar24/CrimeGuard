@@ -140,32 +140,7 @@
           <div
             class="relative z-0 w-full mb-5 group grid md:grid-cols-2 md:gap-6"
           >
-            <!-- 
-            <div class="relative z-0 w-full group">
-              <label
-                class="block text-sm font-medium text-gray-600"
-                for="small_size"
-                >VALID ID:</label
-              >
-              <input
-                class="block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                type="file"
-                @change="onFileChange"
-              />
-            </div>
-            <div class="relative z-0 w-full group">
-              <label
-                class="block text-sm font-medium text-gray-600"
-                for="small_size"
-                >PROFILE:</label
-              >
-              <input
-                class="block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                type="file"
-                @change="onFileChange2"
-              />
-            </div> -->
-            <div class="relative z-0 w-full group">
+          <div class="relative z-0 w-full group">
               <label
                 class="block text-sm font-medium text-gray-600"
                 for="valid_id"
@@ -248,7 +223,7 @@
           </div>
         </div>
         <!-- Addresses -->
-        <div class="w-full" v-if="!isPhone" v-show="active == 2">
+        <div class="w-full pb-10" v-if="!isPhone" v-show="active == 2">
           <span class="font-semibold text-md">CURRENT ADDRESS:</span>
           <hr class="mb-5 mt-1" />
           <div class="grid md:grid-cols-3 md:gap-6">
@@ -867,7 +842,7 @@
         <div class="w-full" v-if="isPhone" v-show="active == 2">
           <span class="font-semibold text-md">CURRENT ADDRESS:</span>
           <hr class="mb-2 mt-1 bg-gradient-to-r from-blue-500 to-green-500" />
-          <div class="overflow-auto" style="height: 58vh">
+          <div >
             <div class="grid grid-cols-1 gap-y-3">
               <div
                 class="relative z-0 w-full group"
@@ -885,7 +860,7 @@
                 <input
                   id="signup_current_province"
                   type="text"
-                  class="block focuse:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  class="block py-2 focus:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   v-model="current_address.province"
                   @click="
@@ -1308,7 +1283,7 @@
         <div class="w-full" v-if="isPhone" v-show="active == 3">
           <span class="font-semibold text-md">OTHER ADDRESS:</span>
           <hr class="mb-2 mt-1" />
-          <div class="overflow-auto" style="height: 58vh" >
+          <div >
             <div class="grid gap-y-3">
               <div
                 class="relative z-0 w-full group"
@@ -2055,7 +2030,6 @@ export default {
       this[fileType] = event.target.files[0];
       this.uploadFile(fileType);
     },
-
     async uploadFile(fileType) {
       const file = this[fileType];
       if (!file) {

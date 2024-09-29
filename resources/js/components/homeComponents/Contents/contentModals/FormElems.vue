@@ -21,14 +21,16 @@
       </div>
     </div>
   </div>
-  <signUpForm :change-active="changeActive" v-if="active == 'Sign up'"></signUpForm>
+  <signUpForm :change-active="changeActive" v-if="active == 'Sign up' && !isPhone"></signUpForm>
   <loginForm :change-active="changeActive" v-if="active == 'Login'"></loginForm>
+  <sign-up-phone :change-active="changeActive" v-if="active == 'Sign up' && isPhone"/>
 </template>
 
 
 <script>
 import loginForm from "./ModalForms/loginForms.vue";
 import signUpForm from "./ModalForms/signUpForm.vue";
+import signUpPhone from "./ModalForms/signUpPhone.vue";
 import reportForm from "./ModalForms/reportForm.vue";
 
 export default {
@@ -40,6 +42,12 @@ export default {
     loginForm,
     signUpForm,
     reportForm,
+    signUpPhone
+  },
+  computed: {
+    isPhone() {
+      return window.innerWidth <= 768;
+    },
   },
 };
 </script>

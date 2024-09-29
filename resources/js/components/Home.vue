@@ -2,7 +2,7 @@
   <loading class="z-50 fixed top-0" v-if="load"></loading>
   <div v-if="!load" class="HomePage w-full">
     <nav
-      class="bg-gradient-to-b from-blue-500 to-blue-400 border-gray-400 w-full fixed top-0 z-50"
+      class="bg-blue-600  w-full fixed top-0 z-50"
     >
       <Navigations
         :navs="navs"

@@ -300,9 +300,9 @@ export default {
     //this.initializeMap()
     //console.log(document.head)
     (async () => {
-      await this.generateData();
+      await this.generateData();/* 
       await this.loadGoogleMapsScript();
-      await this.initializeMap();
+      await this.initializeMap(); */
     })();
   },
   methods: {

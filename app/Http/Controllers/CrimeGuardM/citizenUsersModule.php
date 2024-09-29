@@ -501,6 +501,7 @@ class citizenUsersModule extends Controller
                     'users.last_name',
                     'users.email',
                     'users.created_at',
+                    'users.profile',
                     DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
                 )
 
@@ -526,6 +527,7 @@ class citizenUsersModule extends Controller
             foreach ($citizens as $citizen) {
                 $cleaned = [
                     'id' => $citizen['id'],
+                    'profile' => $citizen['profile'],
                     'first_name' => $citizen['first_name'],
                     'last_name' => $citizen['last_name'],
                     'email' => $citizen['email'],
