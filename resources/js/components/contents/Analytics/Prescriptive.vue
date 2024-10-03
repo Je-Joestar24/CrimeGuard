@@ -1,5 +1,7 @@
 <template>
   <predicted-line-chart v-motion-slide-visible-right />
+  <predict-topbarangay/>
+  <predict-top-incidents class="mb-5"/>
   <bar-graphs v-motion-slide-visible-right />
   <line-charts v-motion-slide-visible-right/>
 
@@ -32,6 +34,8 @@ import vPieChartsMf from "./Prescriptive/victims/pieChartsMF.vue";
 import barGraphs from "./Prescriptive/incidents/barGraphs.vue";
 import lineCharts from "./Prescriptive/incidents/lineCharts.vue";
 import predictedLineChart from "./Prescriptive/incidents/predictedLineChart.vue";
+import PredictTopbarangay from './Prescriptive/incidents/predictTopbarangay.vue';
+import PredictTopIncidents from './Prescriptive/incidents/predictTopIncidents.vue';
 
 export default {
   components: {
@@ -42,6 +46,8 @@ export default {
     barGraphs,
     lineCharts,
     predictedLineChart,
+    PredictTopbarangay,
+    PredictTopIncidents,
   },
 };
 </script>

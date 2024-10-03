@@ -60,21 +60,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >TYPE OF INCIDENT:</label
               >
-            </div><!-- 
-            <div class="relative z-0 w-full mb-5 group">
-              <input
-                type="text"
-                v-model="data.incident.copy_for"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_company"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >COPY FOR:</label
-              >
-            </div> -->
+            </div>
             <div class="relative z-0 w-full mb-5 group">
               <select
             v-model="data.incident.status"
@@ -95,10 +81,10 @@
               >
             </div>
           </div>
-          <div class="grid md:grid-cols-3 md:gap-6">
+          <div class="grid md:grid-cols-2 md:gap-6">
             <div class="grid md:grid-cols-2 md:gap-6 group">
-              <div class="relative z-0 w-full mb-5 group">
-                <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full group">
+                <div class="relative z-0 w-full group">
                   <input
                     type="date"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -113,7 +99,7 @@
                   >Date Reported:</label
                 >
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full group">
                 <input
                   type="time"
                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -161,7 +147,45 @@
                 >
               </div>
             </div>
+          </div>
+          <div class="grid md:grid-cols-3 md:gap-6">
             <div class="flex  flex-row px-0 w-full">
+              <div class="relative z-0 w-full mb-5 group">
+                <input
+                  type="text"
+                  v-model="data.incident.barangay"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=""
+                  @click="generateAddress(data.incident.barangay)"
+                  @focusout="clearIt2"
+                  required
+                />
+                <label
+                  for="floating_company"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Barangay:</label
+                >
+                <div
+                  v-if="places.length > 0"
+                  class="absolute bg-white w-full rounded-md pt-1 border"
+                >
+                  <div class="max-h-24 overflow-auto flex flex-col rounded-md">
+                    <div
+                      class="px-4 hover:bg-gray-50 py-1 border-b"
+                      v-for="place in places"
+                      @click.prevent="setAddress(place )"
+                    >
+                      {{ place }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg  class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+              
+            </div>
+            <div class="flex col-span-2 flex-row px-0 w-full">
               <div class="relative z-0 w-full mb-5 group">
                 <input
                   type="text"
@@ -502,6 +526,7 @@ export default {
           location: "",
           incident_type: 1,
           status: "",
+          barangay: "",
         },
         suspects: [],
         witness: [],
@@ -536,6 +561,7 @@ export default {
         incidentT: "api/incidentNames/search/Display",
       },
       id: -1,
+      places: [],
     };
   },
   created() {
@@ -651,6 +677,33 @@ export default {
     sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     },
+
+    setAddress(value) {
+      this.data.incident.barangay = value;
+      this.places = [];
+    },
+    async generateAddress(search) {
+      const data = {
+        search: search,
+      };
+
+      const send = {
+        url: "api/barangay/request",
+        data: data,
+      };
+
+      const test = await this.$store.dispatch("sendData", send);
+      if (test["response"] == "Success") {
+        this.places = test.data;
+      } else {
+        alert("Error");
+      }
+    },
+
+    async clearIt2() {
+      await this.sleep(500);
+      this.places = [];
+    },
   },
   props: ["toggle", "reloadTab"],
   watch: {
@@ -672,6 +725,11 @@ export default {
     "data.incident_types.incident_name": function (newVal, oldVal) {
       if (newVal != oldVal && !this.disableWatcher) {
         this.search("incidentT", newVal);
+      }
+    },
+    "data.incident.barangay": function (newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.generateAddress(newVal);
       }
     },
   },

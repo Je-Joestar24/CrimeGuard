@@ -97,13 +97,12 @@
               >
             </div>
           </div>
-          <div class="grid md:grid-cols-3 md:gap-6">
+          <div class="grid md:grid-cols-2 md:gap-6">
             <div class="grid md:grid-cols-2 md:gap-6 group">
-              <div class="relative z-0 w-full mb-5 group">
-                <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full group">
+                <div class="relative z-0 w-full group">
                   <input
                     type="date"
-                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=""
                     v-model="data.incident.date_reported"
@@ -116,7 +115,7 @@
                   >Date Reported:</label
                 >
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full group">
                 <input
                   type="time"
                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -164,8 +163,45 @@
                 >
               </div>
             </div>
-            
+          </div>
+          <div class="grid md:grid-cols-3 md:gap-6">
             <div class="flex  flex-row px-0 w-full">
+              <div class="relative z-0 w-full mb-5 group">
+                <input
+                  type="text"
+                  v-model="data.incident.barangay"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=""
+                  @click="generateAddress(data.incident.barangay)"
+                  @focusout="clearIt2"
+                  required
+                />
+                <label
+                  for="floating_company"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Barangay:</label
+                >
+                <div
+                  v-if="places.length > 0"
+                  class="absolute bg-white w-full rounded-md pt-1 border"
+                >
+                  <div class="max-h-24 overflow-auto flex flex-col rounded-md">
+                    <div
+                      class="px-4 hover:bg-gray-50 py-1 border-b"
+                      v-for="place in places"
+                      @click.prevent="setAddress(place )"
+                    >
+                      {{ place }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg  class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+              
+            </div>
+            <div class="flex col-span-2 flex-row px-0 w-full">
               <div class="relative z-0 w-full mb-5 group">
                 <input
                   type="text"
@@ -181,7 +217,7 @@
                 >Place of Incident:</label
               >
               </div>
-              <svg @click="toggleLocation" class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900 cursor-pointer"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg @click="toggleLocation" class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -509,7 +545,8 @@ export default {
           time_of_incident: "",
           location: "",
           incident_type: 1,
-          status: ""
+          status: "",
+          barangay: ""
         },
         suspects: [],
         witness: [],
@@ -543,14 +580,15 @@ export default {
         victims: "api/victims/search/Display",
         incidentT: "api/incidentNames/search/Display",
       },
-      id: -1
+      id: -1,
+      places: []
     };
   },
   created() {
     this.extractData();
     this.disableWatcher = true;
 
-    const credential = JSON.parse(localStorage.getItem('credentials'));
+    const credential = JSON.parse(localStorage.getItem("credentials"));
     this.id = credential.id;
   },
   components: {
@@ -558,34 +596,17 @@ export default {
     selector,
   },
   methods: {
-    /* async sendData() {
-      const data1 = this.data;
-
-      const send = await {
-        data: data1,
-        url: "api/incidents/update/item/request",
-      };
-      const data = await this.$store.dispatch("sendData", send);
-      this.res = await data["response"];
-
-      if (this.res == "Success") {
-        await alert("Successfully Updated Incident.");
-        await this.toggle(-1);
-      } else {
-        await alert("An error occured, please try again.");
-      } 
-    },*/
     toggleEnvolved(param) {
       this.envolvedOpen = !this.envolvedOpen;
       this.formId = param;
     },
-    toggleLocation(){
-      this.locSelectorOpen = !this.locSelectorOpen
+    toggleLocation() {
+      this.locSelectorOpen = !this.locSelectorOpen;
     },
-    setLocation(param){
-      this.data.incident.location = param['address'];
-      this.data.incident['latitude'] = param['latitude'];
-      this.data.incident['longitude'] = param['longitude'];
+    setLocation(param) {
+      this.data.incident.location = param["address"];
+      this.data.incident["latitude"] = param["latitude"];
+      this.data.incident["longitude"] = param["longitude"];
 
       this.data.incident["barangay"] = param["barangay"];
       console.log(this.data.incident);
@@ -603,8 +624,9 @@ export default {
 
       if (this.res == "Success") {
         this.data.incident = data["data"]["incident"];
+        this.data.incident['barangay'] = data["data"]["incident"]['barangay'] ? data["data"]["incident"]['barangay'] : "";
         this.data.incident["id"] = parseInt(this.rId);
-        this.data.incident['status'] = (this.data.incident['status']).toLowerCase();
+        this.data.incident["status"] = this.data.incident["status"].toLowerCase();
 
         this.data.incident_types = data["data"]["incident_types"];
         this.data.suspects = this.wrapByKey("suspect", data.data.suspects);
@@ -630,8 +652,8 @@ export default {
     },
     async sendData() {
       const data1 = this.data;
-      data1.incident['edited_by'] = this.id;
-      data1['id'] = this.id;
+      data1.incident["edited_by"] = this.id;
+      data1["id"] = this.id;
 
       const send = await {
         data: data1,
@@ -690,6 +712,7 @@ export default {
           added_by: this.id,
           edited_by: this.id,
           incident_type: 1,
+          barangay: ""
         },
         suspects: [],
         witness: [],
@@ -717,12 +740,39 @@ export default {
       } else {
         await alert("An error occured, please try again.");
       }
-    },selectIncident(item, tId){
+    },
+    selectIncident(item, tId) {
       this.data.incident_types.incident_name = item;
       this.incidentT.list = [];
       this.data.incident.incident_type = tId;
       this.disableWatcher = true;
-    }
+    },
+    setAddress(value) {
+      this.data.incident.barangay = value;
+      this.places = [];
+    },
+    async generateAddress(search) {
+      const data = {
+        search: search,
+      };
+
+      const send = {
+        url: "api/barangay/request",
+        data: data,
+      };
+
+      const test = await this.$store.dispatch("sendData", send);
+      if (test["response"] == "Success") {
+        this.places = test.data;
+      } else {
+        alert("Error");
+      }
+    },
+
+    async clearIt2() {
+      await this.sleep(500);
+      this.places = [];
+    },
   },
   props: ["toggle", "reloadTab", "rId"],
   watch: {
@@ -744,6 +794,11 @@ export default {
     "data.incident_types.incident_name": function (newVal, oldVal) {
       if (newVal != oldVal && !this.disableWatcher) {
         this.search("incidentT", newVal);
+      }
+    },
+    "data.incident.barangay": function (newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.generateAddress(newVal);
       }
     },
   },

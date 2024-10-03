@@ -880,8 +880,11 @@ class incidentModule extends Controller
                 "time_of_incident",
                 "location",
                 'incident_narrative',
-                'status'
+                'status',
+                'barangay'
             )->find($request['id'])->toArray();
+
+            if($incident['barangay'] == NULL) $incident['barangay'] = "";
 
             $incidentTypes = Incidents::join('incident-types as it', "incidents.incident_type", "=", 'it.id')
                 ->select('it.incident_name')->find($request['id']);

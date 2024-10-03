@@ -9,6 +9,7 @@ use App\Http\Controllers\crimeguardm\incidentNamesModule;
 use App\Http\Controllers\crimeguardm\logsModule;
 use App\Http\Controllers\crimeGuardm\notificationModule;
 use App\Http\Controllers\crimeguardm\officerUsersModule;
+use App\Http\Controllers\crimeguardm\predictiveAnalytics;
 use App\Http\Controllers\CrimeGuardM\suspectsManipulation;
 use App\Http\Controllers\CrimeGuardM\trackuser;
 use App\Http\Controllers\crimeguardm\traillogModule;
@@ -97,7 +98,6 @@ Route::post('api/incidents/generate/statistical/report', [incidentModule::class,
 Route::post('api/accounts/generate/statistical/report', [citizenUsersModule::class, 'accountRequestDisplay'])->name('json');
 /* Narrative */
 Route::post('api/dashboard/lineraph/filtered/generate', [dashboardModule::class, 'generateLine'])->name('json');
-Route::post('api/dashboard/lineraph/predict/generate', [dashboardModule::class, 'generatePredictedLine'])->name('json');
 Route::post('api/dashboard/generate/incident/top/barangay/bar', [dashboardModule::class, 'topBarangays'])->name('json');
 Route::post('api/check/address', [dashboardModule::class, 'findBarangay'])->name('json');
 Route::post('api/dashboard/report/change/rank', [dashboardModule::class, 'rankChangeReports'])->name('json');
@@ -236,6 +236,13 @@ Route::post('api/incidents/report/request', [incidentModule::class, 'reportIncid
 /* tracker */
 Route::post('api/track/my/location/req', [trackuser::class, 'add'])->name('json');
 Route::post('api/track/location/map/req', [trackuser::class, 'usermarker'])->name('json');
+
+
+
+/* PREDICTIVE ANALYTICS */
+Route::post('api/incidents/top/baragay/prediction/display', [predictiveAnalytics::class, 'predictTopBarangaysForFuture'])->name('json');
+Route::post('api/top/incidents/prediction/display', [predictiveAnalytics::class, 'predictTopIncidentTypes']);
+Route::post('api/dashboard/lineraph/predict/generate', [predictiveAnalytics::class, 'generatePredictedLine'])->name('json');
 
 
 /* Clickable displays */

@@ -58,12 +58,12 @@
   <used-tech-phone  v-if="!loggedIn && isPhone" />
   <title-e v-if="!loggedIn && !isPhone"></title-e>
   <used-tech v-if="!loggedIn && !isPhone"></used-tech>
-  <h1
+<!--   <h1
     v-if="!loggedIn && !isPhone"
     class="bg-gradient-to-r from-blue-600 to-red-600 bg-gray-200 text-2xl md:text-3xl text-center text-white py-4 mt-6"
   >
     Incident Heatmap: Yearly Overview of Crime Locations in Ormoc City
-  </h1>
+  </h1> -->
 
   <div
     class="rounded shadow-lg w-full relative"
