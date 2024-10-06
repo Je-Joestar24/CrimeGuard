@@ -10,96 +10,125 @@
     <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
       <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
     </div>
-    <div class="w-full border-l">
-      <div class="w-full flex justify-end p-2">
-        <svg
-          class="w-10 h-10 p-2 text-blue-300 rounded-xl cursor-pointer hover:bg-opacity-50 hover:bg-blue-500 hover:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 14 14"
-          @click.prevent="changeA()"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-          />
-        </svg>
-      </div>
-      <h1 class="w-full flex justify-center">
-        <span
-          class="px-40 font-bold md:py-4 lg:py-4 xl:py-4 2xl:py-4 py-1 rounded text-xl bg-white"
-          >LOGIN</span
-        >
-      </h1>
-      <span class="flex justify-center pb-2">
-        <span class="border px-4 py-0">CRIME GUARD</span></span
-      >
-      <div class="flex justify-center pb-6 border-b-2">
-        <div class="p-4 pb-6 border-2 bg-white rounded-b-full">
-          <img class="w-20 h-20" :src="'/storage/system/bg.png'" alt="logo" />
-        </div>
-      </div>
-      <form class="max-w-sm mx-auto mt-5 md:mt-20 lg:mt-20 xl:mt-20 2xl:mt-20">
-        <p
-          class="border-yellow-400 bg-yellow-100 border rounded-md p-2 flex items-center text-red-700 text-sm font-light"
-          v-if="!verified"
-        >
-          <svg
-            class="flex-shrink-0 inline w-4 h-4 me-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
-            />
+    <div v-if="!isPhone" class="w-full border-l  shadow-lg">
+      <div class="w-full flex justify-end p-4 mt-10">
+        <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
-          No match found!
-        </p>
-        <div :class="{ ' mb-2 ': isPhone, 'mb-5': !isPhone }">
-          <label
-            for="email"
-            class="blocktext-sm font-medium text-gray-900"
-            :class="{ ' mb-1 ': isPhone, 'mb-2': !isPhone }"
-            >USERNAME</label
-          >
-          <input
-            type="email"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="USERNAME"
-            v-model="loginform.user"
-            required
-          />
-        </div>
-        <div :class="{ ' mb-2 ': isPhone, 'mb-5': !isPhone }">
-          <label
-            for="password"
-            class="block text-sm font-medium text-gray-900"
-            :class="{ ' mb-1 ': isPhone, 'mb-2': !isPhone }"
-            >PASSWORD</label
-          >
-          <input
-            type="password"
-            v-model="loginform.password"
-            placeholder="PASSWORD"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            required
-          />
-        </div>
-        <div class="flex items-start" :class="{ ' mb-2 ': isPhone, 'mb-5': !isPhone }"></div>
-        <button
-          type="button"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          @click="SendData()"
-        >
-          Login
         </button>
-      </form>
+      </div>
+      
+      <div class="max-w-md mx-auto px-6 py-8">
+        <div class="text-center mb-8">
+          <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
+          <h1 class="text-3xl font-bold text-gray-800">Login to Crime Guard</h1>
+          <p class="text-gray-600 mt-2">Enter your credentials to access your account</p>
+        </div>
+
+        <form @submit.prevent="SendData" class="space-y-6">
+          <div v-if="!verified" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+            <p class="font-bold">Login Failed</p>
+            <p>Invalid username or password. Please try again.</p>
+          </div>
+
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input
+              type="text"
+              v-model="loginform.user"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              required
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              v-model="loginform.password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
+<!-- 
+        <div class="mt-6 text-center">
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-500">Forgot your password?</a>
+        </div> -->
+      </div>
+    </div>
+
+    <div v-if="isPhone" class="w-full h-full bg-white flex flex-col justify-between">
+      <div class="w-full flex justify-end p-4">
+        <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="flex-grow flex flex-col justify-center px-6 py-8">
+        <div class="text-center mb-8">
+          <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
+          <h1 class="text-2xl font-bold text-gray-800">Login to Crime Guard</h1>
+          <p class="text-sm text-gray-600 mt-2">Enter your credentials to access your account</p>
+        </div>
+
+        <form @submit.prevent="SendData" class="space-y-4">
+          <div v-if="!verified" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 mb-4 text-sm" role="alert">
+            <p class="font-bold">Login Failed</p>
+            <p>Invalid username or password. Please try again.</p>
+          </div>
+
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input
+              type="text"
+              v-model="loginform.user"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+              required
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              v-model="loginform.password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="mt-6 text-center pb-8">
+        <p class="text-sm text-gray-600">Don't have an account?</p>
+        <a @click="goToSignup" class="text-sm text-blue-600 hover:text-blue-500 font-medium cursor-pointer">Sign up here</a>
+      </div>
     </div>
   </div>
 </template>

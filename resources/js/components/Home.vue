@@ -105,6 +105,14 @@ export default {
     toggleReport() {
       this.reportIsOpen = !this.reportIsOpen;
     },
+  setBackground(imagePath) {
+    document.body.style.backgroundImage = `url("${imagePath}")`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.minHeight = '100vh';
+  },
   },
   computed: {
     loggedIn() {
@@ -130,6 +138,7 @@ export default {
       this.navs.push("Login");
     }
 
+    this.setBackground('/storage/system/newBG.png');
     window.removeEventListener("scroll", this.handleScroll);
     //document.body.style.backgroundImage = 'url("background/background.jpg")';
   },

@@ -24,7 +24,7 @@
         <div class="container">
           <h1
             @click="playAudio"
-            class="text-xl font-bold p-3 border rounded shadow-lg mb-10"
+            class="text-xl bg-gray-200 font-bold p-3 border rounded shadow-lg mb-10"
             :class="{
               'text-gray-100 border-gray-700': $store.getters.theme,
               ' bg-gray-50': !$store.getters.theme,

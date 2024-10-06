@@ -7,46 +7,27 @@
       width: 100vw;
     "
   >
-    <div v-if="!isPhone" class="w-full flex-col bg-blue-300">
-      <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
-    </div>
+  <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
+    <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
+  </div>
     <div class="w-full border-l">
-      <div class="w-full flex justify-end p-2">
-        <svg
-          class="w-10 h-10 p-2 text-blue-300 rounded-xl cursor-pointer hover:bg-opacity-50 hover:bg-blue-500 hover:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 14 14"
-          @click.prevent="changeA()"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-          />
-        </svg>
+      <div class="w-full flex justify-end p-4 mt-10">
+        <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
-      <h1 class="w-full flex justify-center">
-        <span
-          class="font-bold rounded text-xl bg-white"
-          :class="{ 'px-30 py-2': isPhone, 'px-40 py-4': !isPhone }"
-          >SIGNUP HERE</span
-        >
-      </h1>
-      <span class="flex justify-center pb-2">
-        <span class="border px-4 py-0">CRIME GUARD</span></span
-      >
+      <div class="text-center mb-8">
+        <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
+        <h1 class="text-3xl font-bold text-gray-800">Join Crime Guard</h1>
+        <p class="text-gray-600 mt-2">Create your account to help keep our community safe</p>
+      </div>
       <div
         v-if="!isPhone || active == len"
         class="flex justify-center pb-6 border-b-2"
       >
-        <div class="p-4 pb-6 border-2 bg-white rounded-b-full">
-          <img class="w-20 h-20" :src="'/storage/system/bg.png'" alt="logo" />
-        </div>
-      </div>
+          </div>
 
       <form
         class="max-w-lg mx-auto pb-3 bg-white p-10"
@@ -95,47 +76,47 @@
         <div class="w-full" v-show="active == 1">
           <div class="grid md:grid-cols-3 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
-              <input
+            <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-                v-model="signUpForm.last_name"
-                required
-              />
+              v-model="signUpForm.last_name"
+              required
+            />
               <label
                 for="floating_phone"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >LAST NAME</label
               >
-            </div>
+          </div>
             <div class="relative z-0 w-full mb-5 group">
-              <input
+            <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-                v-model="signUpForm.first_name"
-                required
-              />
+              v-model="signUpForm.first_name"
+              required
+            />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >FIRST NAME</label
               >
-            </div>
+          </div>
             <div class="relative z-0 w-full mb-5 group">
-              <input
+            <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-                v-model="signUpForm.middle_name"
+              v-model="signUpForm.middle_name"
                 required
-              />
+            />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >MIDDLE NAME</label
               >
-            </div>
+          </div>
           </div>
           <div
             class="relative z-0 w-full mb-5 group grid md:grid-cols-2 md:gap-6"
@@ -146,7 +127,7 @@
                 for="valid_id"
                 >VALID ID:</label
               >
-              <input
+            <input
                 class="block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                 type="file"
                 @change="onFileChange($event, 'valid_id')"
@@ -192,34 +173,34 @@
           </div>
           <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
-              <input
+            <input
                 type="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-                v-model="signUpForm.contact"
-                required
-              />
+              v-model="signUpForm.contact"
+              required
+            />
               <label
                 for="floating_phone"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >MOBILE NUMBER</label
               >
-            </div>
+          </div>
             <div class="relative z-0 w-full mb-5 group">
               <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 v-model="signUpForm.fb_name"
-                required
+              required
               />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >FACEBOOK NAME</label
-              >
-            </div>
+            >
+          </div>
           </div>
         </div>
         <!-- Addresses -->
@@ -255,7 +236,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >PROVINCE</label
               >
-            </div>
+          </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -284,7 +265,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >CITY</label
               >
-            </div>
+        </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -313,8 +294,8 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >BARANGAY</label
               >
-            </div>
-          </div>
+      </div>
+    </div>
           <div
             v-if="
               places.length > 0 &&
@@ -338,7 +319,7 @@
                 >
               </li>
             </ul>
-          </div>
+    </div>
           <div class="grid md:grid-cols-3 md:gap-6">
             <div
               class="relative z-0 w-full group"
@@ -368,7 +349,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >SITIO</label
               >
-            </div>
+  </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -839,909 +820,62 @@
             </ul>
           </div>
         </div>
-        <div class="w-full" v-if="isPhone" v-show="active == 2">
-          <span class="font-semibold text-md">CURRENT ADDRESS:</span>
-          <hr class="mb-2 mt-1 bg-gradient-to-r from-blue-500 to-green-500" />
-          <div >
-            <div class="grid grid-cols-1 gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' ||
-                        key == 'city' ||
-                        key == 'barangay') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_province"
-                  type="text"
-                  class="block py-2 focus:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.province"
-                  @click="
-                    setKeyVal('province', current_address);
-                    generateAddress(current_address, 'province');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >PROVINCE</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'province' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' ||
-                        key == 'city' ||
-                        key == 'barangay') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_city"
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.city"
-                  @click="
-                    setKeyVal('city', current_address);
-                    generateAddress(current_address, 'city');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >CITY</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'city' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' ||
-                        key == 'city' ||
-                        key == 'barangay') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_barangay"
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.barangay"
-                  @click="
-                    setKeyVal('barangay', current_address);
-                    generateAddress(current_address, 'barangay');
-                  "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >BARANGAY</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'barangay' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_village"
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.sitio"
-                  required
-                  @click="
-                    setKeyVal('sitio', current_address);
-                    generateAddress(current_address, 'sitio');
-                  "
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >SITIO</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'sitio' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.village"
-                  @click="
-                    setKeyVal('village', current_address);
-                    generateAddress(current_address, 'village');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >VILLAGE</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'village' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_street"
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.street"
-                  @click="
-                    setKeyVal('street', current_address);
-                    generateAddress(current_address, 'street');
-                  "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >STREET</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'street' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'house_number' || key == 'block') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.house_number"
-                  @click="
-                    setKeyVal('house_number', current_address);
-                    generateAddress(current_address, 'house_number');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >HOUSE NO.</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'house_number' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'house_number' || key == 'block') &&
-                      values == current_address
-                    ),
-                }"
-              >
-                <input
-                  id="signup_current_house_no"
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="current_address.block"
-                  @click="
-                    setKeyVal('block', current_address);
-                    generateAddress(current_address, 'block');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >BLOCK</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'block' &&
-                  values == current_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full" v-if="isPhone" v-show="active == 3">
-          <span class="font-semibold text-md">OTHER ADDRESS:</span>
-          <hr class="mb-2 mt-1" />
-          <div >
-            <div class="grid gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' || key == 'city' || key == 'barangay') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.province"
-                  @click="
-                    setKeyVal('province', other_address);
-                    generateAddress(other_address, 'province');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >PROVINCE</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'province' &&
-                  values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' || key == 'city' || key == 'barangay') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.city"
-                  @click="
-                    setKeyVal('city', other_address);
-                    generateAddress(other_address, 'city');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >CITY</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 && key == 'city' && values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'province' || key == 'city' || key == 'barangay') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.barangay"
-                  @click="
-                    setKeyVal('barangay', other_address);
-                    generateAddress(other_address, 'barangay');
-                  "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >BARANGAY</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'barangay' &&
-                  values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="grid gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.sitio"
-                  required
-                  @click="
-                    setKeyVal('sitio', other_address);
-                    generateAddress(other_address, 'sitio');
-                  "
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >SITIO</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 && key == 'sitio' && values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.village"
-                  @click="
-                    setKeyVal('village', other_address);
-                    generateAddress(other_address, 'village');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >VILLAGE</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 && key == 'village' && values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'sitio' || key == 'village' || key == 'street') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.street"
-                  @click="
-                    setKeyVal('street', other_address);
-                    generateAddress(other_address, 'street');
-                  "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >STREET</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 && key == 'street' && values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="grid gap-y-3">
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'house_number' || key == 'block') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.house_number"
-                  @click="
-                    setKeyVal('house_number', other_address);
-                    generateAddress(other_address, 'house_number');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >HOUSE NO.</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 &&
-                  key == 'house_number' &&
-                  values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="relative z-0 w-full group"
-                :class="{
-                  'mb-5':
-                    places.length <= 0 ||
-                    !(
-                      (key == 'house_number' || key == 'block') &&
-                      values == other_address
-                    ),
-                }"
-              >
-                <input
-                  type="text"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  v-model="other_address.block"
-                  @click="
-                    setKeyVal('block', other_address);
-                    generateAddress(other_address, 'block');
-                  "
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >BLOCK</label
-                >
-              </div>
-              <div
-                v-if="
-                  places.length > 0 && key == 'block' && values == other_address
-                "
-                class="mb-4 bg-white divide-y divide-gray-100 rounded-b-lg h-20 overflow-auto border shadow"
-              >
-                <ul class="text-sm text-gray-700">
-                  <li v-for="p in places">
-                    <span
-                      @click="setAddress(values, key, p)"
-                      class="block px-4 py-1 hover:bg-gray-100 border-b"
-                      >{{ p }}</span
-                    >
-                  </li>
-                  <li v-if="places.length <= 0">
-                    <span
-                      class="block h-16 text-center font-semibold pt-2 text-lg px-4 py-1"
-                      >SELECT ADDRESS</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
         <!-- Account Information -->
         <div class="w-full" v-show="active == len">
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              v-model="signUpForm.user_name"
-              required
-            />
-            <label
-              for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >USER NAME</label
-            >
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Account Information</h2>
+          <div class="space-y-6">
+            <div class="relative">
+              <input
+                type="text"
+                id="username"
+                v-model="signUpForm.user_name"
+                class="peer w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder=" "
+                required
+              />
+              <label
+                for="username"
+                class="absolute left-4 -top-3 text-sm text-gray-600 bg-white px-1 transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm"
+              >
+                Username
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                v-model="signUpForm.password"
+                class="peer w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder=" "
+                required
+              />
+              <label
+                for="password"
+                class="absolute left-4 -top-3 text-sm text-gray-600 bg-white px-1 transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm"
+              >
+                Password
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                type="password"
+                id="confirm-password"
+                v-model="confirmPass"
+                class="peer w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder=" "
+                required
+              />
+              <label
+                for="confirm-password"
+                class="absolute left-4 -top-3 text-sm text-gray-600 bg-white px-1 transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm"
+              >
+                Confirm Password
+              </label>
+            </div>
           </div>
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="password"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              v-model="signUpForm.password"
-              required
-            />
-            <label
-              for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >PASSWORD</label
-            >
-          </div>
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="password"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              v-model="confirmPass"
-              required
-            />
-            <label
-              for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >CONFIRM PASSWORD</label
-            >
-          </div>
+          <p class="mt-4 text-sm text-gray-600">
+            By creating an account, you agree to our <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>.
+          </p>
         </div>
       </form>
       <div

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\crimeGuardm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Incidents;
+use App\Models\TrailLog;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 class notificationModule extends Controller
 {
     //
-    
+
     public function listDisplay(Request $request)
     {
 
@@ -24,16 +25,16 @@ class notificationModule extends Controller
         try {
             /* table data */
             $notif = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
-            ->select([
-                'incidents.id',
-                'users.id',
-                'users.user_name',
-                'users.email',
-                'users.contact',
-                'incidents.message',
-                'incidents.location',
-                'incidents.time_reported'
-            ])->where('incidents.date_reported', $currentDate->format('Y-m-d'));
+                ->select([
+                    'incidents.id',
+                    'users.id',
+                    'users.user_name',
+                    'users.email',
+                    'users.contact',
+                    'incidents.message',
+                    'incidents.location',
+                    'incidents.time_reported'
+                ])->where('incidents.date_reported', $currentDate->format('Y-m-d'));
 
             if ($request->has('search') && !empty($request->input('search'))) {
                 $searchTerm = $request->input('search');
@@ -49,18 +50,17 @@ class notificationModule extends Controller
                 });
             }
             $data['list']['data'] = $notif->get();
-            for($i = 0; $i < count($data['list']['data']) ; $i ++){
+            for ($i = 0; $i < count($data['list']['data']); $i++) {
 
-                $dates = explode('-', explode(" ",$data['list']['data'][$i]['time_reported'])[0]);
+                $dates = explode('-', explode(" ", $data['list']['data'][$i]['time_reported'])[0]);
                 $data['list']['data'][$i]['month'] = (int)$dates[1];
-                $data['list']['data'][$i]['date'] = $dates[2].", ".$dates[0];
+                $data['list']['data'][$i]['date'] = $dates[2] . ", " . $dates[0];
 
                 $time = $data['list']['data'][$i]['time_reported'];
 
                 unset($data['list']['data'][$i]['time_reported']);
 
-                $data['list']['data'][$i]['time'] = explode(" ",Carbon::parse($time)->format('Y-m-d H:i:s'))[1];
-            
+                $data['list']['data'][$i]['time'] = explode(" ", Carbon::parse($time)->format('Y-m-d H:i:s'))[1];
             }
 
             $data['response'] = 'Success';
@@ -70,5 +70,68 @@ class notificationModule extends Controller
         }
 
         return response()->json($data);
+    }
+
+
+    public function notifyUser(Request $request)
+    {
+
+        date_default_timezone_set('Asia/Manila');
+
+        $currentDate = \Carbon\Carbon::now();
+        $data = [];
+
+        try {
+            /* table data */
+            $data['list']['data'] = TrailLog::leftJoin('users', 'trail-log.user_id', '=', 'users.id')->select([
+                'trail-log.id',
+                'users.id',
+                'users.user_name',
+                'users.email',
+                'trail-log.action',
+                'trail-log.item',
+                'trail-log.created_at'
+            ])->where('trail-log.item', '=', 'notify')
+                ->whereNull('trail-log.action')
+                ->whereDate('trail-log.created_at', $currentDate->toDateString())
+                ->where('trail-log.user_id', $request->input('id'));
+            $data['list']['data'] = $data['list']['data']->orderBy('trail-log.created_at', 'desc')
+                ->get();
+
+
+            for ($i = 0; $i < count($data['list']['data']); $i++) {
+
+                $dates = explode('-', explode(" ", $data['list']['data'][$i]['created_at'])[0]);
+                $data['list']['data'][$i]['month'] = (int)$dates[1];
+                $data['list']['data'][$i]['date'] = $dates[2] . ", " . $dates[0];
+
+                $time = $data['list']['data'][$i]['created_at'];
+
+                /* unset para way error */
+                unset($data['list']['data'][$i]['created_at']);
+
+                $data['list']['data'][$i]['time'] = explode(" ", Carbon::parse($time)->format('Y-m-d H:i:s'))[1];
+            }
+
+            $data['response'] = 'Success';
+        } catch (\Exception $e) {
+            $data['response'] = 'Error';
+            $data['err'] = $e;
+        }
+
+        return response()->json($data);
+    }
+
+    public function notified(Request $request)
+    {
+        $response = [];
+        try {
+            TrailLog::where('user_id', $request->input('id'))->update(['action' => 'seen']);
+
+            $response['response'] = 'success';
+        } catch (\Exception $e) {
+            $response['response'] = 'error';
+        }
+        return response()->json($response);
     }
 }

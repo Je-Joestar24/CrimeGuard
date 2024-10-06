@@ -27,16 +27,16 @@ export default {
       ],
       smonth: "",
       emonth: "",
-      filter: { date_start: "2024-0-1", date_end: "2024-8-1" },
+      filter: { date_start: "2024-01-01", date_end: "2024-10-01" },
     };
   },
   mounted() {
     (async () => {
       await this.getData(this.filter);
       this.smonth =
-        this.months[parseInt(this.filter["date_start"].split("-")[1])];
+        this.months[parseInt(this.filter["date_start"].split("-")[1]) - 1];
       this.emonth =
-        this.months[parseInt(this.filter["date_end"].split("-")[1])];
+        this.months[parseInt(this.filter["date_end"].split("-")[1]) - 1];
       this.chartify();
     })();
   },
@@ -48,8 +48,8 @@ export default {
 
       Highcharts.chart("AnalyticsLine", {
         chart: {
-          type: "line",
-          animation: false, // Disable animations
+          type: "spline", // Change from 'line' to 'spline' for curved lines
+          animation: false,
         },
         title: {
           text: "INCIDENT RECORD",
@@ -92,13 +92,26 @@ export default {
               connectorAllowed: false,
             },
             pointStart: 1,
-            animation: false, // Disable series animations
+            animation: false,
+            marker: {
+              enabled: false // Hide point markers for smoother look
+            }
           },
+          spline: {
+            lineWidth: 3,
+            states: {
+              hover: {
+                lineWidth: 4
+              }
+            },
+            tension: 0.4 // Adjust curve tension (0-1)
+          }
         },
         series: [
           {
             name: "INCIDENTS",
             data: counts,
+            color: '#7cb5ec' // You can choose a custom color if desired
           },
         ],
         responsive: {

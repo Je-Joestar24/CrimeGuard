@@ -175,6 +175,10 @@ export default {
       });
 
       Highcharts.chart("PredictedAnalyticsLine", {
+        chart: {
+          type: "spline", // Change from 'line' to 'spline' for curved lines
+          animation: false,
+        },
         title: {
           text:
             "PREDICTED INCIDENT TRENDS (" +
@@ -217,7 +221,19 @@ export default {
               connectorAllowed: false,
             },
             pointStart: 1,
+            marker: {
+              enabled: false // Hide point markers for smoother look
+            }
           },
+          spline: {
+            lineWidth: 3,
+            states: {
+              hover: {
+                lineWidth: 4
+              }
+            },
+            tension: 0.4 // Adjust curve tension (0-1)
+          }
         },
 
         series: [

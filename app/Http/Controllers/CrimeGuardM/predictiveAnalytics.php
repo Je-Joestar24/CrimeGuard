@@ -298,15 +298,19 @@ class predictiveAnalytics extends Controller
             $topIncidentTypes = [];
             foreach ($top5IncidentTypes as $incidentTypeId => $predictedCount) {
                 $iname = IncidentTypes::select('incident_name', 'sub_type_id')->find($incidentTypeId);
-                $res = $iname->toArray()['incident_name'] . "";
-                if ($iname->toArray()['sub_type_id'] != NULL) {
-                    $ist = IncidentSubTypes::select('sub_type')->find($iname->toArray()['sub_type_id']);
-                    $res .= " (" . $ist->toArray()['sub_type'] . ")";
+                if ($iname) {
+                    $res = $iname->incident_name;
+                    if ($iname->sub_type_id != NULL) {
+                        $ist = IncidentSubTypes::select('sub_type')->find($iname->sub_type_id);
+                        if ($ist) {
+                            $res .= " (" . $ist->sub_type . ")";
+                        }
+                    }
+                    array_push($topIncidentTypes, [
+                        'incident' => $res,
+                        'predicted_count' => round($predictedCount, 2),
+                    ]);
                 }
-                array_push($topIncidentTypes, [
-                    'incident' => $res,
-                    'predicted_count' => round($predictedCount, 2),
-                ]);
             }
             $dt['data'] = $topIncidentTypes;
         } catch (\Exception $e) {

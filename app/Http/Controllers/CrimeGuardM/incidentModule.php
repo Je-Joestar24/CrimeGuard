@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CrimeGuardM;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
 use App\Http\Controllers\CrimeGuardM\Dynamic\incidentFunctions;
+use App\Mail\IncidentResponseMail;
 use App\Models\Addresses;
 use App\Models\IncidentNarative;
 use App\Models\incidentReportingPerson;
@@ -21,6 +22,8 @@ use App\Models\Victims;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\IncidentAssignedMail;
 
 use function PHPUnit\Framework\isNull;
 
@@ -386,7 +389,6 @@ class incidentModule extends Controller
     /* respond incident */
     public function respond(Request $request)
     {
-
         date_default_timezone_set('Asia/Manila');
 
         $data = [];
@@ -397,11 +399,23 @@ class incidentModule extends Controller
                 'edited_by' => $request['edited_by'],
                 'rej_message' => null
             ];
-            Incidents::where('id', $request['id'])->update($archive);
+            
+            $incident = Incidents::findOrFail($request['id']);
+            $incident->update($archive);
+
+            $user = User::findOrFail($incident->reported_by_user);
+
+            // Fixed message
+            $message = "Wait for the police. Your report has already been noticed and police are now on the way to your location.";
+
+            // Send email
+            Mail::to($user->email)->send(new IncidentResponseMail($message));
+
+            TrailLog::create(['user_id' => $user->id, 'item' => 'notify']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
-            $data['err'] = $e;
+            $data['err'] = $e->getMessage();
         }
         return response()->json($data);
     }
@@ -577,15 +591,17 @@ class incidentModule extends Controller
 
 
             $incidents = $incidents->orderBy('incidents.date_reported', 'desc')
-                ->select('incidents.id', 'incident-types.incident_name', 'incidents.message', 'incidents.time_reported', 'incidents.landmark', 'incidents.location')
+                ->select('incidents.id', 'incident-types.incident_name', 'incidents.message', 'incidents.time_reported', 'incidents.landmark', 'incidents.location', 'incidents.status')
                 ->get();
 
             foreach ($incidents as $incident) {
                 $cleaned = [
                     'id' => $incident['id'],
                     'incident' => $incident['incident_name'],
+                    'message' => $incident['message'],
                     'landmark' => $incident['landmark'],
                     'location' => $incident['location'],
+                    'status' => $incident['status'],
                     'time' => explode(' ', $incident['time_reported'])[1],
                     'month' => explode('-', explode(' ', $incident['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $incident['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $incident['time_reported'])[0])[0],
@@ -769,14 +785,22 @@ class incidentModule extends Controller
         date_default_timezone_set('Asia/Manila');
         $data = [];
         try {
-            Incidents::find($request->input('id'))->update([
+            $incident = Incidents::findOrFail($request->input('id'));
+            $incident->update([
                 'assigned_to' => $request->input('assigned_to'),
                 'rej_message' => null
             ]);
+
+            // Get the assigned user
+            $assignedUser = User::findOrFail($request->input('assigned_to'));
+
+            // Send email to the assigned user
+            Mail::to($assignedUser->email)->send(new IncidentAssignedMail($assignedUser, $incident));
+
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
-            $data['err'] = $e;
+            $data['err'] = $e->getMessage();
         }
         return response()->json($data);
     }

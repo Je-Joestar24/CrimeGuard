@@ -26,7 +26,8 @@ class traillogModule extends Controller
                 'trail-log.action',
                 'trail-log.item',
                 'trail-log.created_at'
-            ]);
+            ])->where('trail-log.item', '!=', 'notify')
+            ->where('trail-log.action', '!=', 'seen');
 
             if ($request->has('search') && !empty($request->input('search'))) {
                 $searchTerm = $request->input('search');

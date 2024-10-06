@@ -1,99 +1,36 @@
-
 <template>
-  <ul
-    v-if="!isPhone"
-    class="bg-gray-100 m-12 p-3 rounded-lg overflow-auto w-full divide-y"
-    style="height: 80vh"
-  >
-    <li
-      class="text-xl text-red-600 font-semibold border-b border-gray-600 py-2 bg-gray-300 rounded-t-lg px-2"
-    >
-      Reported Incidents
-    </li>
-    <li>
-      <ul
-        class="bg-gray-100 rounded-lg overflow-auto w-full divide-y divide-gray-200"
-        style="height: 70vh"
-      >
-        <!--  dark:divide-gray-700  -->
-        <li
-          v-if="arr.length > 0"
-          v-for="(el, i) in arr"
-          class="pb-3 px-1 py-1 my-1 sm:pb-4 border-b"
-        >
-          <div class="flex items-center space-x-4 rtl:space-x-reverse">
-            <div class="flex-shrink-0">{{ i + 1 }}.</div>
-            <div class="flex-1 min-w-0 font-bold capitalize">
-              {{ el["incident"] }}
+  <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Reported Incidents</h2>
+    <p class="text-gray-600 mb-6 text-center">Review the incidents you've reported. This list helps you track the status of your reports and stay updated on any developments.</p>
+    
+    <div class="overflow-auto" style="max-height: 70vh">
+      <ul class="space-y-4">
+        <div v-for="(el, i) in arr" :key="el.id">
+          <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-lg font-semibold text-gray-800">{{ el.incident }}</span>
+              <span :class="getStatusClass(el.status)">{{ getStatusText(el.status) }}</span>
             </div>
-            <p>
-              <span>
-                {{ el["location"] }} near
-                <span>{{ el["landmark"] }}</span> </span
-              >,
-              <span>{{ el["time"] }}</span>
-            </p>
-            <div
-              class="inline-flex items-center text-base font-semibold text-gray-900"
-            >
-              <!--  dark:text-white -->
-              <span class="capitalize">- {{ month[el["month"] - 1] }}</span
-              >, {{ el["date"] }}
+            <p class="text-gray-600 mb-2">{{ el.location }}</p>
+            <p class="text-gray-600 mb-2" v-if="el.landmark">Near: {{ el.landmark }}</p>
+            <div class="flex justify-between items-center mt-3">
+              <span class="text-sm font-medium text-blue-600">{{ el.time }}</span>
+              <span class="text-sm text-gray-500">{{ formatDate(el.date, el.month) }}</span>
             </div>
-          </div>
-        </li>
-        <li
-          v-if="arr.length == 0"
-          class="border-t shadow-inner border-gray-800 pt-2 text-center font-semibold text-gray-600"
-        >
-          No Incident Reported
-        </li>
-      </ul>
-    </li>
-  </ul>
-  
-  <ul v-if="isPhone" class="bg-gray-100 w-full">
-    <li class="py-2">
-      <div class=" border rounded-lg px-5 py-3 text-lg font-semibold">REPORTED INCIDENTS</div>
-      <ul class="bg-gray-100 rounded-lg w-full divide-y border-t mt-5 overflow-auto" style="height: 75vh;">
-        <!--  dark:divide-gray-700  -->
-        <li
-          v-if="arr.length > 0"
-          v-for="(el, i) in arr"
-          class="pb-3 px-1 py-1 my-4 rounded-md sm:pb-4 border-b shadow-md pt-5 mx-1"
-        >
-        <div class="flex items-start space-x-4 rtl:space-x-reverse">
-          <div class="flex-shrink-0 mb-auto px-3 text-lg font-bold">{{ i + 1 }}.</div>
-          <div class="flex flex-col flex-grow rounded-md bg-gray-100 border">
-            <div
-              class="w-full py-5 px-4 rounded-md bg-red-600 border-b text-xl text-gray-200 font-bold capitalize"
-            >
-              {{ el["incident"] }}
-            </div>
-            <p class=" px-3 border-b py-2 w-full">{{ el["location"] }}</p>
-            <div
-              class="px-3 py-1 bg-gra inline-flex items-center text-base font-semibold text-gray-700 w-full"
-            >
-              <span class="capitalize">
-                {{ el["time"] }} - {{ month[el["month"] - 1] }}
-              </span>
-              , {{ el["date"] }}
-            </div>
-          </div>
+          </li>
         </div>
-        
-        </li>
-        <li
-          v-if="arr.length == 0"
-          class="border-t shadow-inner border-gray-800 pt-2 text-center font-semibold text-gray-600"
-        >
-          No Report Incidents
-        </li>
       </ul>
-    </li>
-  </ul>
-</template>
+    </div>
 
+    <p v-if="arr.length === 0" class="text-center text-gray-500 mt-8">
+      You haven't reported any incidents yet. If you witness or experience an incident, please report it promptly.
+    </p>
+
+    <p v-if="arr.length > 0" class="text-center text-gray-500 mt-8">
+      End of reported incidents list. Thank you for your vigilance in keeping our community safe.
+    </p>
+  </div>
+</template>
 
 <script>
 export default {
@@ -101,62 +38,61 @@ export default {
     return {
       arr: [],
       month: [
-        "january",
-        "february",
-        "march",
-        "april",
-        "may",
-        "june",
-        "july",
-        "august",
-        "september",
-        "october",
-        "november",
-        "december",
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
       ],
       req: {
         url: "api/incidents/citizen/view/display2",
         data: {
-          id: -1, //Temporary
+          id: -1,
         },
       },
     };
   },
   mounted() {
-    (async () => {
-      await (async () => {
-        const credentials = JSON.parse(localStorage.getItem("credentials"));
-        this.req.data.id = credentials.id;
-        console.log(this.req);
-      })();
-      await this.sendData(this.req);
-
-      // Iterate through each element in the array
-      for (let i = 0; i < this.arr.length; i++) {
-        const element = this.arr[i];
-
-        // Await the conversion of military time to normal time
-        element["time"] = await this.$store.dispatch(
-          "militaryToNormalTime",
-          element["time"]
-        );
-      }
-    })();
+    this.fetchData();
   },
   methods: {
-    async sendData(param) {
-      this.header = [];
-      this.data = [];
-      const data = await this.$store.dispatch("sendData", param);
-      if (data["response"] == "Success") {
-        this.arr = await data["data"];
+    async fetchData() {
+      const credentials = JSON.parse(localStorage.getItem("credentials"));
+      this.req.data.id = credentials.id;
+      const data = await this.$store.dispatch("sendData", this.req);
+      if (data.response === "Success") {
+        this.arr = await Promise.all(data.data.map(async (element) => {
+          element.time = await this.$store.dispatch("militaryToNormalTime", element.time);
+          return element;
+        }));
       }
     },
-  },
-  computed: {
-    isPhone() {
-      return window.innerWidth <= 768;
+    formatDate(date, monthIndex) {
+      return `${this.month[monthIndex - 1]} ${date}`;
     },
+    getStatusClass(status) {
+      const baseClasses = "text-xs px-2 py-1 rounded-full";
+      switch (status.toLowerCase()) {
+        case 'under investigation':
+          return `${baseClasses} bg-yellow-200 text-yellow-800`;
+        case 'cleared':
+          return `${baseClasses} bg-green-200 text-green-800`;
+        case 'solved':
+          return `${baseClasses} bg-blue-200 text-blue-800`;
+        case 'pending':
+          return `${baseClasses} bg-gray-200 text-gray-800`;
+        default:
+          return `${baseClasses} bg-gray-200 text-gray-800`;
+      }
+    },
+    getStatusText(status) {
+      switch (status.toLowerCase()) {
+        case 'under investigation':
+        case 'cleared':
+        case 'solved':
+        case 'pending':
+          return status.charAt(0).toUpperCase() + status.slice(1);
+        default:
+          return 'Unknown';
+      }
+    }
   },
 };
 </script>

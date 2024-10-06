@@ -58,12 +58,7 @@
   <used-tech-phone  v-if="!loggedIn && isPhone" />
   <title-e v-if="!loggedIn && !isPhone"></title-e>
   <used-tech v-if="!loggedIn && !isPhone"></used-tech>
-<!--   <h1
-    v-if="!loggedIn && !isPhone"
-    class="bg-gradient-to-r from-blue-600 to-red-600 bg-gray-200 text-2xl md:text-3xl text-center text-white py-4 mt-6"
-  >
-    Incident Heatmap: Yearly Overview of Crime Locations in Ormoc City
-  </h1> -->
+
 
   <div
     class="rounded shadow-lg w-full relative"
@@ -89,7 +84,7 @@
   >
     Incident Heatmap: Yearly Overview of Crime Locations in Ormoc City
   </h1>
-  <span class="px-10 pt-10 text-center flex bg-blue-300 py-2">
+  <span class="px-10 pt-10 text-center flex py-2">
     <h1
       class="text-3xl bg-white w-full py-2 border md:text-4xl text-center text-gray-700 uppercase"
     >
@@ -99,7 +94,7 @@
 
   <div
     v-if="!loggedIn"
-    class="bg-gradient-to-b from-blue-300 to to-blue-100 shadow border-gray-400 w-full 2xl:px-32 md:px-0"
+    class="bg-transparent shadow border-gray-400 w-full 2xl:px-32 md:px-0"
     style="height: 250vh"
   >
     <!-- graphs -->
@@ -174,7 +169,7 @@
   </div>
   <div
     v-if="loggedIn"
-    class="bg-gradient-to-b from-blue-300 to to-blue-100 shadow border-gray-400 w-full 2xl:px-32 md:px-0"
+    class=" shadow border-gray-400 w-full 2xl:px-32 md:px-0"
     style="height: 200vh"
   >
     <!-- graphs -->
@@ -300,9 +295,9 @@ export default {
     //this.initializeMap()
     //console.log(document.head)
     (async () => {
-      await this.generateData();/* 
+      await this.generateData();
       await this.loadGoogleMapsScript();
-      await this.initializeMap(); */
+      await this.initializeMap();
     })();
   },
   methods: {

@@ -206,60 +206,33 @@
         <line x1="6" y1="6" x2="18" y2="18" />
       </svg>
     </div>
-
-    <div
-      v-if="trackMe && reported"
-      class="my-auto mx-auto flex flex-col justify-center gap-y-20"
-    >
-      <span
-        class="my-auto px-10 py-3 rounded-sm font-thin text-lg text-white bg-gradient-to-b from-blue-500 to-blue-400"
-        >YOU'RE BEING TRACK</span
-      >
-      <div class="mx-auto flex relative h-28 w-28">
-        <div
-          class="h-28 w-28 rounded-full animate-ping bg-red-500 absolute top-0"
-        ></div>
-        <div
-          class="absolute top-2 left-2 m-auto h-24 w-24 text-white opacity-95 p-5 bg-gradient-to-b from-white to-transparent rounded-full animate-spin"
-        ></div>
-        <svg
-          class="absolute top-2 left-2 m-auto h-24 w-24 text-white opacity-95 p-5 rounded-full animate-bounce"
-          fill="red"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-          />
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
+    <div v-if="trackMe && reported" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Emergency Response Active</h2>
+        <div class="mb-8">
+          <div class="flex items-center justify-center w-24 h-24 mx-auto bg-blue-100 rounded-full">
+            <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-gray-600 text-center mb-6">
+          Your location is being monitored for emergency response. Help is on the way.
+        </p>
+        <p class="text-gray-600 text-center mb-6">
+          Please stay in a safe location and keep your phone with you at all times.
+        </p>
+        <div class="flex justify-center items-center space-x-2 mb-8">
+          <div class="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+          <span class="text-sm text-gray-500">Live Tracking Active</span>
+        </div>
+        <div class="text-center">
+          <button @click="toggle()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+            Cancel Emergency
+          </button>
+        </div>
       </div>
-      <button
-        @click="toggle"
-        class="flex mx-auto px-6 rounded-full py-1 bg-red-600 text-white"
-      >
-        CANCEL
-        <svg
-          class="h-4 w-4 my-auto ms-1"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
     </div>
   </div>
 </template>

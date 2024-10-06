@@ -203,6 +203,10 @@ Route::post('api/logs/list/Display', [logsModule::class, 'listDisplay'])->name('
 Route::post('api/activity/list/Display', [traillogModule::class, 'listDisplay'])->name('json');
 Route::post('api/notifications/list/Display', [notificationModule::class, 'listDisplay'])->name('json');
 
+Route::post('api/notifications/notify/incidentReported/Display', [notificationModule::class, 'notifyUser'])->name('json');
+
+Route::post('api/notifications/notifed/request', [notificationModule::class, 'notified'])->name('json');
+
 /* Component Display */
 /* dashboard components */
 Route::get('api/dashboard/counts/Display', [dashboardModule::class, 'displayCount'])->name('json');
