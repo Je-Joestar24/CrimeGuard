@@ -33,6 +33,7 @@ class officerUsersModule extends Controller
         /* Table headers */
         $data['table']['headers'] = [
             'id',
+            'profile',
             'last name',
             'firstname',
             'user name',
@@ -46,6 +47,7 @@ class officerUsersModule extends Controller
             /* table data */
             $query = User::leftJoin('addresses', 'users.current_address', '=', 'addresses.id')->select([
                 'users.id',
+                'users.profile',
                 'users.first_name',
                 'users.last_name',
                 'users.user_name',

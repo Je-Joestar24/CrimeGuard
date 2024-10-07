@@ -4,8 +4,8 @@
     <p class="text-gray-600 mb-6 text-center">Review the incidents you've reported. This list helps you track the status of your reports and stay updated on any developments.</p>
     
     <div class="overflow-auto" style="max-height: 70vh">
-      <ul class="space-y-4">
-        <div v-for="(el, i) in arr" :key="el.id">
+      <ul class="space-y-4 overflow-auto overflow-x-hidden">
+        <div  v-motion-slide-visible-right v-for="(el, i) in arr" :key="el.id">
           <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
             <div class="flex items-center justify-between mb-2">
               <span class="text-lg font-semibold text-gray-800">{{ el.incident }}</span>

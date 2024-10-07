@@ -1,139 +1,122 @@
 <template>
-  <div>
+  <div class="relative">
     <button
       type="button"
-      class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300"
+      class="flex items-center space-x-3 focus:outline-none"
       @click="toggle"
     >
-      <!-- dark:focus:ring-gray-600 -->
       <span class="sr-only">Open user menu</span>
-      <svg
-        v-if="info.profile == ''"
-        class="h-8 w-8 text-gray-600 bg-transparent"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        /></svg
-      ><img
-        class="h-10 w-10  rounded-full border-blue-700 border-2 shadow-md shadow-green-600"
-        v-if="info.profile != ''"
-        :src="info.profile"
-        alt="profile"
-      />
+      <div class="relative">
+        <svg
+          v-if="!info.profile"
+          class="h-10 w-10 text-gray-300 bg-gray-100 rounded-full"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <img
+          v-else
+          :src="info.profile"
+          alt="User profile"
+          class="h-10 w-10 rounded-full object-cover border-2 border-white"
+        />
+        <span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-600 bg-green-400"></span>
+      </div>
+      <div class="hidden md:block text-left">
+        <p class="text-sm font-medium text-white">{{ info.user_name || 'User' }}</p>
+        <p class="text-xs text-gray-300">{{ info.email || 'user@email.com' }}</p>
+      </div>
+      <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
     </button>
-  </div>
-  <div
-    v-if="!hiddens"
-    class="fixed top-10 right-20 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow"
-  >
-    <!-- dark:bg-gray-700 dark:divide-gray-600 -->
-    <div class="px-4 py-3" role="none">
-      <p class="text-sm text-gray-900" role="none">
-        <!--  dark:text-white -->
-        {{ info.user_name ? info.user_name : "USER" }}
-      </p>
-      <p class="text-sm font-medium text-gray-900 truncate" role="none">
-        <!--  dark:text-gray-300 -->
-        {{ info.email ? info.email : "user@email.com" }}
-      </p>
-    </div>
-    <ul class="py-1" role="none">
-      <li>
-        <button
+
+    <transition
+      enter-active-class="transition ease-out duration-100"
+      enter-from-class="transform opacity-0 scale-95"
+      enter-to-class="transform opacity-100 scale-100"
+      leave-active-class="transition ease-in duration-75"
+      leave-from-class="transform opacity-100 scale-100"
+      leave-to-class="transform opacity-0 scale-95"
+    >
+      <div
+        v-if="!hiddens"
+        class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+      >
+        <div class="px-4 py-3 border-b border-gray-100">
+          <p class="text-sm font-medium text-gray-900">{{ info.user_name || 'User' }}</p>
+          <p class="text-sm text-gray-500 truncate">{{ info.email || 'user@email.com' }}</p>
+        </div>
+        <a
           @click="changeIt"
-          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          role="menuitem"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
         >
           My Account
-        </button>
-        <!-- dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white -->
-      </li>
-      <li>
-        <button
-          href="#"
-          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          role="menuitem"
-          @click="
-            logout();
-            toggle();
-          "
+        </a>
+        <a
+          @click="logout(); toggle();"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
         >
           Log out
-        </button>
-        <!-- dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white -->
-      </li>
-    </ul>
+        </a>
+      </div>
+    </transition>
   </div>
 
   <div
     v-if="logoutToggle"
-    class="fixed z-50 bg-gray-800 bg-opacity-20 top-0 left-0 flex justify-center align-middle"
-    style="height: 100vh; width: 100vw"
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
   >
-    <div class="w-1/4 rounded-xl mt-44 bg-white shadow h-1/4 animate-popup">
-      <div class="w-full flex justify-end pt-2 pe-2">
-        <button
-          type="button"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-          @click="logout"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                Confirm Logout
+              </h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  Are you sure you want to log out? You will be redirected to the login page.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            @click.prevent="
+              sendData();
+              $store.commit('changeActivePage', [
+                'dashboard',
+                'DASHBOARD',
+                'dashboard',
+              ]);
+            "
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
           >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-      </div>
-      <div class="p-4 md:p-5 text-center">
-        <svg
-          class="mx-auto mb-4 text-gray-400 w-12 h-12"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 20"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-        <h3 class="mb-5 text-lg font-normal text-gray-500">
-          Are you sure you want to logout?
-        </h3>
-        <button
-          @click="sendData"
-          type="button"
-          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
-        >
-          Yes, I'm sure
-        </button>
-        <button
-          @click="logout"
-          type="button"
-          class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-        >
-          No, cancel
-        </button>
+            Logout
+          </button>
+          <button
+            @click="logout = false"
+            type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>

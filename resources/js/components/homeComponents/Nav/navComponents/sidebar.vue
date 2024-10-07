@@ -3,150 +3,76 @@
     class="w-full flex top-0 fixed bg-gray-800 bg-opacity-50"
     style="height: 100vh"
   >
-    <div class="w-1/2 bg-transparent"
-    @click="tog_ol"></div>
+    <div class="w-1/2 bg-transparent" @click="tog_ol"></div>
     <div
-      class="w-full bg-white relative p-3 sideItBar slide-enter-active rounded-s-md"
+      class="w-full max-w-xs flex flex-col bg-white shadow-lg relative p-6 sideItBar slide-enter-active rounded-l-lg "
       :class="{ 'slide-leave-active': isVisible }"
     >
-      <div class="w-full flex justify-between border-b mb-2 py-1">
-        <span class=" py-1 font-semibold  text-gray-700">PROFILE</span>
-        <svg
-          @click="tog_ol"
-          class="h-8 w-8 active:border active:bg-gray-300 rounded-md p-2 text-gray-800"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
-        </svg>
+      <div class="flex justify-between items-center border-b pb-4 mb-6">
+        <h2 class="text-xl font-bold text-gray-800">Profile</h2>
+        <button @click="tog_ol" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-      <div class="mb-2 px-3 py-1 pb-2  flex  gap-3">
-        <img v-if="info.profile" :src="info.profile" 
-        class="h-14 w-14 border-2 border-blue-500 rounded-full text-gray-900 p-0.5" alt=" PROFILE">
-        <svg
-          v-if="!info.profile"
-          class="h-14 w-14 border rounded-md text-gray-900"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <div class="w-40 flex flex-col px-2 my-auto">
-          <p
-            class=" text-base font-semibold leading-none text-gray-900 border-b pb-1"
-          >
-            {{ info.user_name ? info.user_name : 'NO DATA' }}
-          </p>
-          <p class="text-xs text-wrap font-normal text-gray-400">{{ info.email ? info.email : 'NO DATA' }}</p>
+      <div class="flex items-center space-x-4 mb-6">
+        <div class="flex-shrink-0">
+          <img v-if="info.profile" :src="info.profile" 
+            class="h-16 w-16 rounded-full object-cover border-2 border-blue-500" alt="Profile">
+          <div v-else class="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center">
+            <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">
+            {{ info.user_name ? info.user_name : 'No Name' }}
+          </h3>
+          <p class="text-sm text-gray-500">{{ info.email ? info.email : 'No Email' }}</p>
         </div>
       </div>
-      <div class="w-full grid grid-cols-1 border-t gap-y-2">
-        <div
-          class="flex items-center p-2 text-gray-900 rounded-sm border-b hover:bg-gray-100 group"
-          @click="
-            $emit('changeActive', 'myAccount');
-            tog_ol();
-          "
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <path
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-            />
-            <circle cx="12" cy="12" r="3" />
+      <nav class="space-y-3">
+        <button @click="$emit('changeActive', 'Home'); tog_ol();" 
+          class="w-full flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+          <svg class="mr-4 h-6 w-6 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
           </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap font-semibold"
-            >MY ACCOUNT</span
-          >
-        </div>
-        <div
-          class="flex items-center p-2 text-gray-900 rounded-sm border-b hover:bg-gray-100 group"
-          @click="
-            $emit('changeActive', 'Recent Incidents');
-            tog_ol();
-          "
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <path
-              d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11"
-            />
-            <line x1="9" y1="7" x2="13" y2="7" />
-            <line x1="9" y1="11" x2="13" y2="11" />
+          <span class="transition-all duration-300 group-hover:pl-2">Home</span>
+        </button>
+        <button @click="$emit('changeActive', 'myAccount'); tog_ol();" 
+          class="w-full flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-purple-50 hover:text-purple-600 transition-all duration-300 transform hover:scale-105">
+          <svg class="mr-4 h-6 w-6 text-purple-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
           </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap font-semibold"
-            >RECENT INCIDENTS</span
-          >
-        </div>
-        <div
-          @click="
-            $emit('changeActive', 'Reported Incidents');
-            tog_ol();
-          "
-          class="flex items-center p-2 text-gray-900 rounded-sm border-b hover:bg-gray-100 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-            />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
+          <span class="transition-all duration-300 group-hover:pl-2">My Account</span>
+        </button>
+        <button @click="$emit('changeActive', 'Recent Incidents'); tog_ol();" 
+          class="w-full flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-green-50 hover:text-green-600 transition-all duration-300 transform hover:scale-105">
+          <svg class="mr-4 h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
           </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap font-semibold"
-            >REPORTED INCIDENTS</span
-          >
-        </div>
+          <span class="transition-all duration-300 group-hover:pl-2">Recent Incidents</span>
+        </button>
+        <button @click="$emit('changeActive', 'Reported Incidents'); tog_ol();" 
+          class="w-full flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-300 transform hover:scale-105">
+          <svg class="mr-4 h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd" />
+          </svg>
+          <span class="transition-all duration-300 group-hover:pl-2">Reported Incidents</span>
+        </button>
+      </nav>
+      <div class="mt-auto pt-6 border-t">
+        <button
+          @click="logout"
+          class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+        >
+          Logout
+        </button>
       </div>
-      <button
-        type="button"
-        class="py-2.5 px-24 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-400 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 absolute ms-2"
-        :class="{ 'bottom-16': scrollUp, 'bottom-2': !scrollUp }"
-        @click="logout"
-      >
-        LOGOUT
-      </button>
     </div>
   </div>
 

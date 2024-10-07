@@ -1,178 +1,68 @@
 <template>
   <tr
-    class="border-b"
+    v-for="dataSets in tabData"
+    :key="dataSets.id"
+    class="hover:bg-gray-100 transition duration-150 ease-in-out"
     :class="{
       'bg-gray-800 border-gray-700 hover:bg-gray-600': $store.getters.theme,
-      'bg-white text-gray-700 hover:bg-gray-50': !$store.getters.theme,
+      'bg-white border-b border-gray-200': !$store.getters.theme,
     }"
-    v-for="dataSets in tabData"
   >
-    <!-- bg-gray-800 border-gray-700 *  hover:bg-gray-600-->
-    <td class="w-4 p-4">
-      <div class="flex items-center">
-        <input
-          :id="dataSets.id"
-          class="w-4 h-4 rounded"
-          :class="{
-            'focus:ring-blue-600 ring-offset-gray-800 focus:ring-offset-gray-800 focus:ring-2bg-gray-700 border-gray-600':
-              $store.getters.theme,
-            ' focus:ring-blue-500 text-blue-600 bg-gray-100 border-gray-300':
-              !$store.getters.theme,
-          }"
-          type="checkbox"
-        />
+    <td v-for="(value, key) in dataSets" :key="key" class="px-6 py-4">
+      <template v-if="key === 'profile'">
+        <div v-if="value" class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg overflow-hidden">
+          <img v-if="value" :src="value" alt="Profile" class="h-full w-full object-cover">
+          <span v-else>{{ dataSets.first_name ? dataSets.first_name.charAt(0).toUpperCase() : 'U' }}</span>
+        </div>
+        <div v-else class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg">
+          {{ dataSets.first_name ? dataSets.first_name.charAt(0).toUpperCase() : 'U' }}
+        </div>
+      </template>
+      <span v-else>{{ value }}</span>
+    </td>
+    <td class="px-6 py-4">
+      <div class="flex space-x-2">
+        <button
+          v-if="$store.getters.getActive !== 'innerNameIncidents'"
+          @click.prevent="viewItem(dataSets.id)"
+          class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        >
+          View
+        </button>
+        <button
+          v-if="$store.getters.getActive === 'innerIncident'"
+          @click.prevent="editIncident(dataSets.id)"
+          class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        >
+          Edit
+        </button>
+        <button
+          v-if="$store.getters.getActive !== 'innerIncident'"
+          @click.prevent="editItem(dataSets.id)"
+          class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        >
+          Edit
+        </button>
+        <button
+          v-if="type === 1"
+          @click.prevent="deleteIt(dataSets.id)"
+          class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        >
+          Delete
+        </button>
+        <button
+          v-if="type === 0"
+          @click="restoreItem({id: dataSets.id, user_id: users_id})"
+          class="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        >
+          Restore
+        </button>
       </div>
     </td>
-    <td class="px-6 py-4" v-for="datas in dataSets">{{ datas }}</td>
-    <td class="px-6 py-4 flex gap-1">
-      <button
-      v-if="$store.getters.getActive != 'innerNameIncidents'"
-        @click.prevent="viewItem(dataSets['id'])"
-        type="button"
-        class="text-gray-600 hover:bg-gray-700 bg-gray-600 px-2 py-1 rounded-lg"
-        :class="{
-          'text-gray-500': $store.getters.theme,
-          'text-gray-600': !$store.getters.theme,
-        }"
-        data-modal-target="incident-modal"
-        data-modal-toggle="incident-modal"
-      >
-        <svg
-          class="h-5 w-5 text-gray-100"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <circle cx="12" cy="12" r="2" />
-          <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />
-          <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" /></svg
-      ></button>
-      <button
-        v-if="$store.getters.getActive == 'innerIncident'"
-        @click.prevent="editIncident(dataSets['id'])"
-        type="button"
-        class="text-gray-600 hover:bg-blue-700 bg-blue-600 px-1 py-1 rounded-md"
-        :class="{
-          'text-blue-500': $store.getters.theme,
-          'text-blue-600': !$store.getters.theme,
-        }"
-        data-modal-target="incident-modal"
-        data-modal-toggle="incident-modal"
-      >
-        <svg
-          class="h-5 w-5 text-gray-900"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-          />
-        </svg>
-      </button>
-      <button
-        v-if="$store.getters.getActive != 'innerIncident'"
-        @click.prevent="editItem(dataSets['id'])"
-        type="button"
-        class="text-gray-600 hover:bg-blue-700 bg-blue-600 px-1 py-1 rounded-md"
-        :class="{
-          'text-blue-500': $store.getters.theme,
-          'text-blue-600': !$store.getters.theme,
-        }"
-        data-modal-target="incident-modal"
-        data-modal-toggle="incident-modal"
-      >
-        <svg
-          class="h-5 w-5 text-gray-900"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-          />
-        </svg>
-      </button>
-      <button
-        @click.prevent="
-          deleteIt(dataSets['id'], )
-        "
-        v-if="type == 1"
-        type="button"
-        class="text-gray-600 hover:bg-red-700 bg-red-600 px-1 py-1 rounded-md"
-        :class="{
-          'text-blue-500': $store.getters.theme,
-          'text-blue-600': !$store.getters.theme,
-        }"
-        data-modal-target="incident-modal"
-        data-modal-toggle="incident-modal"
-      >
-        <svg
-          class="h-5 w-5 text-gray-900"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polyline points="3 6 5 6 21 6" />
-          <path
-            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-          />
-          <line x1="10" y1="11" x2="10" y2="17" />
-          <line x1="14" y1="11" x2="14" y2="17" />
-        </svg>
-      </button>
-      <button
-        v-if="type == 0"
-        @click="restoreItem({id: dataSets['id'],user_id: users_id})"
-        type="button"
-        class="text-gray-600 hover:bg-green-700 bg-green-600 px-1 py-1 rounded-md"
-        :class="{
-          'text-blue-500': $store.getters.theme,
-          'text-blue-600': !$store.getters.theme,
-        }"
-        data-modal-target="incident-modal"
-        data-modal-toggle="incident-modal"
-      >
-        <svg
-          class="h-5 w-5 text-gray-900"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polyline points="1 4 1 10 7 10" />
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-        </svg>
-      </button>
-    </td>
   </tr>
-  <tr
-    class="border-b text-center"
-    :class="{
-      'bg-gray-800 border-gray-700 hover:bg-gray-600': $store.getters.theme,
-      'bg-white text-gray-700 hover:bg-gray-50': !$store.getters.theme,
-    }"
-  ></tr>
   <incidentEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editIncident" v-if="!editIncidentModal && ($store.getters.getActive == 'innerIncident')"></incidentEditForm>
   <dynamicEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editItem" v-if="!editModal && ($store.getters.getActive != 'innerIncident')"></dynamicEditForm>
-  <deleteM :isHidden="deleteModal" :sendData="sendData" :hiddenT="hiddenTogggle"></deleteM>
+  <deleteM :isHidden="deleteModal" :sendData="sendData" :hiddenT="hiddenTogggle" v-if="!deleteModal && ($store.getters.getActive != 'innerIncident')"></deleteM>
   <suspectView  :suspectId="viewRequestId" v-if="($store.getters.getActive == 'innerSuspects' || $store.getters.getActive == 'innerVictims' || $store.getters.getActive == 'innerWitnesses' || $store.getters.getActive == 'innerWitnessesArchive' ||  $store.getters.getActive == 'innerSuspectsArchive' || $store.getters.getActive == 'innerVictimsArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></suspectView>
   <incidentModal :toggle="viewModalToggle" :incidentId="viewRequestId" v-if="($store.getters.getActive == 'innerIncident' || $store.getters.getActive == 'innerIncidentArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></incidentModal>
   <accountProfile :toggle="viewModalToggle" v-if="(!viewModal) && ($store.getters.getActive == 'innerCitizenAccounts' || $store.getters.getActive == 'innerOfficerAccounts' || $store.getters.getActive == 'innerAccountsArchive')" :suspectId="viewRequestId"></accountProfile>

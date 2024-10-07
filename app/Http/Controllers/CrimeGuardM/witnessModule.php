@@ -24,6 +24,7 @@ class witnessModule extends Controller
             /* Table headers */
             $data['table']['headers'] = [
                 'id',
+                'profile',
                 'last name',
                 'firstname',
                 'email address',
@@ -35,6 +36,7 @@ class witnessModule extends Controller
 
             $query = ReportingPerson::leftJoin('addresses', 'reporting-persons.current_address_id', '=', 'addresses.id')->select([
                 'reporting-persons.id',
+                'reporting-persons.id_card_presented as profile',
                 'reporting-persons.firstname',
                 'reporting-persons.lastname',
                 'reporting-persons.email',
@@ -45,7 +47,7 @@ class witnessModule extends Controller
             ])
                 ->whereNull('reporting-persons.archived_at')
                 ->whereNull('reporting-persons.deleted_by');
-    
+
             /* search */
             if ($request->has('search') && !empty($request->input('search'))) {
                 $search = $request->input('search');
@@ -60,8 +62,8 @@ class witnessModule extends Controller
                         ->orWhere('reporting-persons.gender', 'like', "%{$search}%");
                 });
             }
-    
-            
+
+
             $data['table']['data'] = $query->get();
             $data['table']['type'] = 1;
 
@@ -88,7 +90,7 @@ class witnessModule extends Controller
             ])
                 ->whereNull('reporting-persons.archived_at')
                 ->whereNull('reporting-persons.deleted_by');
-    
+
             if ($request->has('search') && !empty($request->input('search'))) {
                 $search = $request->input('search');
                 $query->where(function ($query) use ($search) {
@@ -102,8 +104,8 @@ class witnessModule extends Controller
                         ->orWhere('reporting-persons.gender', 'like', "%{$search}%");
                 });
             }
-    
-            
+
+
             $data['data'] = $query->get();
             $data['response'] = 'Success';
         } catch (\Exception $e) {
@@ -153,8 +155,8 @@ class witnessModule extends Controller
                 ])
                 ->where('reporting-persons.archived_at', 'IS NOT', NULL)
                 ->where('reporting-persons.deleted_by', 'IS NOT', NULL);
-                
-                
+
+
             /* search */
             if ($request->has('search') && !empty($request->input('search'))) {
                 $search = $request->input('search');
@@ -171,7 +173,7 @@ class witnessModule extends Controller
                         ->orWhere('reporting-persons.gender', 'like', "%{$search}%");
                 });
             }
-            
+
             $witnesses = $witnesses->get();
 
             foreach ($witnesses as $witness) {
@@ -215,8 +217,8 @@ class witnessModule extends Controller
                 'deleted_by' => $request['archived_by']
             ];
             ReportingPerson::where('id', $request['id'])->update($archive);
-            TrailLog::create(['user_id'=> $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'witness']);
-            
+            TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'witness']);
+
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -239,8 +241,8 @@ class witnessModule extends Controller
                 'deleted_by' => NULL
             ];
             ReportingPerson::where('id', $request['id'])->update($archive);
-            
-            TrailLog::create(['user_id'=> $request->input('user_id'), 'action' => 'restored', 'item' => 'witness']);
+
+            TrailLog::create(['user_id' => $request->input('user_id'), 'action' => 'restored', 'item' => 'witness']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -306,23 +308,23 @@ class witnessModule extends Controller
         $data = [];
 
         try {
-            
+
             $data['data'] = ReportingPerson::leftJoin('addresses as current', 'reporting-persons.current_address_id', '=', 'current.id')
-            ->leftJoin('addresses as other', 'reporting-persons.other_address_id', '=', 'other.id')
-            ->select([
-                'current.street as current_street',
-                'current.house_number as current_house_number',
-                'current.village as current_village',
-                'current.barangay as current_barangay',
-                'current.city as current_city',
-                'current.province as current_province',
-                'other.street as other_street',
-                'other.house_number as other_house_number',
-                'other.village as other_village',
-                'other.barangay as other_barangay',
-                'other.city as other_city',
-                'other.province as other_province',
-            ])
+                ->leftJoin('addresses as other', 'reporting-persons.other_address_id', '=', 'other.id')
+                ->select([
+                    'current.street as current_street',
+                    'current.house_number as current_house_number',
+                    'current.village as current_village',
+                    'current.barangay as current_barangay',
+                    'current.city as current_city',
+                    'current.province as current_province',
+                    'other.street as other_street',
+                    'other.house_number as other_house_number',
+                    'other.village as other_village',
+                    'other.barangay as other_barangay',
+                    'other.city as other_city',
+                    'other.province as other_province',
+                ])
                 // ->where('reporting-persons.archived_at', '=', NULL)
                 // ->where('reporting-persons.deleted_by', '=', NULL)
                 ->find($request['id']);
@@ -335,7 +337,7 @@ class witnessModule extends Controller
 
         return response()->json($data);
     }
-    
+
     public function viewRecords(Request $request)
     {
 
@@ -357,24 +359,22 @@ class witnessModule extends Controller
                 ->where('incident-reporting-persons.reporting_person', '=', $request['id'])
                 ->get();
 
-            foreach($records as $record){
-                $r = explode(' ',$record['time_of_incident'])[1] ;
+            foreach ($records as $record) {
+                $r = explode(' ', $record['time_of_incident'])[1];
                 $record['time_of_incident'] = $r;
             }
             $data['data'] = $records;
             $data['response'] = 'Success';
-
         } catch (\Exception $e) {
 
             $data['response'] = 'Error';
             $data['err'] = $e;
-
         }
 
         return response()->json($data);
     }
 
-    
+
     public function addWitness(Request $request)
     {
         $data = [];
@@ -391,12 +391,12 @@ class witnessModule extends Controller
             $other_id = $this->insertAddressProcess($otherAddress);
             if ($current_id != -1) $witness['current_address_id'] = $current_id;
             if ($other_id != -1) $witness['other_address_id'] = $other_id;
-            
+
             $witnessData = $witness;
 
             ReportingPerson::create($witnessData);
-            
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'added', 'item' => 'witness']);
+
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'added', 'item' => 'witness']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -416,11 +416,11 @@ class witnessModule extends Controller
 
         try {
             $witness = ReportingPerson::select('lastname', 'firstname', 'middlename', 'qualifier', 'nickname', 'citizenship', 'gender', 'civil_status', 'birth_date', 'age', 'place_of_birth', 'home_phone', 'mobile_phone', 'under_influence_of', 'current_address_id', 'other_address_id')->find($request['id']);
-            $other_info = ReportingPerson::select('highest_educ_attainment','occupation', 'id_card_presented', 'email', 'fb_account', 'signature')->find($request['id']);
-            if(Addresses::select('*')->find($witness['current_address_id']))$current_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($witness['current_address_id']);
-            if(Addresses::select('*')->find($witness['other_address_id']))$other_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($witness['other_address_id']);
+            $other_info = ReportingPerson::select('highest_educ_attainment', 'occupation', 'id_card_presented', 'email', 'fb_account', 'signature')->find($request['id']);
+            if (Addresses::select('*')->find($witness['current_address_id'])) $current_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($witness['current_address_id']);
+            if (Addresses::select('*')->find($witness['other_address_id'])) $other_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($witness['other_address_id']);
 
-            
+
             unset($witness['other_address_id']);
             unset($witness['current_address_id']);
             $data['data']['witness'] = $witness;
@@ -435,7 +435,7 @@ class witnessModule extends Controller
         return response()->json($data);
     }
 
-    
+
     public function update(Request $request)
     {
         $data = [];
@@ -450,11 +450,11 @@ class witnessModule extends Controller
             $other_id = $this->insertAddressProcess($otherAddress);
             if ($current_id != -1) $witness['current_address_id'] = $current_id;
             if ($other_id != -1) $witness['other_address_id'] = $other_id;
-            
+
             $witnessData = $witness;
 
             ReportingPerson::find($witness['id'])->update($witnessData);
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'edited', 'item' => 'witness']);
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'edited', 'item' => 'witness']);
 
             $data['response'] = 'Success';
         } catch (\Exception $e) {
@@ -468,11 +468,12 @@ class witnessModule extends Controller
 
     /* add witness sub functions */
     //address insertion
-    private function insertAddressProcess($param){
+    private function insertAddressProcess($param)
+    {
         $address_id = -1;
         $address = $param;
         $address_n = $this->isObjNull($address);
-        
+
         if ($address_n) $address_id = $this->addressId($address);
         if ($address_n && $address_id == -1) $this->addressInsert($address);
         $address_id = $this->addressId($address);
@@ -525,5 +526,4 @@ class witnessModule extends Controller
         return $indicator;
     }
     /* add witness end sub */
-
 }

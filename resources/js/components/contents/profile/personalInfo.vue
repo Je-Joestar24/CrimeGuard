@@ -1,66 +1,60 @@
 <template>
-  <div class="m-2 p-2 mt-2 border rounded-xl shadow-md bg-gray-100">
-    <div class="grid grid-flow-col px-2 pt-1">
-      <span class="text-lg font-semibold col-span-5">ACCOUNT INFORMATION</span>
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold text-gray-900">Personal Information</h3>
       <button
         @click="edit = !edit"
-        v-if="!edit"
-        class="col-span-2 text-blue-500 text-end font-semibold"
+        class="px-4 py-2 text-sm font-medium rounded-md"
+        :class="edit ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'"
       >
-        EDIT
-      </button>
-      <button
-        @click="edit = !edit"
-        v-if="edit"
-        class="col-span-2 text-red-500 text-end font-semibold"
-      >
-        CANCEL
+        {{ edit ? 'Cancel' : 'Edit' }}
       </button>
     </div>
-    <div class="p-2 flex flex-row justify-center items-center gap-2">
-      <div class="grid w-full my-2">
-        <label for="" class="text-xs font-semibold mb-1">LAST NAME:</label>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          type="text"
-          :class="{ 'pointer-events-none': !edit }"
+          id="lastName"
           v-model="info.last_name"
+          :disabled="!edit"
+          class="w-full px-3 py-2 border rounded-md"
+          :class="{'bg-gray-100': !edit, 'border-gray-300': edit, 'border-gray-200': !edit}"
         />
       </div>
-      <div class="grid w-full my-2">
-        <label for="" class="text-xs font-semibold mb-1">FIRST NAME:</label>
+      <div>
+        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          type="text"
-          :class="{ 'pointer-events-none': !edit }"
+          id="firstName"
           v-model="info.first_name"
+          :disabled="!edit"
+          class="w-full px-3 py-2 border rounded-md"
+          :class="{'bg-gray-100': !edit, 'border-gray-300': edit, 'border-gray-200': !edit}"
         />
       </div>
-      <div class="grid w-full my-2">
-        <label for="" class="text-xs font-semibold mb-1">MIDDLE NAME:</label>
+      <div>
+        <label for="middleName" class="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          type="text"
-          :class="{ 'pointer-events-none': !edit }"
+          id="middleName"
           v-model="info.middle_name"
+          :disabled="!edit"
+          class="w-full px-3 py-2 border rounded-md"
+          :class="{'bg-gray-100': !edit, 'border-gray-300': edit, 'border-gray-200': !edit}"
         />
       </div>
-      <div class="grid w-3/4 my-2">
-        <label for="" class="text-xs font-semibold mb-1">RANK:</label>
+      <div>
+        <label for="rank" class="block text-sm font-medium text-gray-700 mb-1">Rank</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          type="text"
-          :class="{ 'pointer-events-none': !edit }"
+          id="rank"
           v-model="cred.rank"
+          :disabled="!edit"
+          class="w-full px-3 py-2 border rounded-md"
+          :class="{'bg-gray-100': !edit, 'border-gray-300': edit, 'border-gray-200': !edit}"
         />
       </div>
     </div>
-    <div v-if="edit" class="w-full px-3 text-end">
-      <button
-        @click="senData"
-        class="text-sm text-white border-2 rounded-md px-3 bg-green-500"
-      >
-        SAVE
+    <div v-if="edit" class="mt-4 text-right">
+      <button @click="senData" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-150">
+        Save Changes
       </button>
     </div>
   </div>

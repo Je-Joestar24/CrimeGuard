@@ -3,8 +3,8 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Recent Incidents</h2>
     <p class="text-gray-600 mb-6">Stay informed about the latest incidents in your area. This list is updated in real-time to provide you with the most current information.</p>
     
-    <ul class="space-y-4 overflow-auto" style="max-height: 70vh">
-      <div v-for="(el, i) in arr" :key="el.id">
+    <ul class="space-y-4 overflow-auto overflow-x-hidden" style="max-height: 70vh">
+      <div  v-motion-slide-visible-right v-for="(el, i) in arr" :key="el.id">
         <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
           <div class="flex items-center justify-between">
             <span class="text-lg font-semibold text-gray-800">{{ el.incident }}</span>

@@ -1,11 +1,9 @@
 <template>
-  <figure class="highcharts-figure">
+  <figure class="highcharts-figure border-2 p-3 bg-white rounded-md shadow-lg">
     <div id="citizenBar"></div>
-    <!--       <p class="highcharts-description">
-        Bar chart showing horizontal columns. This chart type is often beneficial
-        for smaller screens, as the user can scroll through the data vertically,
-        and axis labels are easy to read.
-      </p> -->
+    <p class="highcharts-description mt-4 text-sm text-gray-600 text-center">
+      Bar chart showing top 4 barangays with the highest incident rates in Ormoc City.
+    </p>
   </figure>
 </template>
   

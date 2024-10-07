@@ -1,218 +1,188 @@
 <template>
+
   <form
-    class="p-4 md:p-5 md:max-w-screen-md rounded-md border shadow-xs"
+    class="p-4 md:p-5 md:max-w-screen-md rounded-md border shadow-lg"
     :class="{
-      'shadow-white  text-white border-gray-600': $store.getters.theme,
-      '': !$store.getters.theme,
+      'bg-gray-800 text-white border-gray-700': $store.getters.theme,
+      'bg-white text-gray-800': !$store.getters.theme,
     }"
   >
-    <!-- Form fields -->
+    <h2 class="text-2xl font-bold mb-6 text-center" :class="{ 'text-white': $store.getters.theme }">
+      Generate Incident Report
+    </h2>
 
-    <div class="grid md:grid-cols-8 md:gap-6 p-5">
-      <p class="col-span-2 text-lg font-bold text-end">Date & time from:</p>
-      <div class="grid md:grid-cols-2 col-span-6 md:gap-6 group">
-        <div class="relative z-0 w-full mb-5 group">
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="date"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none docus:outline-none focus:ring-0 peer"
-              :class="{
-                'text-gray-50 arder-gray-600 dacus:border-blue-500 f':
-                  $store.getters.theme,
-                'text-gray-900 border-gray-300 focus:border-blue-600':
-                  !$store.getters.theme,
-              }"
-              placeholder=""
-              required
-              v-model="generate.date_start"
-            />
-          </div>
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Start Date:</label
-          >
-        </div>
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="time"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
-            :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
-            }"
-            v-model="generate.time_start"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Time:</label
-          >
-        </div>
-      </div>
-      <p class="col-span-2 text-lg font-bold text-end">Date & time to:</p>
-      <div class="grid md:grid-cols-2 col-span-6 md:gap-6 group">
-        <div class="relative z-0 w-full mb-5 group">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Date From
+          </label>
           <input
             type="date"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
+            v-model="generate.date_start"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
             :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
             }"
-            placeholder=" "
-            v-model="generate.date_end"
             required
           />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >End Date:</label
-          >
         </div>
-        <div class="relative z-0 w-full mb-5 group">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Time From
+          </label>
           <input
             type="time"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
+            v-model="generate.time_start"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
             :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
             }"
-            placeholder=" "
-            v-model="generate.time_end"
             required
           />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Time:</label
-          >
         </div>
       </div>
-      <p class="col-span-2 text-lg font-bold text-end">STATUS:</p>
 
-      <div class="col-span-6">
-        <select
-          v-model="generate.status"
-          class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-        >
-          <option selected value="">STATUS</option>
-          <option value="report">REPORTED</option>
-          <option value="respond">RESPONDED</option>
-          <option value="reject">REJECTED</option>
-          <option value="Pending">PENDING</option>
-          <option value="Cleared">CLEARED</option>
-          <option value="Solved">SOLVED</option>
-        </select>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Date To
+          </label>
+          <input
+            type="date"
+            v-model="generate.date_end"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+            :class="{
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+            }"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Time To
+          </label>
+          <input
+            type="time"
+            v-model="generate.time_end"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+            :class="{
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+            }"
+            required
+          />
+        </div>
       </div>
+    </div>
 
-      <p class="col-span-2 text-lg font-bold text-end">TYPE OF INCIDENT:</p>
+    <div class="mt-6">
+      <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+        Status
+      </label>
+      <select
+        v-model="generate.status"
+        class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+        :class="{
+          'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+          'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+        }"
+      >
+        <option value="">All Statuses</option>
+        <option value="report">REPORTED</option>
+        <option value="respond">RESPONDED</option>
+        <option value="reject">REJECTED</option>
+        <option value="Pending">PENDING</option>
+        <option value="Cleared">CLEARED</option>
+        <option value="Solved">SOLVED</option>
+      </select>
+    </div>
 
-      <div class="relative z-0 w-full col-span-6 mb-5 group">
+    <div class="mt-6">
+      <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+        Type of Incident
+      </label>
+      <div class="relative">
         <input
           type="text"
-          name="floating_company"
-          id="floating_company"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-no00 focus:outline-none focus:ring-0 peer"
-          :class="{
-            'text-gray-50 tk:border-gray-60k:focus:border-blue-5':
-              $store.getters.theme,
-            'text-gray-900 border-gray-300 focus:border-blue-600':
-              !$store.getters.theme,
-          }"
           v-model="generate.tempType"
           @click="search('incidentT', generate.tempType)"
           @focusout="clearIt()"
-          placeholder=" "
-          required
+          class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+          :class="{
+            'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+            'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+          }"
+          placeholder="Select Incident Type"
         />
-        <label
-          for="floating_company"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Type of Incident:</label
-        >
         <div
           v-if="incidentT.list.length > 0"
-          class="max-h-32 overflow-auto bg-white divide-y divide-gray-100 rounded-lg border shadow"
+          class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
+          :class="{ 'bg-gray-700 border-gray-600': $store.getters.theme }"
         >
-          <ul class="py-2 text-sm text-gray-700 border-b">
-            <li v-for="inc in incidentT.list" @click="data.incident_types">
-              <span
-                @click.prevent="selectIncident(inc.incident_name, inc.id)"
-                class="block px-4 py-1 hover:bg-gray-100 border-b"
-                >{{ inc.incident_name }}
-                <span class="text-xs text-gray-600">{{
-                  inc.sub_type != null ? `(${inc.sub_type})` : ""
-                }}</span></span
-              >
+          <ul class="py-1 overflow-auto max-h-60">
+            <li 
+              v-for="inc in incidentT.list" 
+              :key="inc.id"
+              @click="selectIncident(inc.incident_name, inc.id)"
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              :class="{ 'hover:bg-gray-600': $store.getters.theme }"
+            >
+              {{ inc.incident_name }}
+              <span class="text-xs text-gray-500">{{ inc.sub_type != null ? `(${inc.sub_type})` : "" }}</span>
             </li>
           </ul>
         </div>
       </div>
+    </div>
 
-      <p class="col-span-2 text-lg font-bold text-end">BARANGAY:</p>
-
-      <div class="relative z-0 w-full col-span-6 mb-5 group">
+    <div class="mt-6">
+      <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+        Barangay
+      </label>
+      <div class="relative">
         <input
           type="text"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-          placeholder=" "
           v-model="generate.barangay"
           @click="generateAddress(generate.barangay)"
           @focusout="clearIt2"
-          required
+          class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+          :class="{
+            'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+            'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+          }"
+          placeholder="Select Barangay"
         />
-        <label
-          for="floating_email"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Barangay</label
-        >
-
         <div
           v-if="places.length > 0"
-          class="absolute bg-white w-full rounded-md pt-1 border"
+          class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
+          :class="{ 'bg-gray-700 border-gray-600': $store.getters.theme }"
         >
-          <div class="max-h-24 overflow-auto flex flex-col rounded-md">
-            <div
-              class="px-4 hover:bg-gray-50 py-1 border-b"
-              v-for="place in places"
-              @click.prevent="setAddress(place )"
+          <ul class="py-1 overflow-auto max-h-60">
+            <li 
+              v-for="place in places" 
+              :key="place"
+              @click="setAddress(place)"
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              :class="{ 'hover:bg-gray-600': $store.getters.theme }"
             >
               {{ place }}
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <p class="col-span-2"></p>
+    </div>
+
+    <div class="mt-8 flex justify-center">
       <button
         @click="printContent"
         type="button"
-        class="text-white col-span-3 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-        :class="{
-          'bg-green-600 hover:bg-green-700 foutline-none focus:ring-green-800':
-            $store.getters.theme,
-          'bg-green-700 hover:bg-green-800 focus:ring-green-300':
-            !$store.getters.theme,
-        }"
+        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
       >
-        GENERATE REPORT
+        Generate Report
       </button>
     </div>
   </form>

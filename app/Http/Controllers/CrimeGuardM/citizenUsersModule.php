@@ -40,6 +40,7 @@ class citizenUsersModule extends Controller
         /* Table headers */
         $data['table']['headers'] = [
             'id',
+            'profile',
             'last name',
             'firstname',
             'user name',
@@ -55,6 +56,7 @@ class citizenUsersModule extends Controller
                 ->leftJoin('citizen-credentials as cc', 'cc.user_id', '=', 'users.id')
                 ->select([
                     'users.id',
+                    'users.profile',
                     'users.first_name',
                     'users.last_name',
                     'users.user_name',

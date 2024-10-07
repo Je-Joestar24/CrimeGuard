@@ -1,75 +1,80 @@
 <template>
-  <div
-    v-if="!isPhone"
-    class="m-4 p-2 mt-5 border rounded-xl shadow-md bg-gray-100"
-  >
-    <div class="grid grid-flow-col px-2 pt-1">
-      <span class="text-lg font-semibold col-span-5">PERSONAL INFORMATION</span>
+  <div v-if="!isPhone" class="mx-4 p-4 mt-5 border rounded-xl shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+    <div class="flex justify-between items-center px-2 pt-1 border-b border-gray-300 pb-3">
+      <span class="text-xl font-bold text-gray-800">Personal Information</span>
       <button
         v-if="!editOn"
-        class="col-span-2 text-blue-500 text-center font-semibold"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         @click="editOn = !editOn"
       >
-        EDIT
+        Edit Profile
       </button>
       <button
         v-if="editOn"
-        class="col-span-2 text-red-500 text-center font-semibold"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50"
         @click="cancelIt"
       >
-        CANCEL
+        Cancel
       </button>
     </div>
-    <div class="p-5 flex flex-col justify-center items-center">
-      <div class="flex w-full gap-2">
-        <div class="flex flex-col w-full">
-          <label for="" class="text-xs font-semibold mb-1">LAST NAME:</label>
+    <div class="p-5 space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="relative">
+          <label for="lastName" class="text-sm font-semibold text-gray-700 mb-1 block">Last Name:</label>
           <input
-            class="bg-gray-200 text-center rounded-md border border-gray-500 w-full"
-            :class="{ 'pointer-events-none': !editOn }"
+            id="lastName"
+            class="w-full px-4 py-2 bg-white text-gray-800 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
+            :class="{ 'cursor-not-allowed': !editOn }"
+            :readonly="!editOn"
             type="text"
             v-model="info.last_name"
           />
         </div>
-        <div class="flex flex-col w-full">
-          <label for="" class="text-xs font-semibold mb-1">FIRST NAME:</label>
+        <div class="relative">
+          <label for="firstName" class="text-sm font-semibold text-gray-700 mb-1 block">First Name:</label>
           <input
-            class="bg-gray-200 text-center rounded-md border border-gray-500 w-full"
-            :class="{ 'pointer-events-none': !editOn }"
+            id="firstName"
+            class="w-full px-4 py-2 bg-white text-gray-800 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
+            :class="{ 'cursor-not-allowed': !editOn }"
+            :readonly="!editOn"
             type="text"
             v-model="info.first_name"
           />
         </div>
       </div>
-      <div class="grid w-full my-2">
-        <label for="" class="text-xs font-semibold mb-1">EMAIL:</label>
+      <div class="relative">
+        <label for="email" class="text-sm font-semibold text-gray-700 mb-1 block">Email:</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          :class="{ 'pointer-events-none': !editOn }"
-          type="text"
-          value="jejomarparrilla@gmail.com"
+          id="email"
+          class="w-full px-4 py-2 bg-white text-gray-800 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
+          :class="{ 'cursor-not-allowed': !editOn }"
+          :readonly="!editOn"
+          type="email"
           v-model="info.email"
         />
       </div>
-      <div class="grid w-full my-2">
-        <label for="" class="text-xs font-semibold mb-1">CONTACT:</label>
+      <div class="relative">
+        <label for="contact" class="text-sm font-semibold text-gray-700 mb-1 block">Contact:</label>
         <input
-          class="bg-gray-200 text-start rounded-md border border-gray-500 w-full"
-          :class="{ 'pointer-events-none': !editOn }"
+          id="contact"
+          class="w-full px-4 py-2 bg-white text-gray-800 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
+          :class="{ 'cursor-not-allowed': !editOn }"
+          :readonly="!editOn"
           type="text"
           v-model="info.contact"
         />
       </div>
     </div>
-    <div v-if="editOn" class="w-full px-5 text-end">
+    <div v-if="editOn" class="mt-6 text-right">
       <button
+        class="px-6 py-2 bg-green-600 text-white font-bold rounded-md shadow-md hover:bg-green-700 transition duration-300 ease-in-out transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
         @click="sendData"
-        class="text-sm text-white border-2 rounded-md px-3 py-1 bg-green-500"
       >
-        SAVE
+        Save Changes
       </button>
     </div>
   </div>
+  
   <div v-if="isPhone" class="m-4 p-2 mt-5 border-b">
     <div class="grid grid-flow-col px-2 pt-1">
       <span class="text-md font-semibold col-span-5 text-gray-600">PERSONAL INFORMATION</span>

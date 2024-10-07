@@ -68,72 +68,102 @@
       <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   </div>-->
-  <div
-    class="bg-red-600 font-bold px-8 fixed top-0 z-50 p-3 right-32 text-white border-4 border-red-400 blink flex gap-2"
-    v-if="emergency"
+  <transition
+    enter-active-class="animate-fade-in-down"
+    leave-active-class="animate-fade-out-up"
   >
-    <svg
-      class="h-6 w-6"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+    <div
+      v-if="emergency"
+      class="fixed top-2 right-64 z-50 flex items-center bg-red-600 text-white rounded-lg shadow-lg overflow-hidden"
     >
-      <path
-        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-      />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-    {{ cred.user_level == 1 ? "EMERGENCY REPORT" : "ASSIGNED" }}
-  </div>
-  <div
-    v-if="emergency && seenIncidents.length != incidents.length"
-    class="z-50 fixed bg-gray-900 top-0 bg-opacity-35"
-    style="width: 100vw; height: 100vh"
+      <div class="bg-red-700 p-3">
+        <svg
+          class="h-6 w-6 animate-pulse"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+      </div>
+      <div class="px-4 py-2 font-semibold">
+        {{ cred.user_level == 1 ? "Emergency Report" : "New Assignment" }}
+      </div>
+    </div>
+  </transition>
+<!--   <transition
+    enter-active-class="transform ease-out duration-300 transition"
+    enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+    leave-active-class="transition ease-in duration-100"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
   >
-    <div class="w-full flex justify-center">
-      <div
-        class="bg-white rounded-lg modal animated-slide-in relative shadow-[16px_16px_20px_#0000008c] before:absolute before:top-[-50%] before:left-[-50%] before:right-[-50%] before:bottom-[-50%] before:bg-[conic-gradient(transparent,transparent,#03045e)] overflow-hidden before:animate-spin"
-        style="width: 25vw; padding: 2px"
-      >
-        <div class="bg-white relative rounded-md">
-          <div class="p-4 md:p-5 text-center">
-            <svg
-              class="mx-auto mb-4 text-red-400 w-12 h-12"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              />
-            </svg>
-            <h3
-              class="mb-5 text-lg font-semibold text-gray-500 border-b-2 border-red-900"
-            >
-              {{
-                cred.user_level == 1
-                  ? "EMERGENCY REPORT DETECTED"
-                  : "YOU'VE BEEN ASSIGNED"
-              }}
-            </h3>
-            <button
-              @click="addSeen"
-              type="button"
-              class="text-white bg-gray-600 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
-            >
-              OK
-            </button>
+    <div v-if="emergency" class="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end z-50">
+      <div class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
+        <div class="p-4">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="ml-3 w-0 flex-1 pt-0.5">
+              <p class="text-sm font-medium text-gray-900">
+                {{ cred.user_level == 1 ? "Emergency Report" : "New Assignment" }}
+              </p>
+              <p class="mt-1 text-sm text-gray-500">
+                {{ cred.user_level == 1 ? "A new emergency report has been filed. Immediate attention required." : "You have been assigned to a new incident. Please check your assignments." }}
+              </p>
+            </div>
+            <div class="ml-4 flex-shrink-0 flex">
+              <button @click="emergency = false" class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <span class="sr-only">Close</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </transition> -->
+  <div
+    v-if="emergency && seenIncidents.length != incidents.length"
+    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 flex items-center justify-center"
+  >
+    <div class="bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6">
+      <div>
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+          <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div class="mt-3 text-center sm:mt-5">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {{ cred.user_level == 1 ? "Emergency Report Detected" : "New Assignment" }}
+          </h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">
+              {{ cred.user_level == 1 ? "A new emergency report has been filed. Immediate attention is required." : "You have been assigned to a new incident. Please check your assignments for details." }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 sm:mt-6">
+        <button
+          @click="addSeen"
+          type="button"
+          class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+        >
+          Acknowledge
+        </button>
       </div>
     </div>
   </div>

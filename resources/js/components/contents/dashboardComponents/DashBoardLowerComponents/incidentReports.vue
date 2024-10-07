@@ -1,33 +1,30 @@
 <template>
-  <div class="justify-center pt-2 px-5 rounded shadow-md bg-gray-800">
-    <h2 class="text-lg mb-3 font-semibold text-white">Reports Today:</h2>
-    <ul class="max-w-md space-y-1 list-inside text-gray-400">
-      <li v-if="arr.length > 0" v-for="elem of arr" class="flex items-center">
-        <svg
-          :class="{
-            'w-3.5 h-3.5 me-2 text-gray-500 dark:text-gray-400 flex-shrink-0':
-              elem['status'] == 'report',
-            'w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0':
-              elem['status'] != 'report',
-          }"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-          />
-        </svg>
-        <span :class="{ 'text-red-600 ': elem['status'] == 'report' }">
-          {{ elem["message"] }}, {{ elem["landmark"] }}, {{ elem["location"] }},
-          {{ elem["time_reported"].split(" ")[1] }}</span
-        >
-      </li>
-      <li v-if="arr.length <= 0" class="flex text-white w-full justify-center border-t border-l py-32">
-        <span class=" text-lg font-semibold text-gray-100"> NO INCIDENT REPORTS TODAY</span>
-      </li>
-    </ul>
+  <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl p-6 overflow-hidden">
+    <h2 class="text-2xl font-bold text-white mb-4 border-b border-gray-700 pb-2 ">Today's Incident Reports</h2>
+    <div v-if="arr.length > 0" class="space-y-4 overflow-y-auto max-h-[280px]">
+      <div v-for="elem of arr" :key="elem.id" class="bg-gray-700 bg-opacity-50 rounded-lg p-4 transition-all duration-300 hover:bg-opacity-70">
+        <div class="flex items-center">
+          <div :class="{
+            'bg-yellow-500': elem.status === 'report',
+            'bg-green-500': elem.status !== 'report'
+          }" class="w-3 h-3 rounded-full mr-3"></div>
+          <p :class="{
+            'text-yellow-400': elem.status === 'report',
+            'text-green-400': elem.status !== 'report'
+          }" class="text-sm font-semibold">
+            {{ elem.status === 'report' ? 'Reported' : 'Resolved' }}
+          </p>
+        </div>
+        <p class="text-white mt-2">{{ elem.message }}</p>
+        <div class="flex justify-between items-center mt-3 text-xs text-gray-400">
+          <span>{{ elem.landmark }}, {{ elem.location }}</span>
+          <span>{{ elem.time_reported.split(" ")[1] }}</span>
+        </div>
+      </div>
+    </div>
+    <div v-else class="flex items-center justify-center h-64">
+      <p class="text-xl font-semibold text-gray-400">No incident reports today</p>
+    </div>
   </div>
 </template>
 

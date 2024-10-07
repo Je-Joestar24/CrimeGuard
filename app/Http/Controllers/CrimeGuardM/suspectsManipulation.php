@@ -24,6 +24,7 @@ class suspectsManipulation extends Controller
         try {
             $data['table']['headers'] = [
                 'id',
+                'profile',
                 'last name',
                 'firstname',
                 'email address',
@@ -37,6 +38,7 @@ class suspectsManipulation extends Controller
             $query = Suspects::leftJoin('addresses', 'suspects.current_address_id', '=', 'addresses.id')
                 ->select([
                     'suspects.id',
+                    'suspects.profile',
                     'suspects.firstname',
                     'suspects.lastname',
                     'suspects.email',

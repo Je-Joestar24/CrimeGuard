@@ -1,85 +1,38 @@
 <template>
-  <div class="flex gap-2 mb-3">
-
-    <div class="relative w-56">
-      <svg
-        v-if="!info.profile"
-        class="h-56 w-56 border-slate-500 rounded-lg border-2 text-gray-900 bg-slate-50 block mx-auto"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+      <div class="relative">
+        <img
+          v-if="info.profile"
+          :src="info.profile"
+          class="h-32 w-32 rounded-full object-cover border-4 border-blue-500 shadow-lg"
+          alt="Profile Picture"
         />
-      </svg>
-      <img
-        v-if="info.profile"
-        :src="info.profile"
-        class="h-56 w-56 mx-auto border-slate-500 rounded-lg border-2 text-gray-900 bg-slate-50 block"
-        alt="profile"
-      />
-      <div class="absolute bottom-0 w-full flex items-center justify-center">
-        <label
-          class="cursor-pointer text-xs bg-gray-600 text-white justify-center flex rounded-b-md bg-opacity-50 w-56 rounded-sm hover:bg-blue-700 transition"
-          ><svg
-            class="h-8 w-8 text-gray-500"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <path
-              d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"
-            />
-            <circle cx="12" cy="13" r="3" />
+        <svg
+          v-else
+          class="h-32 w-32 text-gray-300 bg-gray-100 rounded-full p-2"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <label class="absolute bottom-0 right-0 bg-blue-600 rounded-full p-2 cursor-pointer hover:bg-blue-700 transition duration-150">
+          <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <input
-            type="file"
-            class="hidden"
-            @change="onFileChange($event, 'valid_id')"
-          />
+          <input type="file" class="hidden" @change="onFileChange($event, 'valid_id')" />
         </label>
       </div>
-    </div>
-    
-    <div
-      class="p-5 flex flex-col items-start border rounded-xl shadow-md bg-gray-100 w-4/5 h-56"
-    >
-      <span class="font-bold py-2 px-4 w-64 text-2xl rounded-md">{{
-        info.user_name ? info.user_name : "NO DATA"
-      }}</span>
-      <span
-        class="py-1 underline text-blue-800 px-4 w-64 rounded-md border-gray-500 font-semibold"
-        >{{ info.email ? info.email : "NO DATA" }}</span
-      >
-      <span class="py-2 px-4 w-64 rounded-md">{{
-        info.contact ? info.contact : "NO DATA"
-      }}</span>
-
-      <div class="flex mb-2">
-        <label for="" class="py-1 ps-4 pr-2 font-bold font-mono">RANK: </label>
-        <span
-          class="py-1 px-5 font-bold font-mono text-white text-md border-2 bg-red-600"
-          >{{ info.rank ? info.rank : "NO DATA" }}</span
-        >
+      <div class="flex-1 space-y-2">
+        <h2 class="text-2xl font-bold text-gray-900">{{ info.user_name || "NO DATA" }}</h2>
+        <p class="text-blue-600 font-medium">{{ info.email || "NO DATA" }}</p>
+        <p class="text-gray-600">{{ info.contact || "NO DATA" }}</p>
+        <div class="flex items-center space-x-2">
+          <span class="font-semibold text-gray-700">Rank:</span>
+          <span class="px-3 py-1 bg-red-600 text-white text-sm font-bold rounded-full">{{ info.rank || "NO DATA" }}</span>
+        </div>
       </div>
-      <!-- 
-      <div class="flex">
-        <label for="" class="py-1 ps-4 pr-2 font-bold font-mono">USER: </label>
-        <span
-          class="py-1 px-4 font-bold font-mono text-lg border-2 border-red-600"
-          >OFFICER</span
-        >
-      </div> -->
     </div>
   </div>
 </template>

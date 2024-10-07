@@ -1,10 +1,14 @@
 <template>
-  <figure class="highcharts-figure">
-    <div id="monthlyAnalytics"></div>
-    <p class="highcharts-description">
-      Line chart showing Incident trends in the last 30 days.
-    </p>
-  </figure>
+  <div class="bg-white rounded-lg shadow-xl p-6 overflow-hidden w-full">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">Incident Trend Analysis</h2>
+    <div class="highcharts-figure">
+      <div id="monthlyAnalytics" class="w-full h-80"></div>
+      <p class="text-sm text-gray-600 mt-4 italic">
+        This elegant spline chart visualizes incident report trends over the past 30 days, 
+        offering crucial insights into crime patterns and facilitating data-driven policing strategies.
+      </p>
+    </div>
+  </div>
 </template>
   
   <script>

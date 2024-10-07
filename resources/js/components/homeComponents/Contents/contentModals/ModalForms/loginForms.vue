@@ -11,7 +11,7 @@
       <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
     </div>
     <div v-if="!isPhone" class="w-full border-l  shadow-lg">
-      <div class="w-full flex justify-end p-4 mt-10">
+      <div class="w-full flex justify-end p-4">
         <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -19,7 +19,7 @@
         </button>
       </div>
       
-      <div class="max-w-md mx-auto px-6 py-8">
+      <div class="max-w-md mx-auto px-6 py-8 mt-10">
         <div class="text-center mb-8">
           <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
           <h1 class="text-3xl font-bold text-gray-800">Login to Crime Guard</h1>
@@ -71,7 +71,7 @@
     </div>
 
     <div v-if="isPhone" class="w-full h-full bg-white flex flex-col justify-between">
-      <div class="w-full flex justify-end p-4">
+      <div class="w-full flex justify-end pt-4 pr-4">
         <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -79,7 +79,7 @@
         </button>
       </div>
       
-      <div class="flex-grow flex flex-col justify-center px-6 py-8">
+      <div class="flex-grow flex flex-col justify-center px-6 pb-8">
         <div class="text-center mb-8">
           <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
           <h1 class="text-2xl font-bold text-gray-800">Login to Crime Guard</h1>
@@ -127,7 +127,7 @@
 
       <div class="mt-6 text-center pb-8">
         <p class="text-sm text-gray-600">Don't have an account?</p>
-        <a @click="goToSignup" class="text-sm text-blue-600 hover:text-blue-500 font-medium cursor-pointer">Sign up here</a>
+        <a @click="changeActive('Sign up')" class="text-sm text-blue-600 hover:text-blue-500 font-medium cursor-pointer">Sign up here</a>
       </div>
     </div>
   </div>

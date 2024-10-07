@@ -23,6 +23,7 @@ class victimsModule extends Controller
             /* Table headers */
             $data['table']['headers'] = [
                 'id',
+                'profile',
                 'last name',
                 'firstname',
                 'email address',
@@ -37,7 +38,9 @@ class victimsModule extends Controller
 
             /* Build the initial query */
             $query = Victims::leftJoin('addresses', 'victims.current_address_id', '=', 'addresses.id')->select([
+
                 'victims.id',
+                'victims.id_card_presented as profile',
                 'victims.firstname',
                 'victims.lastname',
                 'victims.email',
@@ -45,7 +48,8 @@ class victimsModule extends Controller
                 DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
                 'victims.age',
                 'victims.gender',
-                'victims.civil_status'
+                'victims.civil_status',
+
             ])
                 ->whereNull('victims.archived_at')
                 ->whereNull('victims.deleted_by');
@@ -220,8 +224,8 @@ class victimsModule extends Controller
                 'deleted_by' => $request['archived_by']
             ];
             Victims::where('id', $request['id'])->update($archive);
-            
-            TrailLog::create(['user_id'=> $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'victim']);
+
+            TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'victim']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -244,8 +248,8 @@ class victimsModule extends Controller
                 'deleted_by' => NULL
             ];
             Victims::where('id', $request['id'])->update($archive);
-            TrailLog::create(['user_id'=> $request->input('user_id'), 'action' => 'restored', 'item' => 'victim']);
-            
+            TrailLog::create(['user_id' => $request->input('user_id'), 'action' => 'restored', 'item' => 'victim']);
+
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -397,7 +401,7 @@ class victimsModule extends Controller
             if ($other_id != -1) $victim['other_address_id'] = $other_id;
 
             $victimData = $victim;
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'added', 'item' => 'victim']);
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'added', 'item' => 'victim']);
             Victims::create($victimData);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
@@ -418,11 +422,11 @@ class victimsModule extends Controller
 
         try {
             $victim = Victims::select('lastname', 'firstname', 'middlename', 'qualifier', 'nickname', 'citizenship', 'gender', 'civil_status', 'birth_date', 'age', 'place_of_birth', 'home_phone', 'mobile_phone', 'under_influence_of', 'current_address_id', 'other_address_id')->find($request['id']);
-            $other_info = Victims::select('highest_educ_attainment','occupation', 'id_card_presented', 'email', 'fb_account')->find($request['id']);
-            if(Addresses::select('*')->find($victim['current_address_id']))$current_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($victim['current_address_id']);
-            if(Addresses::select('*')->find($victim['other_address_id']))$other_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($victim['other_address_id']);
+            $other_info = Victims::select('highest_educ_attainment', 'occupation', 'id_card_presented', 'email', 'fb_account')->find($request['id']);
+            if (Addresses::select('*')->find($victim['current_address_id'])) $current_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($victim['current_address_id']);
+            if (Addresses::select('*')->find($victim['other_address_id'])) $other_address = Addresses::select('street', 'village', 'barangay', 'city', 'province')->find($victim['other_address_id']);
 
-            
+
             unset($victim['other_address_id']);
             unset($victim['current_address_id']);
             $data['data']['victim'] = $victim;
@@ -456,7 +460,7 @@ class victimsModule extends Controller
             $victimData = $victim;
 
             Victims::find($victim['id'])->update($victimData);
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'edited', 'item' => 'victim']);
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'edited', 'item' => 'victim']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';

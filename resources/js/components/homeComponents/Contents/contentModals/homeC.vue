@@ -60,186 +60,207 @@
   <used-tech v-if="!loggedIn && !isPhone"></used-tech>
 
 
-  <div
-    class="rounded shadow-lg w-full relative"
-    style="height: 85vh"
-    :class="{ '': $store.getters.theme, '': !$store.getters.theme }"
-  >
-    <section class="text-gray-600 body-font relative w-full h-full">
-      <div id="residentMap" class="absolute inset-0 bg-gray-100"></div>
+  <div class="relative w-full h-[85vh] rounded-lg shadow-xl overflow-hidden">
+    <section class="absolute inset-0">
+      <div id="residentMap" class="w-full h-full bg-gray-100"></div>
     </section>
-    <div
-      class="mb-2 py-2 top-3 crimeHeatMap md:hidden sm:hidden absolute w-3/4 grid-cols-3 bg-gray-50 text-center rounded-md border-2 border-gray-600"
-      style="right: 10%"
-    >
-      <span class="font-serif font-semibold text-center text-red-600 underline"
-        >CRIME HEAT MAP</span
-      >
+    <div class="absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/50 to-transparent">
+      <h2 class="text-2xl font-bold text-white text-center">
+        Crime Heat Map
+      </h2>
+    </div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <div class="bg-white rounded-lg shadow-md p-3">
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Legend</h3>
+        <div class="flex items-center space-x-2">
+          <span class="w-4 h-4 rounded-full bg-red-500"></span>
+          <span class="text-xs text-gray-600">Emeregency Reports</span>
+        </div>
+        <div class="flex items-center space-x-2 mt-1">
+          <span class="w-4 h-4 rounded-full bg-yellow-500"></span>
+          <span class="text-xs text-gray-600">None Emergency Reports</span>
+        </div>
+      </div>
     </div>
   </div>
-
-  <h1
+  <div
     v-if="loggedIn && !isPhone"
-    class="bg-gray-200 text-2xl md:text-3xl text-center text-black py-5 border-b border-black"
+    class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 px-4 shadow-lg rounded-b-lg"
   >
-    Incident Heatmap: Yearly Overview of Crime Locations in Ormoc City
-  </h1>
-  <span class="px-10 pt-10 text-center flex py-2">
-    <h1
-      class="text-3xl bg-white w-full py-2 border md:text-4xl text-center text-gray-700 uppercase"
-    >
-      Graphical Insights
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-2">
+      Incident Heatmap
     </h1>
-  </span>
-
-  <div
-    v-if="!loggedIn"
-    class="bg-transparent shadow border-gray-400 w-full 2xl:px-32 md:px-0"
-    style="height: 250vh"
-  >
-    <!-- graphs -->
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div class="p-6">
-        <!-- Line Chart -->
-        <div class="w-full mb-4">
-          <line-charts v-motion-slide-visible-top></line-charts>
-        </div>
-        <!-- Description -->
-        <div class="text-center">
-          <h2 class="text-xl font-semibold text-gray-800 mb-2">
-            30-Day Incident Overview
-          </h2>
-          <p class="text-gray-600">
-            This chart visualizes crime incidents reported over the last 30
-            days, giving a real-time view of the city's safety trends.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <bar-graphs v-motion-slide-visible-top></bar-graphs>
-    <div class="w-full bg-white rounded-md">
-      <h1
-        class="bg-white p-4 text-xl text-center border-b-2 font-bold rounded-t-md"
-        v-motion-slide-visible-top
-      >
-        VICTIMS
-      </h1>
-      <div
-        class="xl:flex 2xl:flex md:grid md:grid-cols-1 xl:flex-row 2xl:flex-row md:flex-col gap-2 px-2"
-      >
-        <pc-gender-victim
-          class="w-full border"
-          :ids="'victimGenderPie'"
-          v-motion-slide-visible-top
-        ></pc-gender-victim>
-        <pc-victim-age
-          class="w-full border"
-          :ids="'victimAgePie'"
-          v-motion-slide-visible-top
-        ></pc-victim-age>
-      </div>
-    </div>
-    <div class="w-full bg-white rounded-md mt-3">
-      <h1
-        class="bg-white p-4 text-xl text-center border-b-2 font-bold rounded-t-md"
-        v-motion-slide-visible-top
-      >
-        SUSPECTS
-      </h1>
-      <div
-        class="xl:flex 2xl:flex md:grid md:grid-cols-1 xl:flex-row 2xl:flex-row md:flex-col gap-2 px-2"
-      >
-        <pc-gender-suspect
-          class="w-full border"
-          :ids="'suspectGenderPie'"
-          v-motion-slide-visible-top
-        ></pc-gender-suspect>
-        <pc-suspect-age
-          class="w-full border"
-          :ids="'suspectAgePie'"
-          v-motion-slide-visible-top
-        ></pc-suspect-age>
-      </div>
-    </div>
-    <!-- <div class="h-60"></div> -->
-
-    <researchers v-if="!loggedIn && !isPhone"></researchers>
-    <researchers-phone v-if="!loggedIn && isPhone" />
+    <p class="text-lg md:text-xl text-center text-blue-100">
+      Yearly Overview of Crime Locations in Ormoc City
+    </p>
   </div>
-  <div
-    v-if="loggedIn"
-    class=" shadow border-gray-400 w-full 2xl:px-32 md:px-0"
-    style="height: 200vh"
-  >
-    <!-- graphs -->
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div class="p-6">
+  <section v-if="!loggedIn" class="py-t bg-gradient-to-b from-blue-100/70 to-white/70 ">
+    <div class="container mx-auto px-4">
+      <div class="bg-gradient-to-r from-blue-100 to-blue-200 py-16 mt-12 rounded-lg shadow-md">
+        <h2 class="text-4xl md:text-5xl font-bold text-center text-blue-800 mb-6 animate-fade-in-down">
+          Dynamic Crime Analytics Dashboard
+        </h2>
+        <p class="text-xl text-center text-blue-600 mb-8 animate-fade-in-up">
+          Explore real-time visualizations of crime data to gain actionable insights
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Line Chart -->
-        <div class="w-full mb-4">
-          <line-charts v-motion-slide-visible-top></line-charts>
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          <div class="p-6">
+            <line-charts v-motion-slide-visible-left></line-charts>
+            <div class="mt-6 text-center">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                30-Day Incident Overview
+              </h3>
+              <p class="text-gray-600">
+                Visualizing crime incidents over the last 30 days, providing real-time insights into our city's safety trends.
+              </p>
+            </div>
+          </div>
         </div>
-        <!-- Description -->
-        <div class="text-center">
-          <h2 class="text-xl font-semibold text-gray-800 mb-2">
-            30-Day Incident Overview
-          </h2>
-          <p class="text-gray-600">
-            This chart visualizes crime incidents reported over the last 30
-            days, giving a real-time view of the city's safety trends.
-          </p>
+
+        <!-- Bar Graphs -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          <div class="p-6">
+            <bar-graphs v-motion-slide-visible-right></bar-graphs>
+            <div class="mt-6 text-center">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                Crime Type Distribution
+              </h3>
+              <p class="text-gray-600">
+                Breakdown of various crime types, helping identify patterns and focus areas for law enforcement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Victims Section -->
+      <div class="mt-16 bg-white rounded-lg shadow-lg overflow-hidden ">
+        <h2 class="bg-blue-600 text-white p-4 text-2xl font-bold text-center">
+          Victim Demographics
+        </h2>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div v-motion-slide-visible-left>
+            <pc-gender-victim class="w-full" :ids="'victimGenderPie'"></pc-gender-victim>
+            <div class="mt-4 text-center">
+              <svg class="w-6 h-6 mx-auto mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <p class="text-gray-700 font-semibold">Gender Distribution</p>
+              <p class="text-sm text-gray-600">Analyzing the gender breakdown of reported victims to identify potential vulnerabilities and tailor prevention strategies.</p>
+            </div>
+          </div>
+          <div v-motion-slide-visible-right>
+            <pc-victim-age class="w-full" :ids="'victimAgePie'"></pc-victim-age>
+            <div class="mt-4 text-center">
+              <svg class="w-6 h-6 mx-auto mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+              </svg>
+              <p class="text-gray-700 font-semibold">Age Group Analysis</p>
+              <p class="text-sm text-gray-600">Examining the age distribution of victims to understand which groups are most at risk and focus community outreach efforts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suspects Section -->
+      <div class="mt-16 bg-white rounded-lg shadow-lg overflow-hidden">
+        <h2 class="bg-red-600 text-white p-4 text-2xl font-bold text-center">
+          Suspect Demographics
+        </h2>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div v-motion-slide-visible-left>
+            <pc-gender-suspect class="w-full" :ids="'suspectGenderPie'"></pc-gender-suspect>
+            <p class="mt-4 text-center text-gray-600">Gender breakdown of reported suspects</p>
+          </div>
+          <div v-motion-slide-visible-right>
+            <pc-suspect-age class="w-full" :ids="'suspectAgePie'"></pc-suspect-age>
+            <p class="mt-4 text-center text-gray-600">Age distribution analysis of suspects</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <bar-graphs v-motion-slide-visible-top></bar-graphs>
-    <div class="w-full bg-white rounded-md">
-      <h1
-        class="bg-white p-4 text-xl text-center border-b-2 font-bold rounded-t-md"
-        v-motion-slide-visible-top
-      >
-        VICTIMS
-      </h1>
-      <div
-        class="xl:flex 2xl:flex md:grid md:grid-cols-1 xl:flex-row 2xl:flex-row md:flex-col gap-2 px-2"
-      >
-        <pc-gender-victim
-          class="w-full border"
-          :ids="'victimGenderPie'"
-          v-motion-slide-visible-top
-        ></pc-gender-victim>
-        <pc-victim-age
-          class="w-full border"
-          :ids="'victimAgePie'"
-          v-motion-slide-visible-top
-        ></pc-victim-age>
-      </div>
+    <div class="mt-16">
+      <researchers v-if="!loggedIn && !isPhone" v-motion-slide-visible-bottom></researchers>
+      <researchers-phone v-if="!loggedIn && isPhone" v-motion-slide-visible-bottom />
     </div>
-    <div class="w-full bg-white rounded-md mt-3">
-      <h1
-        class="bg-white p-4 text-xl text-center border-b-2 font-bold rounded-t-md"
-        v-motion-slide-visible-top
-      >
-        SUSPECTS
-      </h1>
-      <div
-        class="xl:flex 2xl:flex md:grid md:grid-cols-1 xl:flex-row 2xl:flex-row md:flex-col gap-2 px-2"
-      >
-        <pc-gender-suspect
-          class="w-full border"
-          :ids="'suspectGenderPie'"
-          v-motion-slide-visible-top
-        ></pc-gender-suspect>
-        <pc-suspect-age
-          class="w-full border"
-          :ids="'suspectAgePie'"
-          v-motion-slide-visible-top
-        ></pc-suspect-age>
-      </div>
-    </div>
-    <!-- <div class="h-60"></div> -->
+  </section>
+  <div v-if="loggedIn" class="bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-900 mb-16 animate-fade-in-down">
+        Graphical Insights
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:mb-12 lg:mb-12">
+        <!-- Line Chart -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          <div class="p-6">
+            <line-charts v-motion-slide-visible-left></line-charts>
+            <div class="mt-6 text-center">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                30-Day Incident Overview
+              </h3>
+              <p class="text-gray-600">
+                Visualizing crime incidents over the last 30 days, providing real-time insights into our city's safety trends.
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <researchers v-if="!loggedIn && !isPhone"></researchers>
+        <!-- Bar Graphs -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          <div class="p-6">
+            <bar-graphs v-motion-slide-visible-right></bar-graphs>
+            <div class="mt-6 text-center">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                Crime Type Distribution
+              </h3>
+              <p class="text-gray-600">
+                Breakdown of various crime types, helping identify patterns and focus areas for law enforcement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Victims Section -->
+      <div class="bg-white shadow-xl rounded-lg overflow-hidden mb-12">
+        <h2 class="bg-blue-600 text-white p-5 text-2xl font-bold text-center">
+          Victim Demographics
+        </h2>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="transform hover:scale-105 transition-all duration-300" v-motion-slide-visible-left>
+            <pc-gender-victim class="w-full" :ids="'victimGenderPie'"></pc-gender-victim>
+            <p class="mt-4 text-center text-gray-600 font-medium">Gender Distribution of Reported Victims</p>
+          </div>
+          <div class="transform hover:scale-105 transition-all duration-300" v-motion-slide-visible-right>
+            <pc-victim-age class="w-full" :ids="'victimAgePie'"></pc-victim-age>
+            <p class="mt-4 text-center text-gray-600 font-medium">Age Group Analysis of Victims</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suspects Section -->
+      <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+        <h2 class="bg-red-600 text-white p-5 text-2xl font-bold text-center">
+          Suspect Demographics
+        </h2>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="transform hover:scale-105 transition-all duration-300" v-motion-slide-visible-left>
+            <pc-gender-suspect class="w-full" :ids="'suspectGenderPie'"></pc-gender-suspect>
+            <p class="mt-4 text-center text-gray-600 font-medium">Gender Breakdown of Reported Suspects</p>
+          </div>
+          <div class="transform hover:scale-105 transition-all duration-300" v-motion-slide-visible-right>
+            <pc-suspect-age class="w-full" :ids="'suspectAgePie'"></pc-suspect-age>
+            <p class="mt-4 text-center text-gray-600 font-medium">Age Distribution Analysis of Suspects</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>

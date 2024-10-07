@@ -61,13 +61,13 @@
       </thead>
       <tbody>
         <TableBody
-          v-if="data.length > 0"
-          :tab-data="data"
+          v-if="paginatedData.length > 0"
+          :tab-data="paginatedData"
           :type="type"
           :getTData="getTableData"
         ></TableBody>
         <td
-          v-if="data.length == 0"
+          v-if="paginatedData.length == 0"
           class="text-center font-semibold text-gray-600 h-20 bg-gray-50 rounded-b-md"
           :colspan="header.length + 2"
         >
@@ -75,6 +75,43 @@
         </td>
       </tbody>
     </table>
+    <div class="flex justify-center my-4 space-x-2">
+      <button
+        @click="changePage(1)"
+        :disabled="pagination.currentPage === 1"
+        class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+      >
+        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+        First
+      </button>
+      <button
+        @click="changePage(pagination.currentPage - 1)"
+        :disabled="pagination.currentPage === 1"
+        class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+      >
+        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        Previous
+      </button>
+      <span class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm">
+        Page {{ pagination.currentPage }} of {{ pagination.totalPages }}
+      </span>
+      <button
+        @click="changePage(pagination.currentPage + 1)"
+        :disabled="pagination.currentPage === pagination.totalPages"
+        class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+      >
+        Next
+        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+      <button
+        @click="changePage(pagination.totalPages)"
+        :disabled="pagination.currentPage === pagination.totalPages"
+        class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+      >
+        Last
+        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
     <Modals
       :reloadTab="getTableData"
       :toggle="toggleIncident"
@@ -118,9 +155,16 @@ export default {
       currentOpenForm: "Add",
       header: [],
       data: [],
+      paginatedData: [],
       type: 1,
       incidentAddOpen: false,
       search1: '',
+      pagination: {
+        currentPage: 1,
+        itemsPerPage: 5,
+        totalItems: 0,
+        totalPages: 0
+      }
     };
   },
   mounted() {
@@ -140,19 +184,23 @@ export default {
       }
   },
   methods: {
-    initializeDataTable() {
-      /* $(document).ready(() => {
-        $("#tableUsed").dataTable({
-          searching: false,
-          lengthMenu: [5],
-          lengthChange: false,
-          pagingType: "simple_numbers",
-        });
-
-        $(".dataTables_paginate").css("float", "right");
-        $(".dataTables_paginate").css("height", "1px");
-        $(".dataTables_paginate .paginate_button").css("font-size", "12px");
-      }); */
+    changePage(page) {
+      if (page >= 1 && page <= this.pagination.totalPages) {
+        this.pagination.currentPage = page;
+        this.createPaginatedData();
+      }
+    },
+    createPaginatedData() {
+      const startIndex = (this.pagination.currentPage - 1) * this.pagination.itemsPerPage;
+      const endIndex = startIndex + this.pagination.itemsPerPage;
+      this.paginatedData = this.data.slice(startIndex, endIndex);
+      this.pagination.totalItems = this.data.length;
+      this.pagination.totalPages = Math.ceil(this.pagination.totalItems / this.pagination.itemsPerPage);
+      
+      // Ensure the current page is not greater than the total pages
+      if (this.pagination.currentPage > this.pagination.totalPages) {
+        this.changePage(this.pagination.totalPages);
+      }
     },
     toggleAddModal() {
       this.modalIsOpen = !this.modalIsOpen;
@@ -181,6 +229,7 @@ export default {
         this.header = await data["table"]["headers"];
         this.data = await data["table"]["data"];
         this.type = await data["table"]["type"];
+        this.createPaginatedData();
         console.log(this.data);
       }
     },

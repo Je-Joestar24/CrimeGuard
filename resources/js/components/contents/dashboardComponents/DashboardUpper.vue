@@ -1,111 +1,116 @@
 <template>
-  <div class="flex p-2 h-40 rounded bg-gray-50 shadow-md">
-    <div class="flex-1 grid grid-cols-6">
-      <div
-        class="flex items-center justify-center align-items-center col-span-1"
-      >
-        <svg
-          class="h-12 w-12"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <polyline points="12 4 4 8 12 12 20 8 12 4" />
-          <polyline points="4 12 12 16 20 12" />
-          <polyline points="4 16 12 20 20 16" />
-        </svg>
+  <div class="grid grid-cols-6 gap-4 w-full">
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-blue-100">
+          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.incidentCount.totalCount }}</p>
+          <p class="text-gray-600">Incidents</p>
+        </div>
       </div>
-      <div class="col-span-5 grid grid-flow-row">
-        <div class="grid-flow-col gap-2 row-span-1 flex items-center">
-          <span  class="text-blue-800 text-lg font-bold"
-            >{{ arr['incidentCount'] }}</span
-          >
-          <span>INCIDENTS</span>
-        </div>
-        <div class="border-t-2 border-gray-900">
-<!--           <button  class="text-xs underline text-blue-800"
-            >View all</button
-          > -->
-        </div>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.incidentCount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.incidentCount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.incidentCount.growth).toFixed(2) }}%
+        </span> since last month
       </div>
     </div>
-  </div>
-  <div class="flex p-2 h-40 rounded bg-gray-50 shadow-md">
-    <div class="flex-1 grid grid-cols-6">
-      <div
-        class="flex items-center justify-center align-items-center col-span-1"
-      >
-        <svg
-          class="h-12 w-12 text-black"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <path
-            d="M9 5H7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2V7a2 2 0 0 0 -2 -2h-2"
-          />
-          <rect x="9" y="3" width="6" height="4" rx="2" />
-          <path d="M9 14l2 2l4 -4" />
-        </svg>
+
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-green-100">
+          <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.clearedCount.totalCount }}</p>
+          <p class="text-gray-600">Cleared</p>
+        </div>
       </div>
-      <div class="col-span-5 grid grid-flow-row">
-        <div class="grid-flow-col gap-2 row-span-1 flex items-center">
-          <span  class="text-blue-800 text-lg font-bold"
-            >{{ arr['clearedCount'] }}</span
-          >
-          <span>CLEARED</span>
-        </div>
-        <div class="border-t-2 border-gray-900">
-<!--           <button class="text-xs underline text-blue-800"
-            >View all</button
-          > -->
-        </div>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.clearedCount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.clearedCount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.clearedCount.growth).toFixed(2) }}%
+        </span> since last month
       </div>
     </div>
-  </div>
-  <div class="flex p-2 h-40 rounded bg-gray-50 shadow-md">
-    <div class="flex-1 grid grid-cols-6">
-      <div
-        class="flex items-center justify-center align-items-center col-span-1"
-      >
-        <svg
-          class="h-12 w-12 text-black"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-yellow-100">
+          <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.underICount.totalCount }}</p>
+          <p class="text-gray-600">Under Investigation</p>
+        </div>
       </div>
-      <div class="col-span-5 grid grid-flow-row">
-        <div class="grid-flow-col gap-2 row-span-1 flex items-center">
-          <span class="text-blue-800 text-lg font-bold"
-            >{{ arr['underICount'] }}</span
-          >
-          <span>UNDER INVESTIGATION</span>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.underICount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.underICount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.underICount.growth).toFixed(2) }}%
+        </span> since last month
+      </div>
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-red-100">
+          <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </div>
-        <div class="border-t-2 border-gray-900">
-<!--           <button class="text-xs underline text-blue-800"
-            >View all</button
-          > -->
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.rejectCount.totalCount }}</p>
+          <p class="text-gray-600">Rejected</p>
         </div>
+      </div>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.rejectCount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.rejectCount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.rejectCount.growth).toFixed(2) }}%
+        </span> since last month
+      </div>
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-indigo-100">
+          <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.reportCount.totalCount }}</p>
+          <p class="text-gray-600">Reports</p>
+        </div>
+      </div>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.reportCount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.reportCount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.reportCount.growth).toFixed(2) }}%
+        </span> since last month
+      </div>
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 md:col-span-2 lg:col-span-1 bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-3 rounded-full bg-purple-100">
+          <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-semibold">{{ arr.solvedCount.totalCount }}</p>
+          <p class="text-gray-600">Solved</p>
+        </div>
+      </div>
+      <div class="text-sm text-gray-500">
+        <span :class="arr.solvedCount.growth >= 0 ? 'text-green-500' : 'text-red-500'" class="font-semibold">
+          {{ arr.solvedCount.growth >= 0 ? '↑' : '↓' }} {{ Math.abs(arr.solvedCount.growth).toFixed(2) }}%
+        </span> since last month
       </div>
     </div>
   </div>
@@ -115,7 +120,48 @@
 export default {
   data() {
     return {
-      arr: [],
+      arr: {
+            "incidentCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "clearedCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "solvedCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "underICount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "rejectCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "reportCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "respondCount": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            },
+            "totalIncidents": {
+                "totalCount": 0,
+                "currentMonthCount": 0,
+                "growth": 0
+            }
+        }
     };
   },
   created() {
@@ -127,6 +173,7 @@ export default {
       const data = await this.$store.dispatch("generateTableData", param);
       if (data["response"] == "Success") {
         this.arr = await data["data"]['upper'];
+        console.log(this.arr);
       }
     },
   },

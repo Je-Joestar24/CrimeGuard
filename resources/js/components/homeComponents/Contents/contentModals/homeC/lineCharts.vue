@@ -26,37 +26,47 @@ export default {
     chartify() {
   
       let counts = this.arr.map((elem) => {return elem['count']});
-
       Highcharts.chart("monthlyAnalytics", {
+        chart: {
+          type: 'spline'  // Change to spline for curved lines
+        },
         title: {
           text: "LATEST INCIDENT RECORDS",
           align: "center",
         },
-
         subtitle: {
           text: "ORMOC CITY",
           align: "center"
         },
-
         yAxis: {
           title: {
-            text: "Number of Incident",
+            text: "Number of Incidents",
           },
         },
-
         xAxis: {
           accessibility: {
             rangeDescription: "Range: 2010 to 2020",
           },
         },
-
         legend: {
           layout: "vertical",
           align: "right",
           verticalAlign: "middle",
         },
-
         plotOptions: {
+          spline: {  // Change to spline
+            marker: {
+              enabled: false
+            },
+            lineWidth: 3,
+            color: '#7cb5ec',  // A nice blue color
+            shadow: true,
+            states: {
+              hover: {
+                lineWidth: 4
+              }
+            }
+          },
           series: {
             label: {
               connectorAllowed: false,
@@ -64,14 +74,12 @@ export default {
             pointStart: 1,
           },
         },
-
         series: [
           {
             name: "INCIDENTS",
             data: counts
           },
         ],
-
         responsive: {
           rules: [
             {
@@ -89,7 +97,6 @@ export default {
           ],
         },
       });
-    
     },
     async getData(param) {
       const data = await this.$store.dispatch("generateTableData", param);

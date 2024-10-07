@@ -4,21 +4,21 @@
     style="height: 100vh"
   >
     <div
-      class="flex flex-col w-96 md:w-1/4 lg:w-1/4 xl:w-1/4 my-auto mx-auto bg-white p-4 rounded-md relative"
+      class="flex flex-col w-96 md:w-1/4 lg:w-1/4 xl:w-1/4 my-auto mx-auto bg-white p-6 rounded-lg shadow-lg relative transform transition-all duration-300 ease-in-out hover:scale-105"
       v-if="!(trackMe && reported)"
     >
       <span
-        class="w-full text-center text-lg text-gray-800 font-semibold pb-2 mb-2"
+        class="w-full text-center text-2xl text-gray-800 font-bold pb-4 mb-4 border-b"
         >REPORT INCIDENT</span
       >
-      <form class=" ">
-        <div class="px-2 pb-2 pt-5 rounded-md border my-2">
+      <form class="space-y-6">
+        <div class="px-4 py-5 rounded-md border bg-gray-50 shadow-inner">
           <p
-            class="flex items-center p-2 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50"
+            class="flex items-center p-3 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 animate-pulse"
             v-show="reported"
           >
             <svg
-              class="h-6 w-6 text-green-600 me-2"
+              class="h-6 w-6 text-green-600 me-3"
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -37,18 +37,18 @@
           <div
             class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r"
           >
-            <div class="flex items-center px-3 border justify-between mb-2">
+            <div class="flex items-center px-3 border rounded-lg justify-between mb-4 hover:bg-gray-100 transition-colors duration-200">
               <input
                 v-model="trackMe"
                 type="checkbox"
                 value=""
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 transition-all duration-200 ease-in-out"
               />
-              <label class="py-3 text-sm font-medium text-gray-900"
+              <label class="py-3 text-sm font-medium text-gray-900 flex-grow ml-3"
                 >TRACK ME</label
               >
               <svg
-                class="h-8 w-8 text-blue-500"
+                class="h-8 w-8 text-blue-500 transform transition-transform duration-200 ease-in-out hover:scale-110"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -72,7 +72,7 @@
           <div class="relative z-0 w-full mb-5 group">
             <input
               type="text"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer transition-all duration-300"
               placeholder=" "
               v-model="signUpForm.message"
               required
@@ -86,7 +86,7 @@
           <div class="relative z-0 w-full mb-5 group">
             <input
               type="text"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer transition-all duration-300"
               placeholder=" "
               v-model="signUpForm.landmark"
               required
@@ -100,7 +100,7 @@
           <div class="relative z-0 w-full mb-5 group pt-2">
             <select
               v-model="signUpForm.report_type"
-              class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+              class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer transition-all duration-300"
             >
               <option value="0" disabled>SELECT TYPE</option>
               <option value="1">EMERGENCY</option>
@@ -115,7 +115,7 @@
           <div class="relative z-0 w-full mb-5 group">
             <input
               type="text"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer transition-all duration-300"
               placeholder=" "
               v-model="signUpForm.address.barangay"
               @click="generateAddress(signUpForm.address.barangay)"
@@ -129,11 +129,11 @@
 
             <div
               v-if="places.length > 0"
-              class="absolute bg-white w-full rounded-md pt-1 border"
+              class="absolute bg-white w-full rounded-md pt-1 border shadow-lg"
             >
-              <div class="max-h-24 overflow-auto flex flex-col rounded-md">
+              <div class="max-h-32 overflow-auto flex flex-col rounded-md">
                 <div
-                  class="px-4 hover:bg-gray-50 py-1 border-b"
+                  class="px-4 hover:bg-gray-50 py-2 border-b cursor-pointer transition-colors duration-200"
                   v-for="place in places"
                   @click.prevent="setAddress(place + '')"
                 >
@@ -143,9 +143,9 @@
             </div>
           </div>
           <div></div>
-          <span class="my-3 flex gap-3 p-2 border rounded-md"
+          <span class="my-3 flex gap-3 p-3 border rounded-md bg-blue-50 items-center"
             ><svg
-              class="h-6 w-6 text-red-400 my-auto"
+              class="h-12 w-12 text-blue-500 animate-pulse"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -153,16 +153,16 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="1"
+                stroke-width="2"
                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
               />
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="1"
+                stroke-width="2"
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               /></svg
-            ><span class="border-s px-2">{{
+            ><span class="border-s px-3 text-blue-700 font-medium">{{
               signUpForm.location != "" ? signUpForm.location : "LOCATION"
             }}</span>
           </span>
@@ -170,27 +170,24 @@
         <button
           v-if="signUpForm.location != ''"
           type="button"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          :class="{ 'cursor-not-allowed': signUpForm.location == '' }"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-3 text-center transition-all duration-300 ease-in-out transform hover:scale-105"
+          :class="{ 'opacity-50 cursor-not-allowed': signUpForm.location == '' }"
           :disabled="signUpForm.location == ''"
           @click.prevent="rqSend()"
         >
-          <!-- @click="sendData()/*sendData()*/" -->
           REPORT
         </button>
         <button
           v-if="signUpForm.location == ''"
           type="button"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          :class="{ 'cursor-not-allowed': signUpForm.location == '' }"
-          :disabled="signUpForm.location == ''"
+          class="text-white bg-gray-400 font-medium rounded-lg text-sm w-full px-5 py-3 text-center cursor-not-allowed"
+          disabled
         >
-          <!-- @click="sendData()/*sendData()*/" -->
           REPORT
         </button>
       </form>
       <svg
-        class="hover:border hover:bg-gray-100 absolute top-3 right-3 h-8 w-8 p-1 active:text-gray-100 active:bg-gray-200 rounded-md text-gray-400"
+        class="hover:border hover:bg-gray-100 absolute top-3 right-3 h-8 w-8 p-1 active:text-gray-100 active:bg-gray-200 rounded-full text-gray-400 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-110"
         width="24"
         height="24"
         viewBox="0 0 24 24"

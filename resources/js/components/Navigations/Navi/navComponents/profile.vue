@@ -1,175 +1,131 @@
 <template>
-  <div class="flex items-center">
-    <div class="flex items-center ms-3">
-    <div>
-        <button
-          type="button"
-          class="flex text-sm rounded-full focus:ring-4"
-          :class="{
-            'focus:ring-gray-600 bg-gray-800 ': $store.getters.theme,
-            'focus:ring-gray-300': !$store.getters.theme,
-          }"
-          @click="profile = !profile"
-          aria-expanded="false"
+  <div class="relative">
+    <button
+      type="button"
+      class="flex items-center space-x-3 focus:outline-none"
+      @click="profile = !profile"
+      aria-expanded="false"
+    >
+      <div class="relative w-10 h-10 overflow-hidden rounded-full border-2 border-blue-500 transition-all duration-300 hover:border-blue-600">
+        <img 
+          v-if="info.profile" 
+          :src="info.profile" 
+          alt="User profile"
+          class="w-full h-full object-cover"
         >
-          <span class="sr-only">Open user menu</span>
-
-          <svg v-if="info.profile == ''" class="h-8 w-8" fill="none" viewBox="0 0 24 24" :stroke="prof">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <img v-if="info.profile != ''" class="h-10 rounded-full border w-10 text-gray-500 my-auto" :src="info.profile" alt="">
-          
-        </button>
+        <svg 
+          v-else 
+          class="absolute w-full h-full text-gray-300" 
+          fill="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
       </div>
+      <div class="hidden md:block text-left">
+        <p class="text-sm font-medium" :class="{'text-white': $store.getters.theme, 'text-gray-900': !$store.getters.theme}">
+          {{ info.user_name }}
+        </p>
+        <p class="text-xs" :class="{'text-gray-300': $store.getters.theme, 'text-gray-500': !$store.getters.theme}">
+          {{ info.email }}
+        </p>
+      </div>
+      <svg class="w-4 h-4 ml-1" :class="{'text-white': $store.getters.theme, 'text-gray-400': !$store.getters.theme}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <transition
+      enter-active-class="transition ease-out duration-200"
+      enter-from-class="transform opacity-0 scale-95"
+      enter-to-class="transform opacity-100 scale-100"
+      leave-active-class="transition ease-in duration-75"
+      leave-from-class="transform opacity-100 scale-100"
+      leave-to-class="transform opacity-0 scale-95"
+    >
       <div
         v-if="profile"
-        class="fixed top-8 right-3 lg:right-5 my-4 text-base list-none rounded shadow z-50"
-        :class="{
-          'bg-gray-700 divide-gray-600': $store.getters.theme,
-          'bg-white divide-y divide-gray-100 ': !$store.getters.theme,
-        }"
-        style="z-index: 999; display: relative"
+        class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none grid"
+        :class="{'bg-gray-800': $store.getters.theme}"
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="user-menu-button"
+        tabindex="-1"
       >
-        <div class="px-4 py-3" role="none">
-          <p
-            class="text-sm"
-            :class="{
-              'text-white': $store.getters.theme,
-              'text-gray-900': !$store.getters.theme,
-            }"
-            role="none"
-          >
-            {{ info.user_name }}
-          </p>
-          <p
-            class="text-sm font-medium truncate"
-            :class="{
-              'text-gray-300': $store.getters.theme,
-              'text-gray-900': !$store.getters.theme,
-            }"
-            role="none"
-          >
-            <!--  dark: -->
-           {{ info.email }}
-          </p>
-        </div>
-        <ul class="py-1" role="none">
-          <li>
-            <button
-              class="block px-4 py-2 text-sm"
-              role="menuitem"
-              @click="
-                toggleProfile();
-                profile = !profile;
-              "
-              :class="{
-                'text-gray-300 hover:bg-gray-600 hover:text-white':
-                  $store.getters.theme,
-                'text-gray-700 hover:bg-gray-100': !$store.getters.theme,
-              }"
-            >
-              My Account
-            </button>
-            <!--  -->
-          </li>
-          <li>
-            <button
-              class="block px-4 py-2 text-sm"
-              role="menuitem"
-              :class="{
-                'text-gray-300 hover:bg-gray-600 hover:text-white':
-                  $store.getters.theme,
-                'text-gray-700 hover:bg-gray-100': !$store.getters.theme,
-              }"
-              @click="
-                logout = !logout;
-                profile = !profile;
-              "
-            >
-              Log out
-            </button>
-            <!--  -->
-          </li>
-        </ul>
+        <button
+          class="block px-4 py-2 text-sm" 
+          :class="{'text-gray-300 hover:bg-gray-700': $store.getters.theme, 'text-gray-700 hover:bg-gray-100': !$store.getters.theme}"
+          role="menuitem" 
+          tabindex="-1" 
+          @click="toggleProfile(); profile = false;"
+        >
+          My Account
+        </button>
+        <button
+          class="block px-4 py-2 text-sm" 
+          :class="{'text-gray-300 hover:bg-gray-700': $store.getters.theme, 'text-gray-700 hover:bg-gray-100': !$store.getters.theme}"
+          role="menuitem" 
+          tabindex="-1" 
+          @click="logout = true; profile = false;"
+        >
+          Log out
+        </button>
       </div>
-    </div>
+    </transition>
   </div>
-
   <div
     v-if="logout"
-    class="fixed z-50 bg-gray-800 bg-opacity-20 top-0 left-0 flex justify-center align-middle"
-    style="height: 100vh; width: 100vw"
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
   >
-    <div class="w-1/4 rounded-xl mt-44 bg-white shadow h-1/4 animate-popup">
-      <div class="w-full flex justify-end pt-2 pe-2">
-        <button
-          type="button"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-          @click="logout = !logout"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                Confirm Logout
+              </h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  Are you sure you want to log out? You will be redirected to the login page.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            @click.prevent="
+              sendData();
+              $store.commit('changeActivePage', [
+                'dashboard',
+                'DASHBOARD',
+                'dashboard',
+              ]);
+            "
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
           >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-      </div>
-      <div class="p-4 md:p-5 text-center">
-        <svg
-          class="mx-auto mb-4 text-gray-400 w-12 h-12"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 20"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-        <h3 class="mb-5 text-lg font-normal text-gray-500">
-          Are you sure you want to logout?
-        </h3>
-        <button
-          @click.prevent="
-            sendData();
-            $store.commit('changeActivePage', [
-              'dashboard',
-              'DASHBOARD',
-              'dashboard',
-            ]);
-          "
-          type="button"
-          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
-        >
-          Yes, I'm sure
-        </button>
-        <button
-          @click="logout = !logout"
-          type="button"
-          class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-        >
-          No, cancel
-        </button>
+            Logout
+          </button>
+          <button
+            @click="logout = false"
+            type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>

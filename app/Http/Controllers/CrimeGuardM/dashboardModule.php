@@ -291,18 +291,70 @@ class dashboardModule extends Controller
     }
     public function displayCount()
     {
-
         date_default_timezone_set('Asia/Manila');
 
         $currentDate = new DateTime();
+        $firstDayOfMonth = new DateTime('first day of this month');
+        $lastDayOfMonth = new DateTime('last day of this month');
 
         $data = [];
-
         $data['data']['upper'] = [];
-        $data['data']['upper']['incidentCount'] = Incidents::where('status', '!=', 'report')->where('status', '!=', 'reject')->where('status', '!=', 'respond')->count();
-        $data['data']['upper']['clearedCount'] = Incidents::where('status', '=', 'clear')->count();
-        $data['data']['upper']['solvedCount'] = Incidents::where('status', '=', 'solved')->count();
-        $data['data']['upper']['underICount'] = Incidents::where('status', '=', 'Pending')->orWhere('status', '=', 'under investigation')->count();
+
+        $statuses = [
+            'incidentCount' => ['!=', ['report', 'reject', 'respond']],
+            'clearedCount' => ['=', 'clear'],
+            'solvedCount' => ['=', 'solve'],
+            'underICount' => ['in', ['pending', 'under investigation']],
+            'rejectCount' => ['=', 'reject'],
+            'reportCount' => ['=', 'report'],
+            'respondCount' => ['=', 'respond']
+        ];
+
+        foreach ($statuses as $key => $status) {
+            // Count for all time
+            $query = Incidents::query();
+            
+            if ($status[0] == '!=') {
+                foreach ($status[1] as $s) {
+                    $query->where('status', '!=', $s);
+                }
+            } elseif ($status[0] == 'in') {
+                $query->whereIn('status', $status[1]);
+            } else {
+                $query->where('status', $status[0], $status[1]);
+            }
+
+            $totalCount = $query->count();
+            
+            // Count for current month
+            $currentMonthCount = (clone $query)->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
+            
+            // Count for last month
+            $lastMonthStart = (clone $firstDayOfMonth)->modify('-1 month');
+            $lastMonthEnd = (clone $lastDayOfMonth)->modify('-1 month');
+            $lastMonthCount = (clone $query)->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+
+            // Calculate growth
+            $growth = $lastMonthCount > 0 ? (($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100 : ($currentMonthCount > 0 ? 100 : 0);
+
+            $data['data']['upper'][$key] = [
+                'totalCount' => $totalCount,
+                'currentMonthCount' => $currentMonthCount,
+                'growth' => round($growth, 2)
+            ];
+        }
+
+        // Calculate total incidents
+        $totalIncidents = Incidents::count();
+        $currentMonthTotalIncidents = Incidents::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
+        $lastMonthTotalIncidents = Incidents::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+        $totalGrowth = $lastMonthTotalIncidents > 0 ? (($currentMonthTotalIncidents - $lastMonthTotalIncidents) / $lastMonthTotalIncidents) * 100 : ($currentMonthTotalIncidents > 0 ? 100 : 0);
+
+        $data['data']['upper']['totalIncidents'] = [
+            'totalCount' => $totalIncidents,
+            'currentMonthCount' => $currentMonthTotalIncidents,
+            'growth' => round($totalGrowth, 2)
+        ];
 
         $data['response'] = 'Success';
 

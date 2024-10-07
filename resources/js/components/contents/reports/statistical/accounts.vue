@@ -2,137 +2,108 @@
   <form
     class="p-4 md:p-5 md:max-w-screen-md rounded-md border shadow-xs"
     :class="{
-      'shadow-white  text-white border-gray-600': $store.getters.theme,
-      '': !$store.getters.theme,
+      'bg-gray-800 text-white border-gray-700': $store.getters.theme,
+      'bg-white text-gray-800': !$store.getters.theme,
     }"
   >
-    <!-- Form fields -->
+    <h2 class="text-2xl font-bold mb-6 text-center" :class="{ 'text-white': $store.getters.theme }">
+      Generate Account Report
+    </h2>
 
-    <div class="grid md:grid-cols-8 md:gap-6 p-5">
-      <p class="col-span-2 text-lg font-bold text-end">Date & time from:</p>
-      <div class="grid md:grid-cols-2 col-span-6 md:gap-6 group">
-        <div class="relative z-0 w-full mb-5 group">
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="date"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none docus:outline-none focus:ring-0 peer"
-              :class="{
-                'text-gray-50 arder-gray-600 dacus:border-blue-500 f':
-                  $store.getters.theme,
-                'text-gray-900 border-gray-300 focus:border-blue-600':
-                  !$store.getters.theme,
-              }"
-              placeholder=""
-              required
-              v-model="generate.date_start"
-            />
-          </div>
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Start Date:</label
-          >
-        </div>
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="time"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
-            :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
-            }"
-            v-model="generate.time_start"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Time:</label
-          >
-        </div>
-      </div>
-      <p class="col-span-2 text-lg font-bold text-end">Date & time to:</p>
-      <div class="grid md:grid-cols-2 col-span-6 md:gap-6 group">
-        <div class="relative z-0 w-full mb-5 group">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Date From
+          </label>
           <input
             type="date"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
+            v-model="generate.date_start"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
             :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
             }"
-            placeholder=" "
-            v-model="generate.date_end"
             required
           />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >End Date:</label
-          >
         </div>
-        <div class="relative z-0 w-full mb-5 group">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Time From
+          </label>
           <input
             type="time"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 peer"
+            v-model="generate.time_start"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
             :class="{
-              'text-gray-50  border-gray-600 focus:border-blue-500':
-                $store.getters.theme,
-              'text-gray-900 border-gray-300 focus:border-blue-600':
-                !$store.getters.theme,
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
             }"
-            placeholder=" "
-            v-model="generate.time_end"
             required
           />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Time:</label
-          >
         </div>
       </div>
-      <p class="col-span-2 text-lg font-bold text-end">STATUS:</p>
 
-      <div class="col-span-6">
-        <select
-          v-model="generate.status"
-          class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-        >
-          <option selected value="">STATUS</option>
-          <option value="accepted">ACCEPTED</option>
-          <option value="rejected">REJECTED</option>
-          <option value="request">REQUESTING</option>
-        </select>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Date To
+          </label>
+          <input
+            type="date"
+            v-model="generate.date_end"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+            :class="{
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+            }"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+            Time To
+          </label>
+          <input
+            type="time"
+            v-model="generate.time_end"
+            class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+            :class="{
+              'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+              'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+            }"
+            required
+          />
+        </div>
       </div>
+    </div>
 
-      <p class="col-span-2"></p>
+    <div class="mt-6">
+      <label class="block text-sm font-medium mb-1" :class="{ 'text-gray-300': $store.getters.theme, 'text-gray-700': !$store.getters.theme }">
+        Status
+      </label>
+      <select
+        v-model="generate.status"
+        class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-opacity-50"
+        :class="{
+          'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500': $store.getters.theme,
+          'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500': !$store.getters.theme,
+        }"
+      >
+        <option value="">All Statuses</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+        <option value="request">Requesting</option>
+      </select>
+    </div>
+
+    <div class="mt-8 flex justify-center">
       <button
         @click="printContent"
         type="button"
-        class="text-white col-span-3 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-        :class="{
-          'bg-green-600 hover:bg-green-700 foutline-none focus:ring-green-800':
-            $store.getters.theme,
-          'bg-green-700 hover:bg-green-800 focus:ring-green-300':
-            !$store.getters.theme,
-        }"
+        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
       >
-        GENERATE REPORT
+        Generate Report
       </button>
     </div>
   </form>
