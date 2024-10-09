@@ -1,23 +1,12 @@
 <template>
-  <div
-    class="w-full border m-1 p-2 rounded-md flex flex-col"
-    style="height: 25vh"
-  >
-    <h1
-      class="text-start text-gray-700 font-bold border-b mb-2 border-gray-900"
-    >
-      Suspect
-    </h1>
-    <div class="w-full border-b flex-col" style="height: 20vh">
-      <div v-for="dt in data" class="flex border-b">
-        <span class="text-gray-900 w-full text-start font-semibold"
-          >{{ dt.firstname }} {{ dt.lastname }}</span
-        >
-        <span class="text-gray-900 w-full text-end">{{ dt.mobile_phone }}</span>
+  <div class="bg-gray-50 p-4 rounded-lg shadow">
+    <h3 class="text-lg font-semibold text-gray-900 mb-3">Suspects</h3>
+    <div class="space-y-2 max-h-40 overflow-y-auto">
+      <div v-for="(dt, index) in data" :key="index" class="bg-white p-2 rounded shadow-sm">
+        <p class="font-semibold">{{ dt.firstname }} {{ dt.lastname }}</p>
+        <p class="text-sm text-gray-600">{{ dt.mobile_phone }}</p>
       </div>
-      <div v-if="data.length == 0" class="flex-col h-full py-5 bg-gray-100">
-        <span class=" h-full text-2xl">NO DATA</span>
-      </div>
+      <p v-if="data.length === 0" class="text-gray-500 italic">No suspects recorded</p>
     </div>
   </div>
 </template>

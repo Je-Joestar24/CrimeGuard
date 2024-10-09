@@ -1,86 +1,77 @@
 <template>
-  <form class="p-4 md:p-5">
-    <div v-for="model in formModel[$store.getters.CurrentActiveSideBar]">
-      <p v-if="model.title" class="text-gray-700 mb-3">
-        {{ "(" + model.title + ")" }}:
-      </p>
+  <form class="p-3 md:p-4 space-y-4 border border-gray-300 rounded-lg">
+    <div v-for="model in formModel[$store.getters.CurrentActiveSideBar]" :key="model.title" class="space-y-3 border-b border-gray-200 pb-4 last:border-b-0">
+      <h3 v-if="model.title" class="text-sm font-semibold text-gray-700 mb-2">
+        {{ model.title }}
+      </h3>
       <div
-        v-bind:class="`grid gap-3`"
-        :style="
-          'display:grid; grid-template-columns: repeat(' +
-          model.cols +
-          ', 1fr);'
-        "
+        :class="`grid gap-4`"
+        :style="{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${model.cols}, minmax(0, 1fr))`
+        }"
       >
-        <div class="relative z-0 w-full mb-5 group" v-for="mdl in model.infos">
+        <div class="relative" v-for="mdl in model.infos" :key="mdl.label">
           <input
-            v-if="
-              mdl.type != 'select' &&
-              mdl.type != 'area' &&
-              mdl.type != 'file' &&
-              mdl.type != 'file2' &&
-              mdl.type != 'signature'
-            "
+            v-if="['text', 'number', 'date', 'email', 'tel'].includes(mdl.type)"
             :type="mdl.type"
             v-model="mdl.input"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
+            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
 
-          <input
-            class="block pt-2 pb-1.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            v-if="mdl.type == 'file'"
-            type="file"
-            @change="onFileChange"
-          />
+          <div v-else-if="['file', 'file2'].includes(mdl.type)" class="relative border border-gray-300 rounded-md p-2">
+            <input
+              class="hidden"
+              :type="mdl.type"
+              :id="mdl.label"
+              @change="mdl.type === 'file' ? onFileChange : onFileChange2"
+            />
+            <label :for="mdl.label" class="flex items-center justify-center w-full h-4 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+              <span class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </span>
+            </label>
+          </div>
 
-          <input
-            class="block pt-2 pb-1.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            v-if="mdl.type == 'file2'"
-            type="file"
-            @change="onFileChange2"
-          />
+          <signatures v-else-if="mdl.type === 'signature'" class="w-full" :setData="changeSignature" :data="mdl.input" />
 
-          <signatures class="w-full " v-if="mdl.type == 'signature'" :setData="changeSignature" :data="mdl.input"></signatures>
-          <label
-            class="block mb-2 text-sm font-medium text-gray-500"
-            v-if="mdl.type == 'area'"
-            >{{ mdl.label }}</label
-          >
           <textarea
-            v-if="mdl.type == 'area'"
+            v-else-if="mdl.type === 'area'"
             rows="2"
-            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Write here..."
+            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             v-model="mdl.input"
           ></textarea>
+
           <select
-            v-if="mdl.type == 'select'"
+            v-else-if="mdl.type === 'select'"
             v-model="mdl.input"
-            class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">{{ mdl.options.selected }}</option>
-            <option v-for="opt in mdl.options.option" :value="opt.val">
+            <option v-for="opt in mdl.options.option" :key="opt.val" :value="opt.val">
               {{ opt.val }}
             </option>
           </select>
-          <label
-            v-if="mdl.type != 'area'"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >{{ mdl.label }}</label
-          >
+
+          <label class="absolute left-2 -top-2.5 px-1 bg-white text-xs font-medium text-gray-600">
+            {{ mdl.label }}
+          </label>
         </div>
       </div>
     </div>
 
-    <button
-      type="button"
-      @click.prevent="sendData"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-2.5 py-1.5 text-center"
-    >
-      SAVE
-    </button>
+    <div class="flex justify-end pt-4 border-t border-gray-200">
+      <button
+        type="button"
+        @click.prevent="sendData"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        Save
+      </button>
+    </div>
   </form>
 </template>
 

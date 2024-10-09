@@ -1,30 +1,30 @@
 <template>
-  <div
-    class="flex text-start p-1 mt-3 border-b border-gray-700 text-gray-900 text-xs font-bold mx-1"
-  >
-    <div v-for="(heads, i) of table.headers" :class="table.temp[i]">
-      {{ heads }}
-    </div>
-  </div>
-
-  <div
-    class="mx-1 mt-1 flex flex-col border-b border-gray-700 overflow-auto"
-    style="height: 35vh"
-  >
-    <div
-      v-if="table.data.length == 0"
-      class="flex h-full justify-center items-center text-2xl text-gray-400"
-    >
-      NO PREVIOUS RECORDS
-    </div>
-    <div
-      v-for="row of table.data"
-      v-if="table.data.length != 0"
-      class="flex text-start px-1 pt-1 shadow"
-    >
-      <div v-for="(col, i) of Object.values(row)" :class="table.temp[i]">
-        <span v-if="col != null || col != ''">{{ col }}</span>
-        <span class=" text-red-800" v-if="col == null || col == ''">No data</span>
+  <div class="bg-white p-6 rounded-xl shadow-lg">
+    <h3 class="text-2xl font-bold text-indigo-600 mb-4">Previous Records</h3>
+    
+    <div class="bg-gray-50 p-4 rounded-lg">
+      <div class="max-h-40 overflow-y-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-100">
+            <tr>
+              <th v-for="header in table.headers" :key="header" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {{ header }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(row, index) in table.data" :key="index">
+              <td v-for="(col, colIndex) in Object.values(row)" :key="colIndex" class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
+                {{ col || 'N/A' }}
+              </td>
+            </tr>
+            <tr v-if="table.data.length === 0">
+              <td :colspan="table.headers.length" class="px-4 py-2 text-center text-sm text-gray-500">
+                No previous records
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

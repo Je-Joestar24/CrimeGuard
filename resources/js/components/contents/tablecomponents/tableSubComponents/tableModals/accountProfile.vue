@@ -1,80 +1,77 @@
 <template>
   <div
     tabindex="-1"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
   >
     <div class="relative w-full max-w-6xl">
-      <div class="relative bg-white rounded-lg border shadow-2xl">
+      <div class="relative bg-white rounded-lg shadow-2xl">
         <button
           type="button"
-          class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+          class="absolute top-5 right-5 text-gray-400 hover:text-gray-900 transition-colors duration-200"
           @click.prevent="toggle()"
         >
           <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
             fill="none"
-            viewBox="0 0 14 14"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              stroke="currentColor"
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
           <span class="sr-only">Close modal</span>
         </button>
-        <div class="p-4 md:p-5 text-center">
-          <div class="flex text-2xl text-black font-bold justify-center">
-            VIEW DETAILS
-          </div>
-          <div>
-            <div class="flex p-1 gap-1" style="height: 35vh">
-              <div
-                class="p-5 flex flex-col justify-center items-center border rounded-lg border-gray-200 shadow-md bg-gray-100"
-              >
-                <svg
-                  v-if="!profile"
-                  class="h-64 w-64 border-slate-500 rounded-lg border-2 text-gray-900 bg-slate-50"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <img v-if="profile" class="h-64 w-64 border-slate-500 rounded-lg border-2 text-gray-900 bg-slate-50 object-cover object-top" :src="profile" alt="">
-                <span
-                  class="font-bold mt-3 py-2 bg-gray-200 w-60 text-center rounded-md border border-gray-500"
-                  >{{ user_name ? user_name : 'NO DATA' }}</span
-                >
+        <div class="p-5 md:p-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">
+            Account Details
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1">
+              <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div class="w-48 h-48 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                  <img
+                    v-if="profile"
+                    :src="profile"
+                    alt="User profile"
+                    class="w-full h-full object-cover"
+                  >
+                  <svg
+                    v-else
+                    class="w-full h-full text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                  {{ user_name || 'No Name' }}
+                </h3>
+                <span class="text-sm text-gray-600">
+                  Account ID: {{ suspectId }}
+                </span>
               </div>
-              <!-- Basic infos -->
-              <basic :suspectIdRequest="suspectId" :sendUsername="sendData"></basic>
             </div>
-            <h1
-              class="text-md py-2 rounded-md border-b border-gray-400 mb-1 font-bold text-gray-900"
-            >
-              ADDRESS INFORMATION
-            </h1>
-            <div
-              class="flex flex-col rounded-lg border border-gray-300 shadow-sm"
-              style="height: 45vh"
-            >
-              <!-- NAVIGATION -->
-              <h1
-                class="text-start flex gap-0 bg-blue-200 rounded-t-lg text-sm font-bold text-gray-700"
-              ></h1>
-              <div>
-                <addresses :suspectIdRequest="suspectId"></addresses>
-              </div>
+            <div class="md:col-span-2">
+              <basic :suspectIdRequest="suspectId" :sendUsername="sendData" />
+            </div>
+          </div>
+          <div class="mt-5">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">
+              Address Information
+            </h3>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+              <addresses :suspectIdRequest="suspectId" />
             </div>
           </div>
         </div>

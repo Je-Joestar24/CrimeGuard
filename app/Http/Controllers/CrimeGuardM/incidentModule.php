@@ -153,7 +153,7 @@ class incidentModule extends Controller
                 $query = $query->where('incidents.time_of_incident', '<=', $request->input('date_end') . (" " . ($request->input('time_end') ? $request->input('time_end') . ":00" : explode(' ', $defaultDate)[1])));
             }
 
-            if($request->has('barangay')){
+            if ($request->has('barangay')) {
                 $barangay = $request->input('barangay');
                 $query = $query->where('incidents.barangay', 'like', "%{$barangay}%");
             }
@@ -399,7 +399,7 @@ class incidentModule extends Controller
                 'edited_by' => $request['edited_by'],
                 'rej_message' => null
             ];
-            
+
             $incident = Incidents::findOrFail($request['id']);
             $incident->update($archive);
 
@@ -430,7 +430,7 @@ class incidentModule extends Controller
 
         try {
             $archive = [
-                /*'status' => 'reject', */
+                'status' => 'reject',
                 'assigned_to' => null,
                 'edited_by' => $request['edited_by'],
                 'rej_message' => $request->input('rej_message')
@@ -520,10 +520,10 @@ class incidentModule extends Controller
                 }); */
             }
 
-            
+
             if ($request->has('search') && !empty($request->input('search'))) {
                 $searchTerm = $request->input('search');
-               $reports =$reports->where(function ($q) use ($searchTerm) {
+                $reports = $reports->where(function ($q) use ($searchTerm) {
                     $q->where('users.first_name', 'like', "%{$searchTerm}%")
                         ->orWhere('users.last_name', 'like', "%{$searchTerm}%")
                         ->orWhere('users.user_name', 'like', "%{$searchTerm}%")
@@ -584,7 +584,7 @@ class incidentModule extends Controller
             $incidents = $incidents->where('incidents.status', '!=', 'report')
                 ->where('incidents.status', '!=', 'reject')
                 ->where('incidents.incident_type', '!=', NULL)
-                
+
                 /* 
                 ->where('incidents.date_reported', '>=', $thirtyDaysAgo) */;
             if (isset($request) && isset($request['id'])) $incidents = $incidents->where('incidents.reported_by_user', $request['id']);
@@ -779,20 +779,25 @@ class incidentModule extends Controller
         }
         return response()->json($data);
     }
-
     public function assignTo(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
         $data = [];
         try {
-            $incident = Incidents::findOrFail($request->input('id'));
+            $incident = Incidents::find($request->input('id'));
+            if (!$incident) {
+                throw new \Exception("No query results for model [App\\Models\\Incidents].");
+            }
+
+            $assignedUser = User::find($request->input('assigned_to'));
+            if (!$assignedUser) {
+                throw new \Exception("No query results for model [App\\Models\\User].");
+            }
+
             $incident->update([
                 'assigned_to' => $request->input('assigned_to'),
                 'rej_message' => null
             ]);
-
-            // Get the assigned user
-            $assignedUser = User::findOrFail($request->input('assigned_to'));
 
             // Send email to the assigned user
             Mail::to($assignedUser->email)->send(new IncidentAssignedMail($assignedUser, $incident));
@@ -827,6 +832,7 @@ class incidentModule extends Controller
             $incident = $request['incident'];
             $incident['time_reported'] = $incident['date_reported'] . ' ' . $incident['time_reported'] . ':00';
             $incident['time_of_incident'] = $incident['date_of_incident'] . ' ' . $incident['time_of_incident'] . ':00';
+
 
             $victims = $this->doesItExists($request['victims'], 'victim') ? $this->addByKey($request['victims'], 'victim') : [];
             $suspects = $this->doesItExists($request['suspects'], 'suspect') ? $this->addByKey($request['suspects'], 'suspect') : [];
@@ -869,9 +875,7 @@ class incidentModule extends Controller
             $narrativeID = $this->addItem(IncidentNarative::class, $request['incident_narrative']);
 
             if ($narrativeID != -1) $incident['incident_narrative'] = $narrativeID;
-
-            $incidentID = $this->getId(Incidents::class, $incident);
-            if ($incidentID == -1) $incidentID = $this->addItem(Incidents::class, $incident);
+            $incidentID = Incidents::create($incident)->id;
 
             if ($incidentID != -1 && $incidentID != null) {
                 foreach ($victimIDS as $id) $this->addByKeyValue(incidentVictims::class, 'incident', 'victim', $incidentID, $id);
@@ -908,7 +912,7 @@ class incidentModule extends Controller
                 'barangay'
             )->find($request['id'])->toArray();
 
-            if($incident['barangay'] == NULL) $incident['barangay'] = "";
+            if ($incident['barangay'] == NULL) $incident['barangay'] = "";
 
             $incidentTypes = Incidents::join('incident-types as it', "incidents.incident_type", "=", 'it.id')
                 ->select('it.incident_name')->find($request['id']);

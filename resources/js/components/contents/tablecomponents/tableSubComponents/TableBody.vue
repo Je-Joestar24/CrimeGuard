@@ -30,14 +30,14 @@
           View
         </button>
         <button
-          v-if="$store.getters.getActive === 'innerIncident'"
+          v-if="$store.getters.getActive === 'innerIncident' && $route.path !== '/Admin/Archive'"
           @click.prevent="editIncident(dataSets.id)"
           class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
         >
           Edit
         </button>
         <button
-          v-if="$store.getters.getActive !== 'innerIncident'"
+          v-if="$store.getters.getActive !== 'innerIncident' && $route.path !== '/Admin/Archive'"
           @click.prevent="editItem(dataSets.id)"
           class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
         >

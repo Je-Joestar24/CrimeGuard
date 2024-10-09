@@ -1,174 +1,64 @@
 <template>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">BACKGROUND:</h1>
+  <div class="bg-white p-6 rounded-xl shadow-lg">
+    <h3 class="text-2xl font-bold text-indigo-600 mb-4">Background Information</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">Education & Occupation</h4>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Highest Education:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.highest_educ_attainment || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Occupation:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.occupation || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
 
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">HIGHEST EDUCATION ATTAINMENT</label>
-        <input
-          v-if="data['highest_educ_attainment'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['highest_educ_attainment']"
-          type="text"
-        />
-        <input
-          v-if="data['highest_educ_attainment'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">PNP Background</h4>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Rank:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.pnp_rank || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Unit Assignment:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.unit_assignment || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Group Affiliation:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.group_affiliation || 'N/A' }}</span>
+          </div>
+        </div>
       </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">OCCUPATION</label>
-        <input
-          v-if="data['occupation'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['occupation']"
-          type="text"
-        />
-        <input
-          v-if="data['occupation'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-    </div>
-  </div>
 
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">
-      PNP BACKGROUND:
-    </h1>
-
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">RANK</label>
-        <input
-          v-if="data['pnp_rank'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['pnp_rank']"
-          type="text"
-        />
-        <input
-          v-if="data['pnp_rank'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">UNIT ASSIGNMENT</label>
-        <input
-          v-if="data['unit_assignment'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['unit_assignment']"
-          type="text"
-        />
-        <input
-          v-if="data['unit_assignment'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">GROUP AFFILIATION</label>
-        <input
-          v-if="data['group_affiliation'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['group_affiliation']"
-          type="text"
-        />
-        <input
-          v-if="data['group_affiliation'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">
-      WORK ADDRESS:
-    </h1>
-
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">STREET</label>
-        <input
-          v-if="data['street'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['street']"
-          type="text"
-        />
-        <input
-          v-if="data['street'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">VILLAGE</label>
-        <input
-          v-if="data['village'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['village']"
-          type="text"
-        />
-        <input
-          v-if="data['village'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">BARANGAY</label>
-        <input
-          v-if="data['barangay'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['barangay']"
-          type="text"
-        />
-        <input
-          v-if="data['barangay'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">CITY</label>
-        <input
-          v-if="data['city'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['city']"
-          type="text"
-        />
-        <input
-          v-if="data['city'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">PROVINCE</label>
-        <input
-          v-if="data['province'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['province']"
-          type="text"
-        />
-        <input
-          v-if="data['province'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">Work Address</h4>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Street:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.street || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Village:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.village || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Barangay:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.barangay || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">City:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.city || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Province:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.province || 'N/A' }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

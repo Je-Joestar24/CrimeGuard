@@ -1,65 +1,29 @@
 <template>
-  <div class="flex p-1 gap-0.5" style="height: 9vh">
-    <span
-      class="border-black border-2 p-4  text-white font-bold bg-red-600 w-1/2 flex flex-col justify-center"
-      :class="{'text-xl': ((data.incident_name + '').length) > 7, 'text-5xl': ((data.incident_name + '').length) <= 7}"
-      >{{ data.incident_name }}</span
-    >
-    <div class="bg-gray-700 w-full flex flex-col">
-      <div class="bg-white w-full flex">
-        <div class="w-full flex flex-col justify-start">
-          <label class="text-start text-gray-900 text-xs" for=""
-            >Date of Incident:</label
-          >
-          <p
-            class="w-full rounded-md text-gray-950 text-start ps-2 font-bold pointer-events-none"
-          >
-            {{ (data2.date_ofInc == null || data2.date_ofInc == '') ? 'NO DATA' : data2.date_ofInc }}
-          </p>
+  <div class="bg-gray-50 p-4 rounded-lg shadow">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-red-600">{{ data.incident_name }}</h3>
+        <div class="space-y-1">
+          <p class="text-sm text-gray-600">Date of Incident:</p>
+          <p class="font-semibold">{{ data2.date_ofInc || 'NO DATA' }}</p>
         </div>
-        <div class="w-full flex flex-col justify-start">
-          <label class="text-start text-gray-900 text-xs" for=""
-            >Time of Incident:</label
-          >
-          <p
-            class="w-full rounded-md text-gray-950 text-start ps-2 font-bold pointer-events-none"
-          >
-          {{ (data2.time_ofInc == null || data2.time_ofInc == '') ? 'NO DATA' : data2.time_ofInc }}
-          </p>
-        </div>
-        <div class="w-full flex flex-col justify-start">
-          <label class="text-start text-gray-900 text-xs" for=""
-            >Date of Reported:</label
-          >
-          <p
-            v-if="true"
-            class="w-full rounded-md text-gray-950 text-start ps-2 font-bold pointer-events-none"
-          >
-          {{ (data2.date_report == null || data2.date_report == '') ? 'NO DATA' : data2.date_report }}
-          </p>
-        </div>
-        <div class="w-full flex flex-col justify-start">
-          <label class="text-start text-gray-900 text-xs" for=""
-            >Time of Reported:</label
-          >
-          <p
-            v-if="true"
-            class="w-full rounded-md text-gray-950 text-start ps-2 font-bold pointer-events-none"
-          >
-          {{ (data2.time_report == null || data2.time_report == '') ? 'NO DATA' : data2.time_report }}
-          </p>
+        <div class="space-y-1">
+          <p class="text-sm text-gray-600">Time of Incident:</p>
+          <p class="font-semibold">{{ data2.time_ofInc || 'NO DATA' }}</p>
         </div>
       </div>
-      <div class="bg-white w-full flex mt-0.5 pb-0.5">
-        <div class="w-full flex flex-col justify-start">
-          <label class="text-start text-gray-900 text-xs" for=""
-            >Location:</label
-          >
-          <p
-            class="w-full rounded-md text-gray-950 text-start ps-2 font-bold pointer-events-none"
-          > 
-          {{ (data.location == null || data.location == '') ? 'NO DATA' : data.location }}
-          </p>
+      <div class="space-y-2">
+        <div class="space-y-1">
+          <p class="text-sm text-gray-600">Date Reported:</p>
+          <p class="font-semibold">{{ data2.date_report || 'NO DATA' }}</p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-sm text-gray-600">Time Reported:</p>
+          <p class="font-semibold">{{ data2.time_report || 'NO DATA' }}</p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-sm text-gray-600">Location:</p>
+          <p class="font-semibold">{{ data.location || 'NO DATA' }}</p>
         </div>
       </div>
     </div>

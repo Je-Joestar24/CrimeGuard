@@ -3,7 +3,7 @@
   <div
     v-if="logged"
     id="sidebar"
-    class="sidebar"
+    class="sidebar f"
     :class="{
       'bg-gray-800 border-gray-700': $store.getters.theme,
       'bg-white border-gray-200': !$store.getters.theme,
@@ -21,7 +21,7 @@
         class="p-4 mt-14"
         :class="{ 'border-gray-700': this.$store.getters.theme }"
       >
-        <div class="container">
+        <div class="container ps-5">
           <h1
             @click="playAudio"
             class="text-xl bg-gray-200 font-bold p-3 border rounded shadow-lg mb-10"

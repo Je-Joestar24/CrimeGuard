@@ -1,124 +1,52 @@
 <template>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">HAIR:</h1>
+  <div class="bg-white p-6 rounded-xl shadow-lg">
+    <h3 class="text-2xl font-bold text-indigo-600 mb-4">Physical Characteristics</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">Hair</h4>
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Color:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.hair_color || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Description:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.hair_description || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
 
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">HAIR COLOR</label>
-        <input
-          v-if="data['hair_color'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['hair_color']"
-          type="text"
-        />
-        <input
-          v-if="data['hair_color'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">Eyes</h4>
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Color:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.eyes_color || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Description:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.eyes_description || 'N/A' }}</span>
+          </div>
+        </div>
       </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">DESCRIPTION OF HAIR</label>
-        <input
-          v-if="data['hair_description'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['hair_description']"
-          type="text"
-        />
-        <input
-          v-if="data['hair_description'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">EYES:</h1>
 
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">EYES COLOR</label>
-        <input
-          v-if="data['eyes_color'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['eyes_color']"
-          type="text"
-        />
-        <input
-          v-if="data['eyes_color'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">DESCRIPTION OF EYES</label>
-        <input
-          v-if="data['eyes_description'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['eyes_description']"
-          type="text"
-        />
-        <input
-          v-if="data['eyes_description'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">BODY:</h1>
-
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">HEIGHT</label>
-        <input
-          v-if="data['height'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['height']"
-          type="text"
-        />
-        <input
-          v-if="data['height'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">WEIGHT</label>
-        <input
-          v-if="data['weight'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['weight']"
-          type="text"
-        />
-        <input
-          v-if="data['weight'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">BUILT</label>
-        <input
-          v-if="data['built'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['built']"
-          type="text"
-        />
-        <input
-          v-if="data['built'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-lg font-semibold text-gray-700 mb-2">Body</h4>
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Height:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.height || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Weight:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.weight || 'N/A' }}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-500">Build:</span>
+            <span class="text-sm font-semibold text-gray-700">{{ data.built || 'N/A' }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

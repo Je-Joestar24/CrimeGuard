@@ -1,197 +1,30 @@
 <template>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">
-      CURRENT ADDRESS:
-    </h1>
+  <div class="bg-white p-4 rounded-xl shadow-lg">
+    <h3 class="text-xl font-bold text-indigo-600 mb-3">Addresses</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <h4 class="text-base font-semibold text-gray-700 mb-2">Current Address</h4>
+        <div class="space-y-1 max-h-32 overflow-y-auto text-sm">
+          <p><span class="font-medium text-gray-500">Street:</span> {{ data.current_street || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">House No.:</span> {{ data.current_house_number || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Village:</span> {{ data.current_village || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Barangay:</span> {{ data.current_barangay || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">City:</span> {{ data.current_city || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Province:</span> {{ data.current_province || 'N/A' }}</p>
+        </div>
+      </div>
 
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">STREET</label>
-        <input
-          v-if="data['current_street'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_street']"
-          type="text"
-        />
-        <input
-          v-if="data['current_street'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">HOUSE NO.</label>
-        <input
-        v-if="data['current_house_number'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_house_number']"
-          type="text"
-        />
-        <input
-          v-if="data['current_house_number'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">VILLAGE</label>
-        <input
-          v-if="data['current_village'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_village']"
-          type="text"
-        />
-        <input
-          v-if="data['current_village'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">BARANGAY</label>
-        <input
-          v-if="data['current_barangay'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_barangay']"
-          type="text"
-        />
-        <input
-          v-if="data['current_barangay'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">CITY</label>
-        <input
-          v-if="data['current_city'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_city']"
-          type="text"
-        />
-        <input
-          v-if="data['current_city'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">PROVINCE</label>
-        <input
-          v-if="data['current_province'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['current_province']"
-          type="text"
-        />
-        <input
-          v-if="data['current_province'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="w-full col-span-1 gap-1 flex flex-col p-2 text-xs">
-    <h1 class="text-xs font-bold underline p-1 ps-4 text-start">
-      OTHER ADDRESS:
-    </h1>
-
-    <div class="flex w-full gap-2 px-1">
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">STREET</label>
-        <input
-          v-if="data['other_street'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_street']"
-          type="text"
-        />
-        <input
-          v-if="data['other_street'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">HOUSE NO.</label>
-        <input
-        v-if="data['other_house_number'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_house_number']"
-          type="text"
-        />
-        <input
-          v-if="data['other_house_number'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">VILLAGE</label>
-        <input
-          v-if="data['other_village'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_village']"
-          type="text"
-        />
-        <input
-          v-if="data['other_village'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">BARANGAY</label>
-        <input
-          v-if="data['other_barangay'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_barangay']"
-          type="text"
-        />
-        <input
-          v-if="data['other_barangay'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">CITY</label>
-        <input
-          v-if="data['other_city'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_city']"
-          type="text"
-        />
-        <input
-          v-if="data['other_city'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
-      </div>
-      <div class="w-full flex flex-col justify-start">
-        <label class="text-start" for="">PROVINCE</label>
-        <input
-          v-if="data['other_province'] != null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="data['other_province']"
-          type="text"
-        />
-        <input
-          v-if="data['other_province'] == null"
-          class="w-full rounded-md bg-blue-100 pointer-events-none"
-          :value="'No data'"
-          type="text"
-        />
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <h4 class="text-base font-semibold text-gray-700 mb-2">Other Address</h4>
+        <div class="space-y-1 max-h-32 overflow-y-auto text-sm">
+          <p><span class="font-medium text-gray-500">Street:</span> {{ data.other_street || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">House No.:</span> {{ data.other_house_number || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Village:</span> {{ data.other_village || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Barangay:</span> {{ data.other_barangay || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">City:</span> {{ data.other_city || 'N/A' }}</p>
+          <p><span class="font-medium text-gray-500">Province:</span> {{ data.other_province || 'N/A' }}</p>
+        </div>
       </div>
     </div>
   </div>

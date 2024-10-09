@@ -1,19 +1,7 @@
 <template>
-  <div class="border m-1 p-2 rounded-md h-full flex-col">
-    <h1 class="border-b border-black text-gray-800 font-bold text-start">
-      INCIDENT NARRATIVE
-    </h1>
-    <div class="w-full">
-      <textarea
-        id="message"
-        rows="5"
-        class="mt-3 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-        disabled
-      >
-      {{ data.details }}
-            </textarea
-      >
-    </div>
+  <div class="bg-gray-50 p-4 rounded-lg shadow">
+    <h3 class="text-lg font-semibold text-gray-900 mb-3">Incident Narrative</h3>
+    <p class="text-gray-700 whitespace-pre-wrap">{{ data.details || 'No narrative available.' }}</p>
   </div>
 </template>
 

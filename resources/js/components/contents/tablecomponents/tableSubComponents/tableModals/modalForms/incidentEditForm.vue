@@ -3,479 +3,351 @@
     tabindex="-1"
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
   >
-    <div class="relative w-full max-w-6xl">
-      <div class="relative bg-white rounded-lg border shadow-2xl">
-        <div class="flex justify-end p-3 border-b">
-          <span class=" w-full px-2 py-2 text-xl font-bold">EDIT INCIDENT</span>
-          <button
-            type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-            @click="toggle(-1)"
-          >
-            <!--  @click.prevent="toggle()" -->
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
+  <div class="relative w-full max-w-6xl p-6 bg-white rounded-lg shadow-xl">
+    <div class="flex justify-between items-center mb-6 border-b pb-3">
+      <h2 class="text-2xl font-bold text-gray-800">Edit Incident</h2>
+      <button
+        @click="toggle"
+        class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <form class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-2">
+          <label for="irf-entry" class="block text-sm font-medium text-gray-700">IRF Entry Number</label>
+          <input
+            id="irf-entry"
+            v-model="data.incident.IRF_Entry_no"
+            type="text"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          />
         </div>
-        <form class="p-4 md:p-5" >
-          <!-- Form fields -->
-          <div class="grid md:grid-cols-3 md:gap-6">
-            <div class="relative z-0 w-full mb-5 group">
-              <input
-                type="text"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                v-model="data.incident.IRF_Entry_no"
-              />
-              <label
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >IRF ENTRY NUMBER:</label
-              >
+        
+        <div class="space-y-2">
+          <label for="incident-type" class="block text-sm font-medium text-gray-700">Type of Incident</label>
+          <div class="relative">
+            <input
+              id="incident-type"
+              v-model="data.incident_types.incident_name"
+              type="text"
+              @click.prevent="disableWatcher = false; search('incidentT', data.incident_types.incident_name);"
+              @focusout="clearIt()"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+            <div v-if="incidentT.list.length > 0" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg max-h-60 overflow-auto">
+              <ul class="py-1 text-sm text-gray-700">
+                <li v-for="inc in incidentT.list" :key="inc.id" @click.prevent="selectIncident(inc.incident_name, inc.id)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  {{ inc.incident_name }}
+                  <span v-if="inc.sub_type" class="text-xs text-gray-500">({{ inc.sub_type }})</span>
+                </li>
+              </ul>
             </div>
-            <div class="relative z-0 w-full mb-5 group">
-              
-              <input
-                type="text"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-                v-model="data.incident_types.incident_name"
-                @click="disableWatcher = false; search('incidentT', data.incident_types.incident_name);"
-                @focusout="clearIt()"
-              />
-              <label
-                for="floating_company"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >TYPE OF INCIDENT:</label
-              >
-            </div><!-- 
-            <div class="relative z-0 w-full mb-5 group">
-              <input
-                type="text"
-                v-model="data.incident.copy_for"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_company"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >COPY FOR:</label
-              >
-            </div> -->
-            <div class="relative z-0 w-full mb-5 group">
-              <select
+          </div>
+        </div>
+        
+        <div class="space-y-2">
+          <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+          <select
+            id="status"
             v-model="data.incident.status"
-            class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           >
-            <option value="">SELECT STATUS</option>
-            <option value="respond">RESPONDED</option>
-            <option value="reject">REJECTED</option>
-            <option value="pending">PENDING</option>
-            <option value="under investigation">UNDER INVESTIGATION</option>
-            <option value="clear">CLEARED</option>
-            <option value="solve">SOLVED</option>
+            <option value="">Select Status</option>
+            <option value="respond">Responded</option>
+            <option value="reject">Rejected</option>
+            <option value="pending">Pending</option>
+            <option value="under investigation">Under Investigation</option>
+            <option value="clear">Cleared</option>
+            <option value="solve">Solved</option>
           </select>
-              <label
-                for="floating_company"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >STATUS:</label
-              >
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="date-reported" class="block text-sm font-medium text-gray-700">Date Reported</label>
+            <input
+              id="date-reported"
+              v-model="data.incident.date_reported"
+              type="date"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <div class="space-y-2">
+            <label for="time-reported" class="block text-sm font-medium text-gray-700">Time Reported</label>
+            <input
+              id="time-reported"
+              v-model="data.incident.time_reported"
+              type="time"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="date-of-incident" class="block text-sm font-medium text-gray-700">Date of Incident</label>
+            <input
+              id="date-of-incident"
+              v-model="data.incident.date_of_incident"
+              type="date"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <div class="space-y-2">
+            <label for="time-of-incident" class="block text-sm font-medium text-gray-700">Time of Incident</label>
+            <input
+              id="time-of-incident"
+              v-model="data.incident.time_of_incident"
+              type="time"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-2">
+          <label for="barangay" class="block text-sm font-medium text-gray-700">Barangay</label>
+          <div class="relative">
+            <input
+              id="barangay"
+              v-model="data.incident.barangay"
+              type="text"
+              @click="generateAddress(data.incident.barangay)"
+              @focusout="clearIt2"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+            <div v-if="places.length > 0" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg max-h-60 overflow-auto">
+              <ul class="py-1 text-sm text-gray-700">
+                <li v-for="place in places" :key="place" @click.prevent="setAddress(place)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  {{ place }}
+                </li>
+              </ul>
             </div>
           </div>
-          <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="grid md:grid-cols-2 md:gap-6 group">
-              <div class="relative z-0 w-full group">
-                <div class="relative z-0 w-full group">
-                  <input
-                    type="date"
-                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=""
-                    v-model="data.incident.date_reported"
-                    required
-                  />
-                </div>
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Date Reported:</label
-                >
-              </div>
-              <div class="relative z-0 w-full group">
-                <input
-                  type="time"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  v-model="data.incident.time_reported"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Time Reported:</label
-                >
-              </div>
-            </div>
-            <div class="grid md:grid-cols-2 md:gap-6 group">
-              <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="date"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    v-model="data.incident.date_of_incident"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Date of Incident:</label
-                >
-              </div>
-              <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="time"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  v-model="data.incident.time_of_incident"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Time of Incident:</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-3 md:gap-6">
-            <div class="flex  flex-row px-0 w-full">
-              <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="text"
-                  v-model="data.incident.barangay"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=""
-                  @click="generateAddress(data.incident.barangay)"
-                  @focusout="clearIt2"
-                  required
-                />
-                <label
-                  for="floating_company"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Barangay:</label
-                >
-                <div
-                  v-if="places.length > 0"
-                  class="absolute bg-white w-full rounded-md pt-1 border"
-                >
-                  <div class="max-h-24 overflow-auto flex flex-col rounded-md">
-                    <div
-                      class="px-4 hover:bg-gray-50 py-1 border-b"
-                      v-for="place in places"
-                      @click.prevent="setAddress(place )"
-                    >
-                      {{ place }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <svg  class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-              </svg>
-              
-            </div>
-            <div class="flex col-span-2 flex-row px-0 w-full">
-              <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="text"
-                  v-model="data.incident.location"
-                  
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none -dark:text-white -dark:border-gray-600 -dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=""
-                  required
-                />
-              <label
-                for="floating_company"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 -dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:-dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Place of Incident:</label
-              >
-              </div>
-              <svg @click="toggleLocation" class="h-10 border-b-2 border-gray-300 mt-0.5 w-10 p-2 text-gray-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        </div>
+        
+        <div class="col-span-2 space-y-2 relative">
+          <label for="location" class="block text-sm font-medium text-gray-700">Place of Incident</label>
+          <input
+            id="location"
+            v-model="data.incident.location"
+            type="text"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            required
+          />
+            <button
+              @click="toggleLocation"
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
-            </div>
-          </div>
-          <p
-            class="text-lg font-semibold text-gray-900 truncate -dark:text-white"
-          >
-            Involve Personalities
-          </p>
-          <div class="grid md:grid-cols-3 md:gap-6">
-            <ul
-              class="max-w-md divide-y divide-gray-200 -dark:divide-gray-700 -dark:bg-gray-600 rounded-md px-2 my-2 overflow-auto h-40 shadow border"
-            >
-            <!-- Witness -->
-              <p
-                class="text-md font-semibold text-gray-900 truncate -dark:text-white py-1 mt-2"
-              >               
-              <span v-if="!addWitnessClicked">Witness</span>
-
-              <form v-if="addWitnessClicked" class="max-w-md mx-auto">   
-                  <div class="relative">
-                      <div class="absolute inset-y-0 start-0 flex items-center ps-2 ">        
-                          <button
-                          type="button"
-                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
-                          @click="addWitnessClicked = !addWitnessClicked"
-                          >
-                          <!--  @click.prevent="toggle()" -->
-                              <svg
-                                  class="w-3 h-3"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 14 14"
-                              >
-                                  <path
-                                  stroke="currentColor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                  />
-                              </svg>
-                          <span class="sr-only">Close modal</span>
-                          </button>
-                      </div>
-                      <input v-model="witness.search" type="search" class="block w-full p-3 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search Witness..." required />
-                      <!-- dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 -->
-                      <button type="button" @click.prevent="toggleEnvolved('Witness')" class="text-white absolute end-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-xs rounded-lg text-xs px-2 py-1 "><!-- dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 -->+ new</button>
-                  </div>
-              </form>
-              <!-- search witness -->
-              <div v-if="witness.list.length > 0 && witness.search != ''" class=" bg-black max-h-20 fixed overflow-auto bg-transparent flex-col" style="width: 336px;">
-                <div  v-for="(person, i) in witness.list" class="bg-white w-full border-b flex cursor-pointer  active:bg-gray-500 hover:bg-gray-200" @click="addSearched('witness', {'witness':person})">
-                  <span class=" w-full text-gray-800 font-semibold">{{ person.firstname }} {{ person.lastname }}</span>
-                  <span class=" w-full text-end">{{ person.mobile_phone }}
-                  </span>
-                </div>
-              </div>
-              
-              <button
-              v-if="!addWitnessClicked"
-              @click="addWitnessClicked = !addWitnessClicked"
-                type="button"
-                class="float-end text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-0.5 me-2 mb-1 -dark:bg-blue-600 -dark:hover:bg-blue-700 focus:outline-none -dark:focus:ring-blue-800"
-              >
-                + Add
-              </button>
-              </p>
-              <li class="w-full mt-2 h-20 flex-col overflow-auto">
-                <div v-for="(wtnss, i) in data.witness" class=" w-full border-b flex">
-                  <span class=" w-full text-gray-800 font-semibold">{{ wtnss.witness.firstname }} {{ wtnss.witness.lastname }}</span>
-                  <span class=" w-full text-end">{{ wtnss.witness.mobile_phone }}
-                    <button class="bg-red-500 rounded-md  font-semibold text-xs text-white ms-2 px-2" @click="removeItem('witness',i)"> 
-                      REMOVE  
-                    </button>
-                  </span>
-                </div>
-              </li>
-            </ul>
-            <ul
-              class="max-w-md divide-y divide-gray-200 -dark:divide-gray-700 -dark:bg-gray-600 rounded-md px-2 my-2 h-40 shadow border"
-            >
-            <!-- SUspects -->
-              <p
-                class="text-md font-semibold text-gray-900 truncate -dark:text-white py-1 mt-2"
-              >
-                <span v-if="!addSuspectClicked">Suspects</span>
-                <form v-if="addSuspectClicked" class="max-w-md mx-auto">   
-                    <div class="relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-2 ">        
-                            <button
-                            type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
-                            @click="addSuspectClicked = !addSuspectClicked"
-                            >
-                            <!--  @click.prevent="toggle()" -->
-                                <svg
-                                    class="w-3 h-3"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 14 14"
-                                >
-                                    <path
-                                    stroke="currentColor"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                    />
-                                </svg>
-                            <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                        <input type="search" v-model="suspects.search" class="block w-full p-3 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search Suspects..." required />
-                        <!-- dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 -->
-                        <button type="button" @click.prevent="toggleEnvolved('Suspects')" class="text-white absolute end-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-xs rounded-lg text-xs px-2 py-1 "><!-- dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 -->+ new</button>
-                    
-                  </div>
-                    
-                </form>
-                <!-- Search Suspects -->
-                <div v-if="suspects.list.length > 0 && suspects.search != ''" class=" bg-black max-h-20 fixed overflow-auto bg-transparent flex-col" style="width: 336px;">
-                  
-                  <div  v-for="(spct, i) in suspects.list" class="bg-white w-full border-b flex cursor-pointer  active:bg-gray-500 hover:bg-gray-200" @click="addSearched('suspects', {'suspect':spct})">
-                    <span class=" w-full text-gray-800 font-semibold">{{ spct.firstname }} {{ spct.lastname }}</span>
-                    <span class=" w-full text-end">{{ spct.mobile_phone }}
-                    </span>
-                  </div>
-                </div>
-                
-                <button
-                v-if="!addSuspectClicked"
-                @click="addSuspectClicked = !addSuspectClicked"
-                  type="button"
-                  class="float-end text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-0.5 me-2 mb-1 -dark:bg-blue-600 -dark:hover:bg-blue-700 focus:outline-none -dark:focus:ring-blue-800"
-                >
-                  + Add
-                </button>
-              </p>
-              <li class="w-full mt-2 h-20 flex-col overflow-auto">
-                <div v-for="(spct, i) in data.suspects" class=" w-full border-b flex">
-                  <span class=" w-full text-gray-800 font-semibold">{{ spct.suspect.firstname }} {{ spct.suspect.lastname }}</span>
-                  <span class=" w-full text-end">{{ spct.suspect.mobile_phone }}
-                    <button class="bg-red-500 rounded-md  font-semibold text-xs text-white ms-2 px-2" @click="removeItem('suspects',i)"> 
-                      REMOVE  
-                    </button>
-                  </span>
-                </div>
-              </li>
-            </ul>
-            <ul
-              class="max-w-md divide-y divide-gray-200 -dark:divide-gray-700 -dark:bg-gray-600 rounded-md px-2 my-2  h-40 shadow border"
-            >
-            <!-- Victims -->
-              <p
-                class="text-md font-semibold text-gray-900 truncate -dark:text-white py-1 mt-2"
-              >               
-              <span v-if="!addVictimClicked">Victims</span>
-              
-              <form v-if="addVictimClicked" class="max-w-md mx-auto">   
-                  <div class="relative">
-                      <div class="absolute inset-y-0 start-0 flex items-center ps-2 ">        
-                          <button
-                          type="button"
-                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
-                          @click="addVictimClicked = !addVictimClicked"
-                          >
-                          <!--  @click.prevent="toggle()" -->
-                              <svg
-                                  class="w-3 h-3"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 14 14"
-                              >
-                                  <path
-                                  stroke="currentColor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                  />
-                              </svg>
-                          <span class="sr-only">Close modal</span>
-                          </button>
-                      </div>
-                      <input v-model="victims.search" type="search" class="block w-full p-3 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search Victims..." required />
-                      <!-- dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 -->
-                      <button type="button" @click.prevent="toggleEnvolved('Victims')" class="text-white absolute end-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-xs rounded-lg text-xs px-2 py-1 "><!-- dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 -->+ new</button>
-                  </div>
-              </form>
-              <!-- search victims -->
-              <div v-if="victims.list.length > 0 && victims.search != ''" class=" bg-black max-h-20 fixed overflow-auto bg-transparent flex-col" style="width: 336px;">
-                  
-                <div  v-for="(person, i) in victims.list" class="bg-white w-full border-b flex cursor-pointer  active:bg-gray-500 hover:bg-gray-200" @click="addSearched('victims', {'victim':person})">
-                  <span class=" w-full text-gray-800 font-semibold">{{ person.firstname }} {{ person.lastname }}</span>
-                  <span class=" w-full text-end">{{ person.mobile_phone }}
-                  </span>
-                </div>
-              </div>
-              
-              <button
-              v-if="!addVictimClicked"
-              @click="addVictimClicked = !addVictimClicked"
-                type="button"
-                class="float-end text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-0.5 me-2 mb-1 -dark:bg-blue-600 -dark:hover:bg-blue-700 focus:outline-none -dark:focus:ring-blue-800"
-              >
-                + Add
-              </button>
-              </p>
-              <li class="w-full mt-2 h-20 flex-col overflow-auto">
-                <div v-for="(victim, i) in data.victims" class=" w-full border-b flex">
-                  <span class=" w-full text-gray-800 font-semibold">{{ victim.victim.firstname }} {{ victim.victim.lastname }}</span>
-                  <span class=" w-full text-end">{{ victim.victim.mobile_phone }}
-                    <button class="bg-red-500 rounded-md  font-semibold text-xs text-white ms-2 px-2" @click="removeItem('victims',i)"> 
-                      REMOVE  
-                    </button>
-                  </span>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <label
-            for="message"
-            class="block mb-2 text-sm font-medium text-gray-900 -dark:text-white"
-            >Narative of the Incident</label
-          >
-          <textarea
-            id="message"
-            rows="4"
-            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 -dark:bg-gray-700 -dark:border-gray-600 -dark:placeholder-gray-400 -dark:text-white -dark:focus:ring-blue-500 -dark:focus:border-blue-500"
-            placeholder="Write the Narative here..."
-            v-model="data.incident_narrative.details"
-          ></textarea>
-        </form>
-        <div class="flex justify-start p-5 py-2 pt-0">
-          <button
-            type="button"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            @click="sendData"
-          ><!--  -->
-            DONE
-          </button>
+            </button>
         </div>
       </div>
-    </div>
+
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-gray-900">Involved Personalities</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-gray-50 p-4 rounded-lg shadow">
+            <h4 class="text-md font-semibold text-gray-800 mb-2">Witness</h4>
+            <div v-if="!addWitnessClicked" class="flex justify-between items-center">
+              <span>{{ data.witness.length }} witness(es)</span>
+              <button
+                @click="addWitnessClicked = true"
+                type="button"
+                class="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                + Add
+              </button>
+            </div>
+            <form v-else class="space-y-2">
+              <div class="flex">
+                <input
+                  v-model="witness.search"
+                  type="search"
+                  class="flex-grow rounded-l-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  placeholder="Search Witness..."
+                />
+                <button
+                  @click.prevent="toggleEnvolved('Witness')"
+                  type="button"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  New
+                </button>
+              </div>
+              <div v-if="witness.list.length > 0 && witness.search !== ''" class="bg-white rounded-md shadow-md max-h-40 overflow-y-auto">
+                <div
+                  v-for="person in witness.list"
+                  :key="person.id"
+                  @click="addSearched('witness', {'witness':person})"
+                  class="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  <div class="font-medium">{{ person.firstname }} {{ person.lastname }}</div>
+                  <div class="text-sm text-gray-600">{{ person.mobile_phone }}</div>
+                </div>
+              </div>
+            </form>
+            <ul class="mt-2 space-y-1 max-h-40 overflow-y-auto">
+              <li v-for="(wtnss, i) in data.witness" :key="i" class="flex justify-between items-center text-sm">
+                <span>{{ wtnss.witness.firstname }} {{ wtnss.witness.lastname }}</span>
+                <button @click="removeItem('witness', i)" class="text-red-600 hover:text-red-800">
+                  Remove
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg shadow">
+            <h4 class="text-md font-semibold text-gray-800 mb-2">Suspects</h4>
+            <div v-if="!addSuspectClicked" class="flex justify-between items-center">
+              <span>{{ data.suspects.length }} suspect(s)</span>
+              <button
+                @click="addSuspectClicked = true"
+                type="button"
+                class="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                + Add
+              </button>
+            </div>
+            <form v-else class="space-y-2">
+              <div class="flex">
+                <input
+                  v-model="suspects.search"
+                  type="search"
+                  class="flex-grow rounded-l-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  placeholder="Search Suspects..."
+                />
+                <button
+                  @click.prevent="toggleEnvolved('Suspects')"
+                  type="button"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  New
+                </button>
+              </div>
+              <div v-if="suspects.list.length > 0 && suspects.search !== ''" class="bg-white rounded-md shadow-md max-h-40 overflow-y-auto">
+                <div
+                  v-for="spct in suspects.list"
+                  :key="spct.id"
+                  @click="addSearched('suspects', {'suspect':spct})"
+                  class="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  <div class="font-medium">{{ spct.firstname }} {{ spct.lastname }}</div>
+                  <div class="text-sm text-gray-600">{{ spct.mobile_phone }}</div>
+                </div>
+              </div>
+            </form>
+            <ul class="mt-2 space-y-1 max-h-40 overflow-y-auto">
+              <li v-for="(spct, i) in data.suspects" :key="i" class="flex justify-between items-center text-sm">
+                <span>{{ spct.suspect.firstname }} {{ spct.suspect.lastname }}</span>
+                <button @click="removeItem('suspects', i)" class="text-red-600 hover:text-red-800">
+                  Remove
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg shadow">
+            <h4 class="text-md font-semibold text-gray-800 mb-2">Victims</h4>
+            <div v-if="!addVictimClicked" class="flex justify-between items-center">
+              <span>{{ data.victims.length }} victim(s)</span>
+              <button
+                @click="addVictimClicked = true"
+                type="button"
+                class="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                + Add
+              </button>
+            </div>
+            <form v-else class="space-y-2">
+              <div class="flex">
+                <input
+                  v-model="victims.search"
+                  type="search"
+                  class="flex-grow rounded-l-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  placeholder="Search Victims..."
+                />
+                <button
+                  @click.prevent="toggleEnvolved('Victims')"
+                  type="button"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  New
+                </button>
+              </div>
+              <div v-if="victims.list.length > 0 && victims.search !== ''" class="bg-white rounded-md shadow-md max-h-40 overflow-y-auto">
+                <div
+                  v-for="person in victims.list"
+                  :key="person.id"
+                  @click="addSearched('victims', {'victim':person})"
+                  class="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  <div class="font-medium">{{ person.firstname }} {{ person.lastname }}</div>
+                  <div class="text-sm text-gray-600">{{ person.mobile_phone }}</div>
+                </div>
+              </div>
+            </form>
+            <ul class="mt-2 space-y-1 max-h-40 overflow-y-auto">
+              <li v-for="(victim, i) in data.victims" :key="i" class="flex justify-between items-center text-sm">
+                <span>{{ victim.victim.firstname }} {{ victim.victim.lastname }}</span>
+                <button @click="removeItem('victims', i)" class="text-red-600 hover:text-red-800">
+                  Remove
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label for="narrative" class="block text-sm font-medium text-gray-700">Narrative of the Incident</label>
+        <textarea
+          id="narrative"
+          v-model="data.incident_narrative.details"
+          rows="4"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          placeholder="Write the Narrative here..."
+        ></textarea>
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-5">
+        <button
+          @click="toggle"
+          type="button"
+          class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Cancel
+        </button>
+        <button
+          @click="sendData"
+          type="button"
+          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Save Incident
+        </button>
+      </div>
+    </form>
+  </div>
     <!-- search incident -->
     
-    <div v-if=" incidentT.list.length > 0" class=" max-h-32 overflow-auto fixed top-72 w-96 bg-white divide-y divide-gray-100 rounded-lg border shadow ">
-      <ul class="py-2 text-sm text-gray-700 border-b" >
-        <li  v-for="inc in incidentT.list" >
-          <span @click.prevent="selectIncident(inc.incident_name, inc.id)" class="block px-4 py-1 hover:bg-gray-100  border-b">{{ inc.incident_name }} <span class="text-xs text-gray-600">{{ inc.sub_type != null ? `(${inc.sub_type})` : ''}}</span></span>
-        </li>
-      </ul>
-  </div>
     <div v-show="envolvedOpen" class="w-full flex bg-black fixed bg-opacity-20" style="height: 100vh">
       <div class="w-1/2 bg-transparent"></div>
       <div class="bg-white w-full flex-col rounded-s-lg">

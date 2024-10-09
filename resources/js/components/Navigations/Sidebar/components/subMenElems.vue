@@ -1,63 +1,69 @@
 <template>
-  <button
-    type="button"
-    @click.prevent="open = !open"
-    :id="subElem.id"
-    class="flex items-center w-full p-2 text-base  transition duration-75 rounded-lg group "
-    :class="{'text-white hover:bg-gray-700 active:bg-gray-600':$store.getters.theme,'text-gray-900 hover:bg-gray-100 active:bg-gray-200':!$store.getters.theme}"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="w-5 h-5 transition duration-75"
+  <div>
+    <button
+      type="button"
+      @click.prevent="open = !open"
+      :id="subElem.id"
+      class="flex items-center justify-between w-full p-3 text-gray-700 rounded-lg transition-colors duration-150 ease-in-out"
+      :class="{
+        'bg-blue-50 text-blue-600': isActive,
+        'hover:bg-gray-100': !isActive
+      }"
     >
-      <path
-        v-for="(paths, i) in subElem.pth"
-        :stroke-linecap="paths['stroke-linecap']"
-        :stroke-linejoin="paths['stroke-linejoin']"
-        :d="paths.d"
-      />
-    </svg>
-    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">{{
-      subElem.nm
-    }}</span>
-    <svg
-      class="w-3 h-3"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-    >
-      <path
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="m1 1 4 4 4-4"
-      />
-    </svg>
-  </button>
-  <ul class="py-2 space-y-2" :class="isOpen">
-    <!-- id="${vals[4]}" -->
-    <li v-for="(innV, i) in subElem.collapse" class="rounded-lg">
-      <router-link
-        :id="innV.itemId"
-        
-        @click.prevent="changes(innV.api, [innV.itemId, innV.innerTitlePage, subElem.id, innV.tableIndex]); "
-        class="flex items-center w-full p-2   transition duration-75 rounded-lg pl-11 group "
-        :to="subElem.nm"
-        :class="{
-          'text-white active:bg-gray-600 hover:bg-gray-700 ':$store.getters.theme,'text-gray-900 active:bg-gray-200 hover:bg-gray-100':!$store.getters.theme,
-          'bg-gray-200': innV.itemId == $store.state.CurrentActiveSideBar && !$store.getters.theme,
-          'bg-gray-600': innV.itemId == $store.state.CurrentActiveSideBar && $store.getters.theme,
-        }"
+      <div class="flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5 mr-3"
+        >
+          <path
+            v-for="(paths, i) in subElem.pth"
+            :key="i"
+            :stroke-linecap="paths['stroke-linecap']"
+            :stroke-linejoin="paths['stroke-linejoin']"
+            :d="paths.d"
+          />
+        </svg>
+        <span class="font-medium">{{ subElem.nm }}</span>
+      </div>
+      <svg
+        class="w-4 h-4 transition-transform duration-200"
+        :class="{ 'transform rotate-180': open }"
+        fill="currentColor"
+        viewBox="0 0 20 20"
       >
-        <!-- dark: -->
-        {{ innV.itemDisplay }}</router-link>
-    </li>
-  </ul>
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <transition
+      enter-active-class="transition duration-100 ease-out"
+      enter-from-class="transform scale-95 opacity-0"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <ul v-show="open" class="mt-2 space-y-2 pl-11">
+        <li v-for="(innV, i) in subElem.collapse" :key="i">
+          <router-link
+            :id="innV.itemId"
+            @click.prevent="changes(innV.api, [innV.itemId, innV.innerTitlePage, subElem.id, innV.tableIndex])"
+            class="flex items-center p-2 text-gray-600 rounded-lg transition-colors duration-150 ease-in-out"
+            :to="subElem.nm"
+            :class="{
+              'bg-blue-50 text-blue-600': innV.itemId == $store.state.CurrentActiveSideBar,
+              'hover:bg-gray-100': innV.itemId != $store.state.CurrentActiveSideBar
+            }"
+          >
+            {{ innV.itemDisplay }}
+          </router-link>
+        </li>
+      </ul>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -69,13 +75,12 @@ export default {
     };
   },
   computed: {
-    isOpen() {
-      return {
-        hidden: !this.open
-      };
+    isActive() {
+      return this.subElem.collapse.some(item => item.itemId === this.$store.state.CurrentActiveSideBar);
     }
-  },methods:{
-    async changes(param1, param2){
+  },
+  methods: {
+    async changes(param1, param2) {
       await this.$store.dispatch('changeAPI', param1);
       await this.$store.commit('changeActivePage', param2);
     }

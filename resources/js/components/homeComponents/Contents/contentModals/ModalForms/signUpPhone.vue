@@ -704,6 +704,7 @@ export default {
 
       //this.$store.commit("addUser", this.signUpForm);
       //console.log(this.$store.state.userInfo);
+      console.log(this.signUpForm)
 
       const res = await this.signUpRequest();
 

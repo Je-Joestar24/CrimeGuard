@@ -11,9 +11,19 @@
             placeholder="Search incidents..."
             v-model="search"
           />
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              class="h-5 w-5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
         </div>
@@ -21,13 +31,27 @@
 
       <div class="bg-gray-50 rounded-lg overflow-hidden">
         <ul class="divide-y divide-gray-200">
-          <li v-for="el in paginatedArr" :key="el.id" class="hover:bg-gray-100 transition duration-150 ease-in-out">
-            <div class="p-4 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <li
+            v-for="el in paginatedArr"
+            :key="el.id"
+            class="hover:bg-gray-100 transition duration-150 ease-in-out"
+          >
+            <div
+              class="p-4 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4"
+            >
               <div class="flex-shrink-0">
-                <div v-if="!el.profile" class="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg">
+                <div
+                  v-if="!el.profile"
+                  class="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg"
+                >
                   {{ el.user_name.charAt(0).toUpperCase() }}
                 </div>
-                <img v-else :src="el.profile" alt="Profile" class="h-12 w-12 rounded-full object-cover">
+                <img
+                  v-else
+                  :src="el.profile"
+                  alt="Profile"
+                  class="h-12 w-12 rounded-full object-cover"
+                />
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-900 truncate">
@@ -40,7 +64,11 @@
                   {{ el.message }} at {{ el.location }}, {{ el.time }}
                 </p>
                 <p class="text-sm font-semibold text-gray-700 mt-1">
-                  {{ month[el.month - 1].charAt(0).toUpperCase() + month[el.month - 1].slice(1) }} {{ el.date }}
+                  {{
+                    month[el.month - 1].charAt(0).toUpperCase() +
+                    month[el.month - 1].slice(1)
+                  }}
+                  {{ el.date }}
                 </p>
               </div>
               <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
@@ -66,20 +94,28 @@
                 </button>
                 <button
                   v-if="el['status'] == 'report' && cred.user_level == 2"
-                  @click="toggleRespondModal({ id: el['id'], edited_by: cred.id })"
+                  @click="
+                    toggleRespondModal({ id: el['id'], edited_by: cred.id })
+                  "
                   class="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm"
                 >
                   Respond
                 </button>
                 <button
                   v-if="el['status'] == 'report' && cred.user_level == 2"
-                  @click="toggleRejectModal({ id: el['id'], edited_by: cred.id })"
+                  @click="
+                    toggleRejectModal({ id: el['id'], edited_by: cred.id })
+                  "
                   class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm"
                 >
                   Reject
                 </button>
                 <button
-                  v-if="el['status'] == 'report' && cred.user_level == 1 && !el['assigned_to']"
+                  v-if="
+                    el['status'] == 'report' &&
+                    cred.user_level == 1 &&
+                    !el['assigned_to']
+                  "
                   @click="toggleAssignModal({ id: el['id'] })"
                   class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm"
                 >
@@ -89,7 +125,7 @@
                   v-if="el['status'] != 'reject' && el['status'] != 'report'"
                   class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
                 >
-                  {{ el['status'].toUpperCase() }}
+                  {{ el["status"].toUpperCase() }}
                 </span>
                 <span
                   v-if="el['status'] == 'reject'"
@@ -121,7 +157,20 @@
         :disabled="pagination.currentPage === 1"
         class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
       >
-        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+        <svg
+          class="w-4 h-4 mr-1 inline-block"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+          ></path>
+        </svg>
         First
       </button>
       <button
@@ -129,10 +178,25 @@
         :disabled="pagination.currentPage === 1"
         class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
       >
-        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <svg
+          class="w-4 h-4 mr-1 inline-block"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
         Previous
       </button>
-      <span class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm">
+      <span
+        class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm"
+      >
         Page {{ pagination.currentPage }} of {{ pagination.totalPages }}
       </span>
       <button
@@ -141,7 +205,20 @@
         class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
       >
         Next
-        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        <svg
+          class="w-4 h-4 ml-1 inline-block"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          ></path>
+        </svg>
       </button>
       <button
         @click="changePage(pagination.totalPages)"
@@ -149,14 +226,27 @@
         class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
       >
         Last
-        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+        <svg
+          class="w-4 h-4 ml-1 inline-block"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 5l7 7-7 7M5 5l7 7-7 7"
+          ></path>
+        </svg>
       </button>
     </div>
   </div>
 
-  <div  v-if="cred.user_level == 1" class="flex">
-    <rejectedComponent/>
-    <respondedComponent/>
+  <div v-if="cred.user_level == 1" class="flex">
+    <rejectedComponent />
+    <respondedComponent />
   </div>
   <!-- Modals -->
   <respondIncident
@@ -204,10 +294,32 @@ export default {
       arr: [],
       paginatedArr: [],
       month: [
-        "january", "february", "march", "april", "may", "june",
-        "july", "august", "september", "october", "november", "december"
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december",
       ],
       search: "",
+      respond: {
+        data: {},
+        url: "api/incidents/respond/item/request",
+      },
+      reject: {
+        data: {},
+        url: "api/incidents/reject/item/request",
+      },
+      assign: {
+        data: {},
+        url: "api/incidents/assign/item/request",
+      },
       modals: {
         respondIsOpen: false,
         rejectIsOpen: false,
@@ -244,30 +356,76 @@ export default {
     },
     toggleRespondModal(param) {
       this.modals.respondIsOpen = !this.modals.respondIsOpen;
-      this.respondParam = param;
-    },
-    toggleRejectModal(param) {
-      this.modals.rejectIsOpen = !this.modals.rejectIsOpen;
-      this.rejectParam = param;
+      this.respond.data = param;
     },
     toggleAssignModal(param) {
       this.modals.assignIsOpen = !this.modals.assignIsOpen;
-      this.assignParam = param;
+      this.assign.data = param;
+    },
+    toggleRejectModal(param) {
+      this.modals.rejectIsOpen = !this.modals.rejectIsOpen;
+      this.reject.data = param;
+      console.log(this.reject)
+    },
+    sendId(param) {
+      this.requestId = param;
+      this.incidentAdd = !this.incidentAdd;
     },
     async respondData() {
-      // Implement respond logic
-      // After successful response, refresh the data
-      await this.getData({ url: "api/incidents/report/list/Display", data: {} });
+      const send = this.respond;
+
+      const data = await this.$store.dispatch("sendData", send);
+      const res = await data["response"];
+
+      if (res == "Success") {
+        await alert("Incident Responded.");
+        this.toggleRespondModal("");
+        await this.getData({
+          url: "api/incidents/report/list/Display",
+          data: { search: "" },
+        });
+      } else {
+        await alert("An error occured, please try again.");
+      }
     },
     async rejectData(message) {
-      // Implement reject logic
-      // After successful rejection, refresh the data
-      await this.getData({ url: "api/incidents/report/list/Display", data: {} });
+      const send = this.reject;
+      this.reject.data["rej_message"] = message;
+      console.log(this.reject)
+
+      const data = await this.$store.dispatch("sendData", this.reject);
+      const res = await data["response"];
+
+      if (res == "Success") {
+        await alert("Incident Rejected.");
+        this.toggleRejectModal(this.reject.data);
+        await this.getData({
+          url: "api/incidents/report/list/Display",
+          data: { search: "" },
+        });
+      } else {
+        await alert("An error occured, please try again.");
+      }
     },
-    async assignData(officerId) {
-      // Implement assign logic
-      // After successful assignment, refresh the data
-      await this.getData({ url: "api/incidents/report/list/Display", data: {} });
+    async assignData(param) {
+      this.assign.data["assigned_to"] = param;
+
+      const send = this.assign;
+      console.log(send);
+
+      const data = await this.$store.dispatch("sendData", send);
+      const res = await data["response"];
+
+      if (res == "Success") {
+        await alert("Incident Assigned.");
+        this.toggleAssignModal("");
+        await this.getData({
+          url: "api/incidents/report/list/Display",
+          data: {},
+        });
+      } else {
+        await alert("An error occured, please try again.");
+      }
     },
     sendId(id) {
       this.requestId = id;
@@ -283,11 +441,14 @@ export default {
       }
     },
     createPaginatedData() {
-      const startIndex = (this.pagination.currentPage - 1) * this.pagination.itemsPerPage;
+      const startIndex =
+        (this.pagination.currentPage - 1) * this.pagination.itemsPerPage;
       const endIndex = startIndex + this.pagination.itemsPerPage;
       this.paginatedArr = this.arr.slice(startIndex, endIndex);
       this.pagination.totalItems = this.arr.length;
-      this.pagination.totalPages = Math.ceil(this.pagination.totalItems / this.pagination.itemsPerPage);
+      this.pagination.totalPages = Math.ceil(
+        this.pagination.totalItems / this.pagination.itemsPerPage
+      );
 
       if (this.pagination.currentPage > this.pagination.totalPages) {
         this.changePage(this.pagination.totalPages);
@@ -295,10 +456,13 @@ export default {
     },
   },
   watch: {
-    search: function(newVal) {
-      this.getData({ url: "api/incidents/report/list/Display", data: { search: newVal } });
+    search: function (newVal) {
+      this.getData({
+        url: "api/incidents/report/list/Display",
+        data: { search: newVal },
+      });
       this.pagination.currentPage = 1; // Reset to first page when searching
-    }
-  }
+    },
+  },
 };
 </script>
