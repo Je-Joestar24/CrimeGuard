@@ -67,13 +67,13 @@ export default {
             UI/UX Designer: Focused on creating a seamless user interface and
             optimizing the overall experience for users.`,
         },
-        {
+/*         {
           profile: "/storage/system/ADVISER.jpg",
           name: "Joscoro Cantero",
           desc: `Instructor at CICTE, Western Leyte College: Provides academic
             guidance and ensures the project adheres to best practices and
             institutional standards.`,
-        },
+        }, */
       ],
     };
   },

@@ -19,6 +19,7 @@ class predictiveAnalytics extends Controller
             ->where('status', '!=', 'report')
             ->where('status', '!=', 'reject')
             ->where('status', '!=', 'archive')
+            ->where('barangay', '!=', NULL)
             ->orderBy('date_of_incident', 'ASC')
             ->get();
 
@@ -325,6 +326,7 @@ class predictiveAnalytics extends Controller
         $allIncidents = Incidents::select('date_of_incident', 'barangay')
             ->where('status', '!=', 'report')
             ->where('status', '!=', 'reject')
+            ->where('barangay', '!=', NULL)
             ->where('status', '!=', 'archive');
         if ($param != '') $allIncidents = $allIncidents->where('incident_type', '=', $param);
         $allIncidents = $allIncidents->orderBy('date_of_incident', 'ASC')

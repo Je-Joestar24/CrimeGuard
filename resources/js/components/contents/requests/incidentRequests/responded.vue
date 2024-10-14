@@ -79,7 +79,7 @@ export default {
         const arr2 = await data["data"];
         console.log(this.arr)
         for(let i = 0; i < arr2.length; i ++){
-          if(arr2[i].status != 'report' && arr2[i].status != 'reject')this.arr.push(arr2[i]);
+          if(arr2[i].status != 'report' && arr2[i].status != 'reject' && arr2[i].assigned_to != NULL && arr2[i].assigned_to != '')this.arr.push(arr2[i]);
         }
         console.log(this.arr)
       }

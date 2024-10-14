@@ -500,6 +500,7 @@ export default {
       console.log(this.formModel.innerWitnesses)
     },
     async sendData() {
+      this.loadinging();
       switch (this.$store.getters.getActive) {
         case "innerVictims":
           await this.sendVictims();
@@ -567,20 +568,19 @@ export default {
         },
         id: this.id,
       };
-
       const send = await {
         data: model,
         url: "api/victims/add/item/request",
       };
 
-      //console.log(send)
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        await alert("Successfully added Victim.");
+        this.outLoading()
         await this.clearForm();
       } else {
+        this.outLoading()
         await alert("An error occured, please try again.");
       }
     },
@@ -629,20 +629,19 @@ export default {
         },
         id: this.id,
       };
-
       const send = await {
         data: model,
         url: "api/witness/add/item/request",
       };
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        await alert("Successfully added Witness.");
+        this.outLoading();
         await this.clearForm();
       } else {
+        this.outLoading()
         await alert("An error occured, please try again.");
       }
     },
@@ -712,27 +711,25 @@ export default {
         },
         id: this.id,
       };
-
       if (model.suspect.has_previous_record) {
         model.suspect["previous_records_details"] =
           this.formModel.innerSuspects[6].infos[0].input;
         model.suspect.status = this.formModel.innerSuspects[5].infos[8].input;
       }
-      //console.log(model);
 
       const send = await {
         data: model,
         url: "api/suspects/add/item/request",
       };
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        await alert("Successfully added Suspect.");
+        this.outLoading();
         await this.clearForm();
       } else {
+        this.outLoading()
         await alert("An error occured, please try again.");
       }
     },
@@ -750,14 +747,14 @@ export default {
         url: "api/incidentNames/add/item/request",
       };
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        await alert("Successfully added Incident Name.");
+        this.outLoading();
         await this.clearForm();
       } else {
+        this.outLoading()
         await alert("An error occured, please try again.");
       }
     },
@@ -823,14 +820,14 @@ export default {
           url: "api/citizenusers/add/item/request",
         };
 
-        await console.log(send);
         const data = await this.$store.dispatch("sendData", send);
         this.res = await data["response"];
 
         if (this.res == "Success") {
-          await alert("Successfully added User.");
+          this.outLoading()
           await this.clearForm();
         } else {
+          this.outLoading()
           await alert("An error occured, please try again.");
         }
       }
@@ -876,8 +873,6 @@ export default {
         id: this.id,
       };
 
-      console.log(model);
-
       if (!model.user.password) alert("password does not match!");
       else {
         const send = await {
@@ -885,14 +880,14 @@ export default {
           url: "api/officerusers/add/item/request",
         };
 
-        await console.log(send);
         const data = await this.$store.dispatch("sendData", send);
         this.res = await data["response"];
 
         if (this.res == "Success") {
-          await alert("Successfully added User.");
+          this.outLoading();
           await this.clearForm();
         } else {
+          this.outLoading()
           await alert("An error occured, please try again.");
         }
       }
@@ -1032,7 +1027,7 @@ export default {
     const credential = JSON.parse(localStorage.getItem("credentials"));
     this.id = credential.id;
   },
-  props: ["reloadTab1", "toggle"],
+  props: ["reloadTab1", "toggle", "loadinging", "outLoading"],
   computed: {},
   watch: {
     "formModel.innerSuspects.5.infos.7.input": function (newVal, oldVal) {
@@ -1053,7 +1048,7 @@ export default {
     },
   },
   components: {
-    signatures,
+    signatures
   },
 };
 </script>

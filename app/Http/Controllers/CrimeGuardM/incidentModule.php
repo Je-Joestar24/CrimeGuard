@@ -508,7 +508,7 @@ class incidentModule extends Controller
                     'users.profile',
                     DB::raw("CONCAT(assign.first_name, ' ', assign.last_name) AS assigned_to"),
                     'incidents.rej_message'
-                );
+                )->where('incidents.reported_by_user', '!=', NULL);
             if ($request->has('id')) $reports = $reports->where('incidents.assigned_to', $request->input('id'));
             if ($request->has('status')) $reports = $reports->where('incidents.status', 'respond');
             else {

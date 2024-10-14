@@ -699,7 +699,7 @@ class citizenUsersModule extends Controller
             ];
             User::where('id', $request['id'])->update($archive);
 
-            TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'account']);
+            if($request->input('user_id') != NULL && $request->has('user_id')) TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'account']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';

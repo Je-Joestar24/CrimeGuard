@@ -1,8 +1,10 @@
 <template>
   <div
+  v-show="!loading"
     tabindex="-1"
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
-  > <div class="relative w-full max-w-6xl p-6 bg-white rounded-lg shadow-xl">
+  >
+   <div class="relative w-full max-w-6xl p-6 bg-white rounded-lg shadow-xl">
     <div class="flex justify-between items-center mb-6 border-b pb-3">
       <h2 class="text-2xl font-bold text-gray-800">Add Incident</h2>
       <button
@@ -384,12 +386,13 @@
   </div>
 
   <selector v-if="locSelectorOpen" :toggleIt="toggleLocation" :sendIt="setLocation"></selector>
-    
+  <addLoading v-if="loading"></addLoading>
   
 </template>
 <script>
 import envolvePersons from "./incidentAddForm/envolvePersons.vue";
 import selector from "./modComps/selector.vue";
+import addLoading from "../loading/addLoading.vue";
 
 export default {
   data() {
@@ -401,6 +404,7 @@ export default {
       disableWatcher: false,
       locSelectorOpen: false,
       formId: "",
+      loading: false,
       data: {
         incident: {
           IRF_Entry_no: "",
@@ -457,6 +461,7 @@ export default {
   components: {
     envolvePersons,
     selector,
+    addLoading
   },
   methods: {
     toggleEnvolved(param) {
@@ -481,6 +486,7 @@ export default {
       this.data[keys].splice(param, 1);
     },
     async sendData() {
+      this.loading = true;
       const data1 = this.data;
       /* here */
       data1.incident["edited_by"] = this.id;
@@ -496,11 +502,11 @@ export default {
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        await alert("Successfully added Incident.");
         await this.clearForm();
         await this.toggle();
       } else {
         await alert("An error occured, please try again.");
+        this.loading = false;
       }
     },
     clearForm() {
@@ -563,7 +569,6 @@ export default {
     sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     },
-
     setAddress(value) {
       this.data.incident.barangay = value;
       this.places = [];
@@ -587,7 +592,6 @@ export default {
         alert("Error"); */
       }
     },
-
     async clearIt2() {
       await this.sleep(500);
       this.places = [];

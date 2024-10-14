@@ -32,6 +32,7 @@
       <div class="bg-gray-50 rounded-lg overflow-hidden">
         <ul class="divide-y divide-gray-200">
           <li
+            v-if="paginatedArr.length > 0"
             v-for="el in paginatedArr"
             :key="el.id"
             class="hover:bg-gray-100 transition duration-150 ease-in-out"
@@ -41,10 +42,12 @@
             >
               <div class="flex-shrink-0">
                 <div
-                  v-if="!el.profile"
+                  v-if="
+                    !el.profile && el.user_name != '' && el.user_name != NULL
+                  "
                   class="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg"
                 >
-                  {{ el.user_name.charAt(0).toUpperCase() }}
+                  {{ el.user_name[0].toUpperCase() }}
                 </div>
                 <img
                   v-else
@@ -250,16 +253,19 @@
   </div>
   <!-- Modals -->
   <respondIncident
+    v-show="!respondLoading"
     :toggle="toggleRespondModal"
     :sendData="respondData"
     v-if="modals.respondIsOpen"
   ></respondIncident>
   <rejectIncident
+    v-show="!rejectLoading"
     :toggle="toggleRejectModal"
     :sendData="rejectData"
     v-if="modals.rejectIsOpen"
   ></rejectIncident>
   <assignTo
+    v-show="!assingLoading"
     :toggle="toggleAssignModal"
     :sendData="assignData"
     v-if="modals.assignIsOpen"
@@ -270,6 +276,11 @@
     :toggle="sendId"
     v-if="incidentAdd"
   ></incidentEditForm>
+
+  <!-- Loading -->
+  <assignLoading v-if="assingLoading" />
+  <rejectLoading v-if="rejectLoading" />
+  <respondLoading v-if="respondLoading" />
 </template>
 
 <script>
@@ -279,7 +290,9 @@ import assignTo from "./requestComponents/assignTo.vue";
 import incidentEditForm from "../tablecomponents/tableSubComponents/tableModals/modalForms/incidentEditForm.vue";
 import rejectedComponent from "./incidentRequests/rejected.vue";
 import respondedComponent from "./incidentRequests/responded.vue";
-
+import assignLoading from "./requestComponents/loading/assignLoading.vue";
+import rejectLoading from "./requestComponents/loading/rejectLoading.vue";
+import respondLoading from "./requestComponents/loading/respondLoading.vue";
 export default {
   components: {
     respondIncident,
@@ -288,11 +301,17 @@ export default {
     incidentEditForm,
     rejectedComponent,
     respondedComponent,
+    assignLoading,
+    rejectLoading,
+    respondLoading,
   },
   data() {
     return {
       arr: [],
       paginatedArr: [],
+      assingLoading: false,
+      rejectLoading: false,
+      respondLoading: false,
       month: [
         "january",
         "february",
@@ -365,7 +384,7 @@ export default {
     toggleRejectModal(param) {
       this.modals.rejectIsOpen = !this.modals.rejectIsOpen;
       this.reject.data = param;
-      console.log(this.reject)
+      console.log(this.reject);
     },
     sendId(param) {
       this.requestId = param;
@@ -373,43 +392,45 @@ export default {
     },
     async respondData() {
       const send = this.respond;
-
+      this.respondLoading = true;
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
 
       if (res == "Success") {
-        await alert("Incident Responded.");
+        this.respondLoading = false;
         this.toggleRespondModal("");
         await this.getData({
           url: "api/incidents/report/list/Display",
           data: { search: "" },
         });
       } else {
+        this.respondLoading = false;
         await alert("An error occured, please try again.");
       }
     },
     async rejectData(message) {
       const send = this.reject;
       this.reject.data["rej_message"] = message;
-      console.log(this.reject)
+      this.rejectLoading = true;
 
       const data = await this.$store.dispatch("sendData", this.reject);
       const res = await data["response"];
 
       if (res == "Success") {
-        await alert("Incident Rejected.");
+        this.rejectLoading = false;
         this.toggleRejectModal(this.reject.data);
         await this.getData({
           url: "api/incidents/report/list/Display",
           data: { search: "" },
         });
       } else {
+        this.rejectLoading = false;
         await alert("An error occured, please try again.");
       }
     },
     async assignData(param) {
       this.assign.data["assigned_to"] = param;
-
+      this.assingLoading = true;
       const send = this.assign;
       console.log(send);
 
@@ -417,13 +438,14 @@ export default {
       const res = await data["response"];
 
       if (res == "Success") {
-        await alert("Incident Assigned.");
+        this.assingLoading = false;
         this.toggleAssignModal("");
         await this.getData({
           url: "api/incidents/report/list/Display",
           data: {},
         });
       } else {
+        this.assingLoading = false;
         await alert("An error occured, please try again.");
       }
     },

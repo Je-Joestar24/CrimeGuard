@@ -115,8 +115,7 @@
     <Modals
       :reloadTab="getTableData"
       :toggle="toggleIncident"
-      v-show="incidentAddOpen"
-      v-if="$store.getters.getActive != 'innerIncident'"
+      v-if="$store.getters.getActive != 'innerIncident' && incidentAddOpen"
     ></Modals>
 
     <incidentAddFrom

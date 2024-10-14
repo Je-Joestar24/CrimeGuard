@@ -1,6 +1,7 @@
 <template>
   <!-- Main modal -->
   <div
+    v-show="!loading"
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
   >
     <div
@@ -54,7 +55,9 @@
             ($store.getters.getActive == 'innerIncident' ||
               $store.getters.getActive == 'innerIncidentArchive') 
           "
-        ></incidentForm>
+          :loadinging="loadingT"
+          :outLoading="outL"
+        />
         <incidentTypeForm
         :toggle="toggle"
         :reloadTab1="reloadTab"
@@ -64,26 +67,33 @@
               $store.getters.getActive == 'innerIncidentArchive'
             )
           "
-        ></incidentTypeForm>
+          :loadinging="loadingT"
+          :outLoading="outL"
+        />
       </div>
     </div>
   </div>
+
+  <addLoading v-if="loading"></addLoading>
 </template>
 
 
 <script>
 import incidentForm from "./modalForms/incidentsForm.vue";
 import incidentTypeForm from "./modalForms/dynamicAddForm.vue";
+import addLoading from "./loading/addLoading.vue";
 
 export default {
   components: {
     incidentForm,
     incidentTypeForm,
+    addLoading
   },
   data() {
     return {
       title: "",
-      width: ""
+      width: "",
+      loading: false
     };
   },
   props: [ "toggle", "reloadTab"],
@@ -98,7 +108,11 @@ export default {
     getTitle() {
       this.title = this.$store.getters.currentActiveTitle;
       this.title = this.title.toString().toLowerCase();
-    },
+    },loadingT(){
+      this.loading = true
+    },outL(){
+      this.loading = false
+    }
   },watch: {
     '$store.getters.currentActiveTitle': function(newVal, oldVal){
       if(newVal != oldVal){

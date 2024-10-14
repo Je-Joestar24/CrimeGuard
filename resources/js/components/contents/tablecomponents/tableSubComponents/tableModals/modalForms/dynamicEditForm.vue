@@ -1,5 +1,6 @@
 <template>
   <div
+    v-show="!loading"
     tabindex="-1"
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
   >
@@ -111,15 +112,19 @@
       </div>
     </div>
   </div>
+  <editLoading v-if="loading"/>
 </template>
   
   <script>
+import editLoading from '../loading/editLoading.vue';
+
 export default {
   data() {
     return {
       editData: {},
       prevRecord: "",
       cls: "",
+      loading: false,
       formModel: {
         innerNameIncidents: [
           {
@@ -507,6 +512,10 @@ export default {
       id: -1,
     };
   },
+  components:{
+    editLoading
+  },
+  
   methods: {
     async extractData(param) {
       const send = {
@@ -514,7 +523,6 @@ export default {
         data: { id: parseInt(this.rId) },
       };
 
-      //   console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
@@ -606,7 +614,7 @@ export default {
         },
         id: this.id,
       };
-
+      this.beforeEdit();
       const send = await {
         data: model,
         url: "api/witness/update/item/request",
@@ -615,8 +623,8 @@ export default {
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully updated Witness.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully updated Witness."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
       } else {
@@ -667,18 +675,17 @@ export default {
         },
         id: this.id,
       };
-
+      this.beforeEdit();
       const send = await {
         data: model,
         url: "api/victims/update/item/request",
       };
 
-      //console.log(send)
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully Updated Victim.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully Updated Victim."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
       } else {
@@ -770,7 +777,7 @@ export default {
         edited_by: this.id,
         id: parseInt(this.rId),
       };
-
+      this.beforeEdit();
       const send = await {
         data: model,
         url: "api/incidentNames/update/item/request",
@@ -779,8 +786,8 @@ export default {
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully updated Incident Name.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully updated Incident Name."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
       } else {
@@ -854,25 +861,23 @@ export default {
         },
         id: this.id,
       };
-
+      this.beforeEdit();
       if (model.suspect.has_previous_record) {
         model.suspect["previous_records_details"] =
           this.formModel.innerSuspects[6].infos[0].input;
         model.suspect.status = this.formModel.innerSuspects[5].infos[8].input;
       }
-      //console.log(model);
 
       const send = await {
         data: model,
         url: "api/suspects/update/item/request",
       };
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully updated Suspect.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully updated Suspect."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
       } else {
@@ -916,7 +921,7 @@ export default {
         },
         id: this.id,
       };
-
+      this.beforeEdit();
       if (this.formModel.innerCitizenAccounts[3].infos[1].input)
         model.user["password"] =
           this.formModel.innerCitizenAccounts[3].infos[1].input;
@@ -925,14 +930,12 @@ export default {
         data: model,
         url: "api/citizenusers/update/item/request",
       };
-      console.log(model);
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully updated User.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully updated User."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
         await this.clearForm();
@@ -977,31 +980,34 @@ export default {
         },
         id: this.id,
       };
+      this.beforeEdit();
       if (this.formModel.innerOfficerAccounts[3].infos[1].input)
         model.user["password"] =
           this.formModel.innerOfficerAccounts[3].infos[1].input;
-      console.log(model);
 
       const send = await {
         data: model,
         url: "api/officerusers/update/item/request",
       };
 
-      await console.log(send);
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully Updated User.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully Updated User."); */
         this.reloadTab("", this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");
       }
+    },beforeEdit(){
+      this.loading = true;
     },
+    afterEdit(){
+      this.loading = false;
+    }
   },
   created() {
-    console.log(this.formModel[this.$store.getters.CurrentActiveSideBar]);
     if (
       this.$store.getters.CurrentActiveSideBar != "innerSuspects" &&
       this.$store.getters.CurrentActiveSideBar != "innerNameIncidents"
@@ -1020,8 +1026,6 @@ export default {
   computed: {},
   watch: {
     "formModel.innerSuspects.5.infos.7.input": function (newVal, oldVal) {
-      console.log("The input value changed from", oldVal, "to", newVal);
-      /* console.log(this.editData.desc['previous_records_details'].previouse_records_details );*/
       if (newVal == "YES")
         this.formModel.innerSuspects.push({
           cols: 1,
@@ -1040,7 +1044,6 @@ export default {
         this.formModel.innerSuspects.pop();
     },
     "formModel.innerSuspects.6.infos.0.input": function (newVal, oldVal) {
-      console.log(newVal, oldVal);
     },
   },
 };

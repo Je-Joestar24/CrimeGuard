@@ -60,9 +60,11 @@
       </div>
     </td>
   </tr>
+  
+  <deleteLoading  v-if="loading.delete"></deleteLoading>
   <incidentEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editIncident" v-if="!editIncidentModal && ($store.getters.getActive == 'innerIncident')"></incidentEditForm>
   <dynamicEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editItem" v-if="!editModal && ($store.getters.getActive != 'innerIncident')"></dynamicEditForm>
-  <deleteM :isHidden="deleteModal" :sendData="sendData" :hiddenT="hiddenTogggle" v-if="!deleteModal && ($store.getters.getActive != 'innerIncident')"></deleteM>
+  <deleteM v-show="!loading.delete" :isHidden="deleteModal" :sendData="sendData" :hiddenT="hiddenTogggle" v-if="!deleteModal"></deleteM>
   <suspectView  :suspectId="viewRequestId" v-if="($store.getters.getActive == 'innerSuspects' || $store.getters.getActive == 'innerVictims' || $store.getters.getActive == 'innerWitnesses' || $store.getters.getActive == 'innerWitnessesArchive' ||  $store.getters.getActive == 'innerSuspectsArchive' || $store.getters.getActive == 'innerVictimsArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></suspectView>
   <incidentModal :toggle="viewModalToggle" :incidentId="viewRequestId" v-if="($store.getters.getActive == 'innerIncident' || $store.getters.getActive == 'innerIncidentArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></incidentModal>
   <accountProfile :toggle="viewModalToggle" v-if="(!viewModal) && ($store.getters.getActive == 'innerCitizenAccounts' || $store.getters.getActive == 'innerOfficerAccounts' || $store.getters.getActive == 'innerAccountsArchive')" :suspectId="viewRequestId"></accountProfile>
@@ -77,6 +79,7 @@ import accountProfile from './tableModals/accountProfile.vue';
 import incidentModal from './tableModals/incidentModal.vue';
 import dynamicEditForm from './tableModals/modalForms/dynamicEditForm.vue';
 import incidentEditForm from './tableModals/modalForms/incidentEditForm.vue';
+import deleteLoading from './tableModals/loading/deleteLoading.vue';
 
 export default {
   data() {
@@ -112,7 +115,11 @@ export default {
         restoreArchiveOpen: false,
       },
       id: -1,
-      users_id: -1
+      users_id: -1,
+      loading: {
+        delete: false,
+        restore: false,
+      }
     };
   },
   props: ["tabData", "type", "getTData"],
@@ -128,7 +135,8 @@ export default {
     accountProfile,
     incidentModal,
     dynamicEditForm,
-    incidentEditForm
+    incidentEditForm,
+    deleteLoading
   },
   methods: {
     restoreModalToggle(){
@@ -137,7 +145,6 @@ export default {
     viewModalToggle(){
       this.viewModal = !this.viewModal;
     },deleteIt(param){
-
       this.deleteItem({ id: param, 
           deleted_by: this.id//Temporary
           , archived_by: this.id// Temporary
@@ -171,13 +178,13 @@ export default {
     },
     async sendData() {
       const send = await this.deleteR;
-
+      this.loading.delete = true;
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
       
       if (res == "Success") {
-        await alert("Data Deleted.");
         this.hiddenTogggle('delete');
+        this.loading.delete = false;
         /* Use to reload the api data */
         this.getTData('', this.$store.getters.api);
       } else {

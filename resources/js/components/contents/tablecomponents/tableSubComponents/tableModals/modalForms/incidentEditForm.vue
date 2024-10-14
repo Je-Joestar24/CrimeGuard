@@ -1,5 +1,6 @@
 <template>
   <div
+    v-show="!loading"
     tabindex="-1"
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-20"
   >
@@ -389,17 +390,19 @@
   
   <selector v-if="locSelectorOpen" :toggleIt="toggleLocation" :sendIt="setLocation"></selector>
     
-  
+  <editLoading v-if="loading"/>
 </template>
 
 
 <script>
 import envolvePersons from "./incidentAddForm/envolvePersons.vue";
+import editLoading from "../loading/editLoading.vue";
 
 import selector from "./modComps/selector.vue";
 export default {
   data() {
     return {
+      loading: false,
       envolvedOpen: false,
       addSuspectClicked: false,
       addWitnessClicked: false,
@@ -466,6 +469,7 @@ export default {
   components: {
     envolvePersons,
     selector,
+    editLoading
   },
   methods: {
     toggleEnvolved(param) {
@@ -526,7 +530,7 @@ export default {
       const data1 = this.data;
       data1.incident["edited_by"] = this.id;
       data1["id"] = this.id;
-
+      this.loading = true;
       const send = await {
         data: data1,
         url: "api/incidents/update/item/request",
@@ -536,8 +540,8 @@ export default {
       const data = await this.$store.dispatch("sendData", send);
       this.res = await data["response"];
 
-      if (this.res == "Success") {
-        await alert("Successfully updated Incident.");
+      if (this.res == "Success") {/* 
+        await alert("Successfully updated Incident."); */
         this.reloadTab("", this.$store.getters.api);
         await this.toggle();
       } else {

@@ -1,26 +1,26 @@
 <template>
   <div class="flex justify-center">
-    <div class="m-5 max-w-screen-xl px-3 py-3 rounded border shadow-lg">
-      <div class="flex" style="width: 65vw; height: 65vh">
-        <section class="text-gray-600 body-font relative w-full h-full">
+    <div class="m-5 max-w-screen-2xl w-11/12 px-6 py-6 rounded-lg border shadow-xl bg-white">
+      <div class="flex space-x-6" style="width: 70vw; height: 70vh">
+        <section class="text-gray-600 body-font relative w-3/5 h-full rounded-lg overflow-hidden shadow-md">
           <div
             id="innerMonitoringMap"
-            class="absolute inset-0 bg-gray-300"
+            class="absolute inset-0 bg-gray-200"
           ></div>
         </section>
-        <div class="border w-5/12 grid">
+        <div class="w-2/5 flex flex-col rounded-lg shadow-md overflow-hidden">
           <!-- Reporting Persons Section -->
-          <div class="border-b flex flex-col">
-            <h2 class="text-lg font-semibold text-gray-800 px-4 py-3 bg-gray-100">
-              REPORTING PERSONS
+          <div class="flex-1 flex flex-col">
+            <h2 class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b">
+              Reporting Persons
             </h2>
-            <div class="overflow-auto" style="height: 24vh">
+            <div class="overflow-auto flex-1 bg-white">
               <template v-if="users.length">
                 <div
                   v-for="(marker, index) in users"
                   :key="index"
                   @click="focusOnMarker(marker)"
-                  class="flex items-center px-4 py-3 border-b hover:bg-gray-50 transition duration-150 ease-in-out cursor-pointer"
+                  class="flex items-center px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
                   :class="{ 'bg-blue-50': active == marker.ctr }"
                 >
                   <div class="flex-shrink-0">
@@ -28,21 +28,21 @@
                       v-if="marker.profile"
                       :src="marker.profile"
                       :alt="marker.name"
-                      class="h-10 w-10 rounded-full object-cover"
+                      class="h-12 w-12 rounded-full object-cover shadow-sm"
                       :class="{ 'ring-2 ring-blue-500': active == marker.ctr }"
                     />
                     <div
                       v-else
-                      class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center"
+                      class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center shadow-sm"
                     >
-                      <svg class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                     </div>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-900">{{ marker.name }}</p>
-                    <p class="text-xs text-gray-500">{{ marker.con_no }}</p>
+                  <div class="ml-4">
+                    <p class="text-sm font-semibold text-gray-900">{{ marker.name }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ marker.con_no }}</p>
                   </div>
                 </div>
               </template>
@@ -53,23 +53,23 @@
           </div>
           
           <!-- Reported Incidents Section -->
-          <div class="border-b flex flex-col">
-            <h2 class="text-lg font-semibold text-gray-800 px-4 py-3 bg-gray-100">
-              REPORTED INCIDENTS
+          <div class="flex-1 flex flex-col">
+            <h2 class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b">
+              Reported Incidents
             </h2>
-            <div class="overflow-auto" style="height: 24vh">
+            <div class="overflow-auto flex-1 bg-white">
               <template v-if="data.markers.length">
                 <div
                   v-for="(marker, index) in data.markers"
                   :key="index"
                   @click="focusOnMarker(marker)"
-                  class="px-4 py-3 border-b hover:bg-gray-50 transition duration-150 ease-in-out cursor-pointer"
+                  class="px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
                   :class="{ 'bg-blue-50': active == marker.ctr }"
                 >
                   <div class="flex justify-between items-start">
                     <div class="flex-1">
-                      <p class="text-sm font-medium text-gray-900">{{ marker.message }}</p>
-                      <p class="text-xs text-gray-500 mt-1">{{ marker.location }}</p>
+                      <p class="text-sm font-semibold text-gray-900">{{ marker.message }}</p>
+                      <p class="text-xs text-gray-500 mt-2">{{ marker.location }}</p>
                     </div>
                     <div class="text-right">
                       <p class="text-xs text-gray-500">{{ convertToNormalTime(marker.time) }}</p>

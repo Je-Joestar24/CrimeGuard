@@ -64,7 +64,7 @@
     <section class="absolute inset-0">
       <div id="residentMap" class="w-full h-full bg-gray-100"></div>
     </section>
-    <div class="absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/50 to-transparent">
+    <div class="pointer-events-none absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/50 to-transparent">
       <h2 class="text-2xl font-bold text-white text-center">
         Crime Heat Map
       </h2>

@@ -115,11 +115,13 @@
   </div>
 
   <acceptAccount
+    v-show="!acceptLoading"
     :toggle="acceptToggle"
     :sendData="acceptData"
     v-if="modals.acceptIsOpen"
   ></acceptAccount>
   <rejectAccount
+    v-show="!rejectLoading"
     :toggle="rejectModalToggle"
     :sendData="rejectData"
     v-if="modals.rejectIsOpen"
@@ -129,22 +131,31 @@
     v-if="modals.viewIsOpen && viewRequestId != -1"
     :suspectId="viewRequestId"
   ></accountProfile>
+
+  <acceptLoading v-if="acceptLoading" />
+  <rejectAccLoading v-if="rejectLoading" /> 
 </template>
 
 <script>
 import acceptAccount from "./requestComponents/acceptAccount.vue";
 import rejectAccount from "./requestComponents/rejectAccount.vue";
 import accountProfile from "./requestComponents/accountProfile.vue";
+import acceptLoading from "./requestComponents/loading/acceptLoading.vue";
+import rejectAccLoading from "./requestComponents/loading/rejectAccLoading.vue";
 
 export default {
   components: {
     acceptAccount,
     rejectAccount,
     accountProfile,
+    acceptLoading,
+    rejectAccLoading,
   },
   data() {
     return {
       arr: [],
+      acceptLoading: false,
+      rejectLoading: false,
       paginatedArr: [],
       month: [
         "january", "february", "march", "april", "may", "june",
@@ -197,27 +208,31 @@ export default {
       }
     },
     async acceptData() {
+      this.acceptLoading = true;
       const send = this.accept;
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
       if (res == "Success") {
-        await alert("Account accepted.");
+        this.acceptLoading = false;
         this.acceptToggle("");
         await this.getData({url: "api/citizenUsers/account/request/list/Display", data: {}});
       } else {
         await alert("An error occurred, please try again.");
+        this.acceptLoading = false;
       }
     },
     async rejectData() {
+      this.rejectLoading = true;
       const send = this.reject;
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
       if (res == "Success") {
-        await alert("Account rejected.");
+        this.rejectLoading = false;
         this.rejectModalToggle("");
         await this.getData({url: "api/citizenUsers/account/request/list/Display", data: {}});
       } else {
         await alert("An error occurred, please try again.");
+        this.rejectLoading = false;
       }
     },
     changePage(page) {
