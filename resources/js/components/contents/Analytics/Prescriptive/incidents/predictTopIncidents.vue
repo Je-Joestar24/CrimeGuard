@@ -1,44 +1,48 @@
 <template>
-
-  <div class="flex justify-between">
-    <div class="w-full flex gap-2">
-      <input type="date" v-model="filter.date_start" />
-      <input type="date" v-model="filter.date_end" />
-    </div>
-    <div class="flex justify-end w-full gap-3">
-      <div class="relative z-0 group">
+  <div class="bg-violet-50 p-6 rounded-lg shadow-lg mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+      <div class="w-full md:w-auto flex gap-4 mb-4 md:mb-0">
+        <input
+          type="date"
+          v-model="filter.date_start"
+          class="px-4 py-2 border border-violet-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+        <input
+          type="date"
+          v-model="filter.date_end"
+          class="px-4 py-2 border border-violet-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+      </div>
+      <div class="relative">
         <button
+          v-if="!barangayToggle"
           @click="toggleB"
-          class="bg-gray-50 flex gap-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
+          class="bg-white hover:bg-violet-100 text-violet-700 font-semibold py-2 px-4 border border-violet-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
           :disabled="incidentToggle"
         >
           SELECT BARANGAY
           <svg
-            class="h-5 w-5 text-gray-500 my-auto"
+            class="h-5 w-5 ml-2"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-      </div>
-      <div
-        v-if="barangayToggle && !incidentToggle"
-        class="absolute z-40 px-1 py-1 w-60 bg-white rounded-md shadow-lg border right-20"
-      >
-        <barangaylists :setAddress="setAddress" :toggle="toggleB" />
+        <div
+          v-else-if="barangayToggle"
+          class="relative z-40  w-64"
+        >
+          <barangaylists :setAddress="setAddress" :toggle="toggleB" />
+        </div>
       </div>
     </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md border border-violet-200">
+      <div id="predictedTopIncidentNames" class="w-full h-96"></div>
+    </div>
   </div>
-  <figure class="highcharts-figure rounded-md mt-10 p-5 border-2 border-violet-600 shadow-md shadow-violet-600">
-    <div id="predictedTopIncidentNames"></div>
-  </figure>
 </template>
   
   
@@ -91,7 +95,8 @@ export default {
           },
         },
         subtitle: {
-          text: "Top "+this.data.count.length+" Incident with the high chance",
+          text:
+            "Top " + this.data.count.length + " Incident with the high chance",
           align: "left",
         },
         xAxis: {
@@ -189,8 +194,8 @@ export default {
       const day = String(today.getDate()).padStart(2, "0");
       this.filter[key] = `${year}-${month}-${day}`;
     },
-  },watch: {
-    
+  },
+  watch: {
     "filter.date_start": function (newVal, oldVal) {
       if (newVal != oldVal) {
         (async () => {
@@ -207,7 +212,7 @@ export default {
         })();
       }
     },
-  }
+  },
 };
 </script>
   

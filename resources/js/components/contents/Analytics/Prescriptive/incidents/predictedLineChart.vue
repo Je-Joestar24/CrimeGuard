@@ -1,107 +1,107 @@
 <template>
-  <div class="flex justify-between">
-    <div class="w-full flex gap-2">
-      <input type="date" v-model="filter.date_start" />
-      <input type="date" v-model="filter.date_end" />
-    </div>
-    <div class="flex justify-end w-full gap-3">
-      <div class="relative z-0 group">
-        <button
-          @click="toggleI"
-          class="bg-gray-50 flex gap-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
-          :disabled="barangayToggle"
-        >
-          SELECT INCIDENT NAME
-          <svg
-            class="h-5 w-5 text-gray-500 my-auto"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+  <div class="bg-violet-50 p-6 rounded-lg shadow-lg mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+      <div class="w-full md:w-auto flex gap-4 mb-4 md:mb-0">
+        <input
+          type="date"
+          v-model="filter.date_start"
+          class="px-4 py-2 border border-violet-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+        <input
+          type="date"
+          v-model="filter.date_end"
+          class="px-4 py-2 border border-violet-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+      </div>
+      <div class="flex gap-4">
+        <div class="relative">
+          <button
+            v-if="!(incidentToggle && !barangayToggle)"
+            @click="toggleI"
+            class="bg-white hover:bg-violet-100 text-violet-700 font-semibold py-2 px-4 border border-violet-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
+            :disabled="barangayToggle"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-      </div>
-      <div class="relative z-0 group">
-        <button
-          @click="toggleB"
-          class="bg-gray-50 flex gap-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
-          :disabled="incidentToggle"
-        >
-          SELECT BARANGAY
-          <svg
-            class="h-5 w-5 text-gray-500 my-auto"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            SELECT INCIDENT
+            <svg
+              class="h-5 w-5 ml-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div
+            v-else-if="incidentToggle && !barangayToggle"
+            class="relative my-auto w-64 rounded-md"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
-        v-if="incidentToggle && !barangayToggle"
-        class="absolute z-40 px-1 py-1 w-60 right-64 bg-white rounded-md shadow-sm border"
-      >
-        <incident-lists :toggle="toggleI" :setIncident="selectIncident" />
-      </div>
-      <div
-        v-if="barangayToggle && !incidentToggle"
-        class="absolute z-40 px-1 py-1 w-60 bg-white rounded-md shadow-lg border right-20"
-      >
-        <barangaylists :setAddress="setAddress" :toggle="toggleB" />
+            <incident-lists :toggle="toggleI" :setIncident="selectIncident" />
+          </div>
+        </div>
+        <div  class="relative">
+          <button
+          
+            v-if="!(barangayToggle && !incidentToggle)"
+            @click="toggleB"
+            class="bg-white hover:bg-violet-100 text-violet-700 font-semibold py-2 px-4 border border-violet-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
+            :disabled="incidentToggle"
+          >
+            SELECT BARANGAY
+            <svg
+              class="h-5 w-5 ml-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div
+            v-else-if="barangayToggle && !incidentToggle"
+            class="  w-64 rounded-md  relative"
+          >
+            <barangaylists :setAddress="setAddress" :toggle="toggleB" />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <figure
-    class="highcharts-figure p-3 border border-violet-600 rounded-md shadow-md shadow-violet-600"
-  >
-    <div id="PredictedAnalyticsLine"></div>
-  </figure>
-
-  <div
-    class="container mx-auto mt-10 p-5 border border-violet-600 rounded-md shadow-md shadow-violet-600 mb-5"
-  >
-    <div class="text-center text-2xl font-bold mb-4 text-violet-500">
-      PREDICTED INCIDENT CALENDAR ({{ filter.date_start }} -
-      {{ filter.date_end }})
+    
+    <div class="bg-white p-6 rounded-lg shadow-md border border-violet-200">
+      <div id="PredictedAnalyticsLine" class="w-full h-96"></div>
     </div>
-    <div class="grid grid-cols-7 gap-2">
-      <!-- Render days of the week -->
-      <div
-        v-for="day in daysOfWeek"
-        :key="day"
-        class="font-semibold text-center text-violet-400"
-      >
-        {{ day }}
-      </div>
-      <div v-for="n in startOffset" :key="'offset-' + n"></div>
 
-      <div
-        v-for="(day, index) in daysInRange"
-        :key="day.date"
-        class="border rounded p-2 text-center flex flex-col items-center"
-        :class="{
-          'bg-gray-100': day.count === 0,
-          'bg-green-100': day.count > 0 && day.count <= 3,
-          'bg-yellow-100': day.count > 3 && day.count <= 6,
-          'bg-red-100': day.count > 6,
-        }"
-      >
-        <span class="font-bold">{{ day.date.getDate() }}</span>
-        <span v-if="day.count > 0" class="text-sm text-gray-700"
-          >Count: {{ day.count }}</span
+    <div class="mt-10 bg-white p-6 rounded-lg shadow-md border border-violet-200">
+      <h2 class="text-2xl font-bold mb-6 text-violet-700 text-center">
+        PREDICTED INCIDENT CALENDAR
+        <span class="text-lg font-normal text-violet-500">
+          ({{ filter.date_start }} - {{ filter.date_end }})
+        </span>
+      </h2>
+      <div class="grid grid-cols-7 gap-4">
+        <div
+          v-for="day in daysOfWeek"
+          :key="day"
+          class="font-semibold text-center text-violet-600"
         >
+          {{ day }}
+        </div>
+        <div v-for="n in startOffset" :key="'offset-' + n"></div>
+        <div
+          v-for="(day, index) in daysInRange"
+          :key="day.date"
+          class="border rounded-lg p-3 text-center flex flex-col items-center justify-center transition-colors duration-300"
+          :class="{
+            'bg-violet-50 hover:bg-violet-100': day.count === 0,
+            'bg-green-100 hover:bg-green-200': day.count > 0 && day.count <= 3,
+            'bg-yellow-100 hover:bg-yellow-200': day.count > 3 && day.count <= 6,
+            'bg-red-100 hover:bg-red-200': day.count > 6,
+          }"
+        >
+          <span class="font-bold text-lg text-violet-800">{{ day.date.getDate() }}</span>
+          <span v-if="day.count > 0" class="text-sm text-violet-600 mt-1">
+            Count: {{ day.count }}
+          </span>
+        </div>
       </div>
     </div>
   </div>

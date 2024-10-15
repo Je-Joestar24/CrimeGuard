@@ -44,128 +44,115 @@
       }
     }
   </style>
-
 <template>
-  <div class="flex justify-center">
-  <div class="m-5 max-w-screen-xl px-3 py-3 rounded border shadow-lg"
-    :class="{'border-gray-500':$store.getters.theme,'border-gray-200':!$store.getters.theme}"
-  >
-<!--     <div class="grid mb-2 grid-cols-3">
-      <div class="col-span-3">
-        <form>
-          <div class="flex">
+  <div class="flex flex-col items-center">
+    <div class="w-full max-w-screen-xl px-4 py-6 bg-white rounded-lg shadow-lg mb-6">
+      <div class="flex flex-col md:flex-row justify-between items-center ">
+        <div class="w-full md:w-auto flex gap-4 mb-4 md:mb-0">
+          <input
+            type="date"
+            v-model="filter.date_start"
+            class="px-4 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out hover:border-blue-400"
+          />
+          <input
+            type="date"
+            v-model="filter.date_end"
+            class="px-4 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out hover:border-blue-400"
+          />
+        </div>
+        <div class="flex gap-4">
+          <div class="relative">
             <button
-              class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-              type="button"
+              v-if="!(incidentToggle && !barangayToggle)"
+              @click="toggleI"
+              class="bg-white hover:bg-blue-100 text-gray-700 font-semibold py-2 px-4 border border-blue-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
+              :disabled="barangayToggle"
             >
-              Filter
-            </button>
-            <div class="relative w-full">
-              <input
-                type="search"
-                id="search-dropdown"
-                class="block p-2.5 w-full z-20 text-sm   rounded-e-lg border-s-gray-50 border-s-2 border"
-                :class="{' bg-gray-700 border-s-gray-700 border-gray-600 placeholder-gray-400 text-white focus:border-blue-500':$store.getters.theme,'bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-900':!$store.getters.theme}"
-      
-                placeholder="Search Location"
-                required
-              />
-              <button
-                type="submit"
-                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              SELECT INCIDENT
+              <svg
+                class="h-5 w-5 ml-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  class="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-                <span class="sr-only">Search</span>
-              </button>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div
+              v-else-if="incidentToggle && !barangayToggle"
+              class="relative my-auto w-64 rounded-md"
+            >
+              <incident-lists :toggle="toggleI" :setIncident="selectIncident" />
             </div>
           </div>
-        </form>
-      </div>
-    </div> -->
-    <div class="" style="width: 65vw; height: 65vh">
-      
-      <section class="text-gray-600 body-font relative w-full h-full">
-        <div id="heatMap" class="absolute inset-0 bg-gray-300">
-          
+          <div  class="relative">
+            <button
+            
+              v-if="!(barangayToggle && !incidentToggle)"
+              @click="toggleB"
+              class="bg-white hover:bg-blue-100 text-gray-700 font-semibold py-2 px-4 border border-blue-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
+              :disabled="incidentToggle"
+            >
+              SELECT BARANGAY
+              <svg
+                class="h-5 w-5 ml-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div
+              v-else-if="barangayToggle && !incidentToggle"
+              class="  w-64 rounded-md  relative"
+            >
+              <barangaylists :setAddress="setAddress" :toggle="toggleB" />
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
     </div>
+    <div class="w-full max-w-screen-xl bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full h-[65vh]">
+        <section class="relative w-full h-full">
+          <div id="heatMap" class="absolute inset-0 bg-gray-300"></div>
+        </section>
+      </div>
+    </div>
+    <button @click="removeAllMarkers">test</button>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      data: { markers: [] },
-    };
-  },
   mounted() {
-    //this.initializeMap()
     (async () => {
       await this.generateData();
       await this.loadGoogleMapsScript();
       await this.initializeMap();
     })();
-    //console.log(document.head)
+  },
+  data() {
+    return {
+      data: { markers: [] },
+      filter: {
+        date_start: "",
+        date_end: "",
+        barangay: "",
+        incident: "",
+      },
+      map: null,
+      markers: [],
+      barangayToggle: false,
+      incidentToggle: false,
+      searchQuery: "",
+    };
   },
   methods: {
-    async generateData() {
-      const dt = await this.$store.dispatch(
-        "sendData",{
-        url: "api/incidents/heat/map/marker/Display",data: {}}
-      );
-
-      if (dt["response"] == "Success") {
-        let data = dt["data"];
-        for (let i = 0; i < data.length; i++) {
-          this.data.markers.push({
-            pos: {
-              lat: parseFloat(data[i]["pos"]["lat"]),
-              lng: parseFloat(data[i]["pos"]["lng"]),
-            },
-            message: data[i]["message"],
-            location: data[i]["location"],
-            name: data[i]["name"],
-            con_no: data[i]["contact"],
-            report_type: data[i]["report_type"],
-          });
-          //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
-        }
-      } else {
-        alert("Error!");
-      }
-    },
-    async loadGoogleMapsScript() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM";
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
     initializeMap() {
       const location = { lat: 11.005, lng: 124.6077 };
-      const map = new google.maps.Map(
+      this.map = new google.maps.Map(
         document.getElementById("heatMap"),
         {
           zoom: 12,
@@ -173,9 +160,86 @@ export default {
         }
       );
 
+      this.loadMarkers();
+    },
+    removeAllMarkers() {
+      if (this.markers.length > 0) {
+        console.log(this.markers); 
+        this.markers.forEach((marker) => {
+          marker.setVisible(false);
+          setTimeout(() => {
+            marker.setMap(null); 
+          }, 50);
+        });
+
+        this.markers = [];
+      } else {
+      }
+      this.users = [];
+    },  loadMarkers() {
+    this.removeAllMarkers(); // Clear existing markers before adding new ones
+    this.data.markers.forEach((mark) => {
+      const markerIcon = new google.maps.Marker({
+        position: new google.maps.LatLng(mark.pos.lat, mark.pos.lng),
+        map: this.map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: mark.report_type == 1 ? '#ff0000' : '#ff8400',
+          fillOpacity: 0.8,
+          strokeWeight: 2,
+          strokeColor: mark.report_type == 1 ? '#ff0000' : '#ff8400',
+        },
+      });
+
+      this.markers.push(markerIcon);
+
+      const bg = mark.report_type == 1
+        ? "border-red-600 bg-red-100"
+        : "border-yellow-600 bg-yellow-100";
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
+            <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+              <h2 class="text-xl font-bold text-white">Incident Details</h2>
+            </div>
+            <div class="p-4 space-y-3">
+              <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                <span class="text-sm font-semibold text-gray-800">${mark.incident_type}</span>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Status</span>
+                <span class="text-sm font-semibold ${mark.status === 'under investigation' ? 'text-blue-600' : 'text-green-600'}">${mark.status}</span>
+              </div>
+              <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Date & Time</span>
+                <span class="text-sm font-semibold text-gray-800">${mark.month} ${mark.date}, ${mark.time}</span>
+              </div>
+              <div class="border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Location</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
+              </div>
+              <div>
+                <span class="text-sm font-medium text-gray-500">Message</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.message || 'No message provided'}</p>
+              </div>
+            </div>
+          </div>
+        `,
+      });
+
+      markerIcon.addListener("click", () => {
+        infoWindow.open(this.map, markerIcon);
+      });
+    });
+  },
+/*     loadMarkers() {
+      this.removeAllMarkers(); // Clear existing markers before adding new ones
       this.data.markers.forEach((mark) => {
         // Custom Overlay for animated marker
         const markerIcon = new google.maps.OverlayView();
+
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
           layer.classList.add(mark.report_type == 1 ? "redM" : "yellowM");
@@ -198,7 +262,7 @@ export default {
           });
 
           layer.addEventListener("click", () => {
-            infoWindow.open(map, marker);
+            infoWindow.open(this.map, this);
           });
 
           const panes = this.getPanes();
@@ -215,21 +279,112 @@ export default {
           div.style.left = position.x + "px";
           div.style.top = position.y + "px";
         };
-        markerIcon.setMap(map);
+        markerIcon.setMap(this.map);
 
-        // Dummy marker to keep the InfoWindow functionality
-        const marker = new google.maps.Marker({
-          position: mark.pos,
-          map: map,
-          visible: false,
-        });
-
-        marker.addListener("click", function () {
-          infoWindow.open(map, marker);
-        });
+        this.markers.push(markerIcon);
       });
-      
+    }, */
+/*     removeAllMarkers() {
+      if (this.markers.length > 0) {
+        this.markers.forEach((marker) => {
+          marker.setVisible(false);
+        });
+        this.markers = [];
+      }
+    }, */
+    async generateData() {
+      const dt = await this.$store.dispatch(
+        "sendData",{
+        url: "api/incidents/heat/map/marker/Display",data: {}}
+      );
+
+      if (dt["response"] == "Success") {
+        let data = dt["data"];
+        for (let i = 0; i < data.length; i++) {
+          this.data.markers.push({
+            pos: {
+              lat: parseFloat(data[i]["pos"]["lat"]),
+              lng: parseFloat(data[i]["pos"]["lng"]),
+            },
+            message: data[i]["message"],
+            location: data[i]["location"],
+            name: data[i]["name"],
+            con_no: data[i]["contact"],
+            report_type: data[i]["report_type"],
+            incident_type: data[i]["incident_type"],
+            status: data[i]["status"],
+            time: data[i]["time"],
+            month: data[i]["month"],
+            date: data[i]["date"],  
+          });
+          //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
+        }
+      } else {
+        alert("Error!");
+      }
     },
-  },
+    async loadGoogleMapsScript() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src =
+          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM";
+        script.async = true;
+        script.defer = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    },
+    async searchIncident(){
+      const dt = await this.$store.dispatch(
+        "sendData",{
+        url: "api/incidents/heat/map/marker/Display",data: {searchQuery: this.searchQuery}}
+      );
+      if (dt["response"] == "Success") {
+        let data = dt["data"];
+        for (let i = 0; i < data.length; i++) {
+          this.data.markers.push({
+            pos: {
+              lat: parseFloat(data[i]["pos"]["lat"]),
+              lng: parseFloat(data[i]["pos"]["lng"]),
+            },
+          });
+        }
+      } else {
+        alert("Error!");
+      }
+    },
+    async sendFilter(){
+      const dt = await this.$store.dispatch(
+        "sendData",{
+        url: "api/incidents/heat/map/marker/Display",data: {filter: this.filter}}
+      );
+
+      if (dt["response"] == "Success") {
+        let data = dt["data"];
+        for (let i = 0; i < data.length; i++) {
+          this.data.markers.push({
+            pos: {
+              lat: parseFloat(data[i]["pos"]["lat"]),
+              lng: parseFloat(data[i]["pos"]["lng"]),
+            },
+            message: data[i]["message"],
+            location: data[i]["location"],
+            name: data[i]["name"],
+            con_no: data[i]["contact"],
+            report_type: data[i]["report_type"],
+          });
+        }
+      } else {
+        alert("Error!");
+      }
+    }
+  },watch: {
+    'searchQuery': function (newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.searchIncident();
+      }
+    },
+  }
 };
 </script>

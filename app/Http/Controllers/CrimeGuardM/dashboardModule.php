@@ -494,16 +494,16 @@ class dashboardModule extends Controller
 
     public function heatMap(Request $request)
     {
-
         date_default_timezone_set('Asia/Manila');
 
         $currentDate = new DateTime();
 
         $data['data'] = [];
 
-
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
+                ->leftJoin('incident-types', 'incidents.incident_type', '=', 'incident-types.id')
+                ->leftJoin('incident-sub-types', 'incident-types.sub_type_id', '=', 'incident-sub-types.id')
                 ->select(
                     'incidents.id',
                     'incidents.message',
@@ -517,9 +517,40 @@ class dashboardModule extends Controller
                     'users.contact',
                     'incidents.longitude',
                     'incidents.latitude',
-                    'incidents.report_type'
-                )
-                ->where('incidents.status', '!=', 'report')
+                    'incidents.report_type',
+                    'incident-types.incident_name',
+                    'incident-sub-types.sub_type',
+                    'incidents.status'
+                )->where('incidents.incident_type', '!=', NULL);
+                if($request->has('filter') ){
+                    $filter = $request->input('filter');
+                    if($filter['date_start'] != ''){
+                        $reports = $reports->whereDate('incidents.date_reported', '>=', $filter['date_start']);
+                    }
+                    if($filter['date_end'] != ''){
+                        $reports = $reports->whereDate('incidents.date_reported', '<=', $filter['date_end']);
+                    }
+                    if($filter['barangay'] != ''){
+                        $reports = $reports->where('incidents.location', 'like', '%' . $filter['barangay'] . '%');
+                    }
+                    if($filter['incident'] != ''){
+                        $reports = $reports->where('incident-types.incident_name', 'like', '%' . $filter['incident'] . '%');
+                    }
+                };
+
+                if($request->has('searchQuery') && $request->input('searchQuery') != ''){
+                    $reports = $reports->where('incidents.message', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('incidents.location', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('incidents.landmark', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('users.user_name', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('users.first_name', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('users.last_name', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('incident-types.incident_name', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('incident-sub-types.sub_type', 'like', '%' . $request->input('searchQuery') . '%');
+                    $reports = $reports->orWhere('users.contact', 'like', '%' . $request->input('searchQuery') . '%');
+                }
+
+                $reports = $reports->where('incidents.status', '!=', 'report')
                 ->where('incidents.latitude', '>', 0)
                 ->where('incidents.longitude', '>', 0)
                 ->get();
@@ -533,6 +564,7 @@ class dashboardModule extends Controller
                     'message' => $report['message'],
                     'location' => $report['location'],
                     'contact' => $report['contact'],
+                    'status' => $report['status'],
                     'pos' => [
                         'lat' => $report['latitude'],
                         'lng' => $report['longitude']
@@ -540,7 +572,8 @@ class dashboardModule extends Controller
                     'time' => explode(' ', $report['time_reported'])[1],
                     'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
-                    'report_type' => $report['report_type']
+                    'report_type' => $report['report_type'],
+                    'incident_type' => $report['sub_type'] != NULL ? ($report['incident_name']."( ".$report['sub_type']." )") : $report['incident_name'],
                 ];
                 array_push($data['data'], $cleaned);
             }

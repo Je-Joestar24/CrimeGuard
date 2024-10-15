@@ -81,11 +81,37 @@ export default {
           let infoWindow = new google.maps.InfoWindow({
             content: `
             <div class="p-4 rounded-lg shadow-lg max-w-xs border-2 ${bg}">
-              <h1 class="font-bold text-lg mb-2">Incident Information:</h1>
-              <p><span class="font-semibold">Message:</span> ${mark.message}</p>
-              <p><span class="font-semibold">Location:</span> ${mark.location}</p>
-              <p><span class="font-semibold">Reported by:</span> ${mark.name}</p>
-              <p><span class="font-semibold">Contact no:</span>${mark.con_no}</p>
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
+          <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+            <h2 class="text-xl font-bold text-white">Reported Incident Information</h2>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Reported by</span>
+              <span class="text-sm font-semibold text-gray-800">${mark.name}</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Contact</span>
+              <span class="text-sm font-semibold text-gray-800">${mark.con_no}</span>
+            </div>
+              <div class="border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Location</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
+              </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Report Type</span>
+              <span class="text-sm font-semibold ${mark.report_type == 1 ? 'text-red-600' : 'text-yellow-600'}">
+                ${mark.report_type == 1 ? 'Emergency' : 'Non-Emergency'}
+              </span>
+            </div>
+            ${mark.message ? `
+              <div>
+                <span class="text-sm font-medium text-gray-500">Message</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
+              </div>
+            ` : ''}
+          </div>
+        </div>
             </div>
             `,
           });

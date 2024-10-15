@@ -17,57 +17,38 @@
     </NavigationBar>
     <div class="p-4 sm:ml-64">
       <div
-        id="DisplayContentArea"
         class="p-4 mt-14"
         :class="{ 'border-gray-700': this.$store.getters.theme }"
       >
         <div class="container ps-5">
-          <h1
-            @click="playAudio"
-            class="text-xl bg-gray-200 font-bold p-3 border rounded shadow-lg mb-10"
-            :class="{
-              'text-gray-100 border-gray-700': $store.getters.theme,
-              ' bg-gray-50': !$store.getters.theme,
-            }"
-          >
-            {{ $store.state.CurrentActiveTitleNavigation }}
-          </h1>
+          <div class="mb-10">
+            <h1
+              @click="playAudio"
+              class="text-2xl font-bold p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out"
+              :class="{
+                'bg-gray-800 text-white border-l-2 border-gray-500': $store.getters.theme,
+                'bg-white text-gray-800 border-l-2 border-gray-500': !$store.getters.theme,
+              }"
+            >
+              <span class="flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                {{ $store.state.CurrentActiveTitleNavigation }}
+              </span>
+            </h1>
+          </div>
           <router-view></router-view>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 
-    THe off canvas
-   -->
   <adminprofile
     v-if="!closeProfile"
     :toggle-profile="toggleProfile"
     :close-profile="closeProfile"
   ></adminprofile>
-  <!-- <div v-if="emergency" class="blinking-shadow"></div> 
-  <div
-    v-if="emergency"
-    class="z-50 bg-red-700 fixed flex justify-center h-60 w-60 bg-transparent"
-    style="top: 30vh; right: 45vw"
-  >
-    <svg
-      class="blink h-60 w-60 text-red-300"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="solid"
-    >
-      <polygon
-        points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"
-      />
-      <line x1="12" y1="8" x2="12" y2="12" />
-      <line x1="12" y1="16" x2="12.01" y2="16" />
-    </svg>
-  </div>-->
   <transition
     enter-active-class="animate-fade-in-down"
     leave-active-class="animate-fade-out-up"
@@ -96,44 +77,7 @@
       </div>
     </div>
   </transition>
-<!--   <transition
-    enter-active-class="transform ease-out duration-300 transition"
-    enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-    leave-active-class="transition ease-in duration-100"
-    leave-from-class="opacity-100"
-    leave-to-class="opacity-0"
-  >
-    <div v-if="emergency" class="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end z-50">
-      <div class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
-        <div class="p-4">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <svg class="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <div class="ml-3 w-0 flex-1 pt-0.5">
-              <p class="text-sm font-medium text-gray-900">
-                {{ cred.user_level == 1 ? "Emergency Report" : "New Assignment" }}
-              </p>
-              <p class="mt-1 text-sm text-gray-500">
-                {{ cred.user_level == 1 ? "A new emergency report has been filed. Immediate attention required." : "You have been assigned to a new incident. Please check your assignments." }}
-              </p>
-            </div>
-            <div class="ml-4 flex-shrink-0 flex">
-              <button @click="emergency = false" class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <span class="sr-only">Close</span>
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </transition> -->
+
   <div
     v-if="emergency && seenIncidents.length != incidents.length"
     class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 flex items-center justify-center"

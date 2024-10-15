@@ -62,13 +62,14 @@
   </tr>
   
   <deleteLoading  v-if="loading.delete"></deleteLoading>
+  <restoreLoading v-if="loading.restore"></restoreLoading>
   <incidentEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editIncident" v-if="!editIncidentModal && ($store.getters.getActive == 'innerIncident')"></incidentEditForm>
   <dynamicEditForm :reloadTab="getTData" :rId="viewRequestId" :toggle="editItem" v-if="!editModal && ($store.getters.getActive != 'innerIncident')"></dynamicEditForm>
   <deleteM v-show="!loading.delete" :isHidden="deleteModal" :sendData="sendData" :hiddenT="hiddenTogggle" v-if="!deleteModal"></deleteM>
   <suspectView  :suspectId="viewRequestId" v-if="($store.getters.getActive == 'innerSuspects' || $store.getters.getActive == 'innerVictims' || $store.getters.getActive == 'innerWitnesses' || $store.getters.getActive == 'innerWitnessesArchive' ||  $store.getters.getActive == 'innerSuspectsArchive' || $store.getters.getActive == 'innerVictimsArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></suspectView>
   <incidentModal :toggle="viewModalToggle" :incidentId="viewRequestId" v-if="($store.getters.getActive == 'innerIncident' || $store.getters.getActive == 'innerIncidentArchive') && !viewModal " :isHidden="viewModal"  :hiddenT="hiddenTogggle"></incidentModal>
   <accountProfile :toggle="viewModalToggle" v-if="(!viewModal) && ($store.getters.getActive == 'innerCitizenAccounts' || $store.getters.getActive == 'innerOfficerAccounts' || $store.getters.getActive == 'innerAccountsArchive')" :suspectId="viewRequestId"></accountProfile>
-  <restoreModal :sendData="restoreArchivedData" :toggle="restoreModalToggle" v-if="modal.restoreArchiveOpen"></restoreModal>
+  <restoreModal v-show="!loading.restore" :sendData="restoreArchivedData" :toggle="restoreModalToggle" v-if="modal.restoreArchiveOpen"></restoreModal>
 </template>
 
 <script>
@@ -80,7 +81,7 @@ import incidentModal from './tableModals/incidentModal.vue';
 import dynamicEditForm from './tableModals/modalForms/dynamicEditForm.vue';
 import incidentEditForm from './tableModals/modalForms/incidentEditForm.vue';
 import deleteLoading from './tableModals/loading/deleteLoading.vue';
-
+import restoreLoading from './tableModals/loading/restoreLoading.vue';
 export default {
   data() {
     return {
@@ -136,7 +137,8 @@ export default {
     incidentModal,
     dynamicEditForm,
     incidentEditForm,
-    deleteLoading
+    deleteLoading,
+    restoreLoading
   },
   methods: {
     restoreModalToggle(){
@@ -192,17 +194,19 @@ export default {
       }
     },
     async restoreArchivedData() {
+      this.loading.restore = true;
       const send = await this.restoreData;
 
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
       
       if (res == "Success") {
-        await alert("Data restored.");
+        this.loading.restore = false;
         this.restoreModalToggle();
         this.getTData('', this.$store.getters.api);
       } else {
         await alert("An error occured, please try again.");
+        this.loading.restore = false;
       }
     }
   },mounted(){

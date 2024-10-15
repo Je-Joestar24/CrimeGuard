@@ -385,13 +385,32 @@ export default {
               : "border-yellow-600 bg-yellow-100";
           let infoWindow = new google.maps.InfoWindow({
             content: `
-            <div class="p-4 rounded-lg shadow-lg max-w-xs border-2 ${bg}">
-              <h1 class="font-bold text-lg mb-2">Incident Information:</h1>
-              <p><span class="font-semibold">INCIDENT: </span> ${mark.name}</p>
-              <p><span class="font-semibold">LOCATION: </span> ${mark.location}</p>
-              <p><span class="font-semibold">DATE: </span> ${mark.date}</p>
-              <p><span class="font-semibold">NO. OF SUSPECTS: </span> ${mark.suspects}</p>
-              <p><span class="font-semibold">NO. OF VICTIMS: </span> ${mark.victims}</p>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
+              <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+                <h2 class="text-xl font-bold text-white">Incident Details</h2>
+              </div>
+              <div class="p-4 space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <span class="text-sm font-medium text-gray-500">Incident</span>
+                  <span class="text-sm font-semibold text-gray-800">${mark.name}</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <span class="text-sm font-medium text-gray-500">Date</span>
+                  <span class="text-sm font-semibold text-gray-800">${mark.date}</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <span class="text-sm font-medium text-gray-500">Suspects</span>
+                  <span class="text-sm font-semibold text-gray-800">${mark.suspects}</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <span class="text-sm font-medium text-gray-500">Victims</span>
+                  <span class="text-sm font-semibold text-gray-800">${mark.victims}</span>
+                </div>
+                <div>
+                  <span class="text-sm font-medium text-gray-500">Location</span>
+                  <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
+                </div>
+              </div>
             </div>
             `,
           });
