@@ -32,6 +32,7 @@ export default {
           }, */
         ],
       },
+      map: null,
     };
   },
   mounted() {
@@ -39,7 +40,7 @@ export default {
     (async () => {
       await this.generateData();
       await this.loadGoogleMapsScript();
-      await this.initializeMap(); 
+      await this.initializeMap();
     })();
     //console.log(document.head)
   },
@@ -58,14 +59,14 @@ export default {
     },
     initializeMap() {
       const location = { lat: 11.005, lng: 124.6077 };
-      const map = new google.maps.Map(
+      this.map = new google.maps.Map(
         document.getElementById("dashboardMonitoringMap"),
         {
           zoom: 12,
           center: location,
         }
       );
-      
+
       this.data.markers.forEach((mark) => {
         // Custom Overlay for animated marker
         const markerIcon = new google.maps.OverlayView();
@@ -81,18 +82,30 @@ export default {
           let infoWindow = new google.maps.InfoWindow({
             content: `
             <div class="p-4 rounded-lg shadow-lg max-w-xs border-2 ${bg}">
-              <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
-          <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+                bg === "border-red-600 bg-red-100"
+                  ? "border-red-600"
+                  : "border-yellow-600"
+              }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
             <h2 class="text-xl font-bold text-white">Reported Incident Information</h2>
           </div>
           <div class="p-4 space-y-3">
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Reported by</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.name}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
             </div>
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Contact</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.con_no}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
             </div>
               <div class="border-b border-gray-200 pb-2">
                 <span class="text-sm font-medium text-gray-500">Location</span>
@@ -100,16 +113,22 @@ export default {
               </div>
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Report Type</span>
-              <span class="text-sm font-semibold ${mark.report_type == 1 ? 'text-red-600' : 'text-yellow-600'}">
-                ${mark.report_type == 1 ? 'Emergency' : 'Non-Emergency'}
+              <span class="text-sm font-semibold ${
+                mark.report_type == 1 ? "text-red-600" : "text-yellow-600"
+              }">
+                ${mark.report_type == 1 ? "Emergency" : "Non-Emergency"}
               </span>
             </div>
-            ${mark.message ? `
+            ${
+              mark.message
+                ? `
               <div>
                 <span class="text-sm font-medium text-gray-500">Message</span>
                 <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
             </div>
@@ -134,20 +153,22 @@ export default {
           div.style.left = position.x + "px";
           div.style.top = position.y + "px";
         };
-        markerIcon.setMap(map);
+        markerIcon.setMap(this.map);
 
         // Dummy marker to keep the InfoWindow functionality
         const marker = new google.maps.Marker({
           position: mark.pos,
-          map: map,
+          map: this.map,
           visible: false,
         });
 
         marker.addListener("click", function () {
-          infoWindow.open(map, marker);
+          infoWindow.open(this.map, marker);
         });
       });
 
+      if (this.data.markers.length > 0)
+          this.focusOnMarker(this.data.markers[this.data.markers.length - 1]);
       /*       var marker = new google.maps.Marker({
         position: location,
         map: map,
@@ -170,6 +191,11 @@ export default {
         infoWindow.open(map, marker);
       }); */
     },
+    focusOnMarker(marker) {
+      const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
+      this.active = marker.ctr;
+      this.map.setCenter(position);
+    },
     async generateData() {
       const dt = await this.$store.dispatch(
         "generateTableData",
@@ -188,7 +214,7 @@ export default {
             location: data[i]["location"],
             name: data[i]["name"],
             con_no: data[i]["contact"],
-            report_type: data[i]['report_type']
+            report_type: data[i]["report_type"],
           });
           //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
         }
@@ -220,8 +246,14 @@ export default {
 }
 
 @keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed z-50 bg-white top-0 flex animate-popup"
+    class="fixed z-50 bg-white top-0 flex animate-popup "
     style="
       height: 100vh;
       background-image: url('/storage/system/bg.jpg');
@@ -144,6 +144,15 @@ export default {
       requestType: "LOGIN",
       verified: true,
     };
+  },
+  created() {
+    document.body.style.overflow = 'hidden';
+  },
+  mounted() {
+    document.body.style.overflow = 'hidden';
+  },
+  beforeUnmount() {
+    document.body.style.overflow = '';
   },
   props: ["changeActive"],
   methods: {

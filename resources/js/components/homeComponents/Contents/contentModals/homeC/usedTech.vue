@@ -5,6 +5,7 @@
       <a
         v-for="dt in data"
         v-motion-slide-visible-right
+        target="newtab"
         :href="dt.link"
         class="card flex flex-col items-center p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
       >

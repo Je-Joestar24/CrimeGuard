@@ -1217,6 +1217,13 @@ export default {
       }
       console.log(this.len);
     })();
+    document.body.style.overflow = 'hidden';
+  },
+  created() {
+    document.body.style.overflow = 'hidden';
+  },
+  beforeUnmount() {
+    document.body.style.overflow = '';
   },
   watch: {
     "current_address.province": function (newVal, oldVal) {

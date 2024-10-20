@@ -1,6 +1,6 @@
 const mix = require("laravel-mix");
 const path = require('path');
-/* mix.webpackConfig({
+mix.webpackConfig({
     devServer: {
         proxy: {
             '*': 'http://127.0.0.1:8000',  
@@ -11,7 +11,7 @@ const path = require('path');
             'Access-Control-Allow-Origin': '*',
         }
     }
-}); */
+});
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .postCss('resources/css/app.css', 'public/css', [

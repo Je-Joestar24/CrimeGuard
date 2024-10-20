@@ -531,7 +531,7 @@ class dashboardModule extends Controller
                         $reports = $reports->whereDate('incidents.date_reported', '<=', $filter['date_end']);
                     }
                     if($filter['barangay'] != ''){
-                        $reports = $reports->where('incidents.location', 'like', '%' . $filter['barangay'] . '%');
+                        $reports = $reports->where('incidents.barangay', '=', $filter['barangay']);
                     }
                     if($filter['incident'] != ''){
                         $reports = $reports->where('incident-types.incident_name', 'like', '%' . $filter['incident'] . '%');

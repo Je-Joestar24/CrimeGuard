@@ -29,7 +29,7 @@
 
 
 <template>
-  <div class="fixed inset-0 z-50 overflow-hidden bg-gray-900 bg-opacity-50 flex justify-end">
+  <div class="fixed inset-0 z-50 overflow-hidden bg-gray-900 bg-opacity-50 flex justify-end" @click.self="toggle()">
     <div class="bg-white w-full max-w-2xl h-full overflow-y-auto slide-enter-active" 
     :class="{ 'slide-leave-active': isVisible }">
       <div class="flex items-center justify-between p-6 border-b">
