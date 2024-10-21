@@ -238,7 +238,7 @@ class officerUsersModule extends Controller
 
             $data['data'] = OfficerCredential::join('users', 'officer-credentials.user_id', '=', 'users.id')
                 ->where('users.id', $request->input('id'))
-                ->select('users.user_name', 'users.email', 'users.contact', 'users.profile', 'officer-credentials.rank')
+                ->select('users.user_name', 'users.email', 'users.contact', 'users.profile', 'officer-credentials.rank', 'officer-credentials.station')
                 ->first();
 
             $data['response'] = 'Success';

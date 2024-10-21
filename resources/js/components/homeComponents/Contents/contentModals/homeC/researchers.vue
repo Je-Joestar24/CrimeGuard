@@ -68,28 +68,26 @@ export default {
     return {
       persons: [
         {
-          profile: "/storage/system/me.jpeg",
+          profile: "/images/Jejomar.png",
           name: "Jejomar Parrilla",
           desc: `
             Lead Developer & Fullstack Engineer: Specializing in Laravel,
             Vue.js, and Tailwind CSS. Responsible for designing and maintaining
             the backend infrastructure and ensuring smooth user-server
             communication.`,
-          github: "https://github.com/Je-Joestar24",
-          facebook: "https://www.facebook.com/jejomar.parrilla",
         },
 
         {
-          profile: "/storage/system/dante.jpg",
+          profile: "/images/Dante.png",
           name: "Dante Villalon",
           desc: `
             Data Analyst & Project Manager: Handles data collection and analysis
-            while overseeing the project's progress and ensuring everything
+            while overseeing the project’s progress and ensuring everything
             aligns with the timeline.`,
         },
 
         {
-          profile: "/storage/system/sammer.jpeg",
+          profile: "/images/Sammer.png",
           name: "Sammer Sanchez",
           desc: `
             UI/UX Designer: Focused on creating a seamless user interface and

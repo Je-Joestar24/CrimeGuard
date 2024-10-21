@@ -17,7 +17,7 @@
           <img
             :src="person.profile"
             :alt="person.name"
-            class=" w-20 h-20 mx-auto object-cover rounded-md object-center my-auto"
+            class=" w-20 h-20 mx-auto object-cover rounded-md object-center my-auto shadow-md"
           />
         </div>
         <div class="w-3/4 p-6">
@@ -42,7 +42,7 @@ export default {
     return {
       persons: [
         {
-          profile: "/storage/system/me.jpeg",
+          profile: "/images/Jejomar.png",
           name: "Jejomar Parrilla",
           desc: `
             Lead Developer & Fullstack Engineer: Specializing in Laravel,
@@ -52,7 +52,7 @@ export default {
         },
 
         {
-          profile: "/storage/system/dante.jpg",
+          profile: "/images/Dante.png",
           name: "Dante Villalon",
           desc: `
             Data Analyst & Project Manager: Handles data collection and analysis
@@ -61,7 +61,7 @@ export default {
         },
 
         {
-          profile: "/storage/system/sammer.jpeg",
+          profile: "/images/Sammer.png",
           name: "Sammer Sanchez",
           desc: `
             UI/UX Designer: Focused on creating a seamless user interface and

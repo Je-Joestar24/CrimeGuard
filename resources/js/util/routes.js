@@ -11,6 +11,8 @@ import Reports from "@/components/contents/Reports.vue";
 import Requests from "@/components/contents/Requests.vue"
 import archive from "@/components/contents/archive.vue";
 import Analytics from "@/components/contents/Analytics.vue";
+import ForgetPass from "@/components/homeComponents/Contents/forgotPass.vue";
+import Officer from "@/components/Officer.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -57,7 +59,38 @@ const router = createRouter({
                 path: 'Analytics',
                 component: Analytics
             }
-        ] }
+        ] },
+        { path: '/Officer', component: Officer, children:[
+            {
+                path: 'Dashboard',
+                component: DashBoard
+            },
+            {
+                path: 'Requests',
+                component: Requests
+            },
+            {
+                path: 'Incidents',
+                component: Incidents
+            },
+            {
+                path: 'Maps',
+                component: Maps
+            },
+            {
+                path: 'Notifications',
+                component: Notif
+            },
+            {
+                path: 'Reports',
+                component: Reports
+            },
+            {
+                path: 'Analytics',
+                component: Analytics
+            }
+        ] },
+        { path: '/forgotPass', component: ForgetPass},
     ]
 })
 

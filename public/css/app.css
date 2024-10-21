@@ -1377,6 +1377,11 @@ video {
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
 .divide-y > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
@@ -1428,6 +1433,9 @@ video {
 }
 .rounded {
   border-radius: 0.25rem;
+}
+.rounded-2xl {
+  border-radius: 1rem;
 }
 .rounded-full {
   border-radius: 9999px;
@@ -1609,6 +1617,10 @@ video {
 .border-yellow-400 {
   --tw-border-opacity: 1;
   border-color: rgb(250 204 21 / var(--tw-border-opacity));
+}
+.border-yellow-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(234 179 8 / var(--tw-border-opacity));
 }
 .border-yellow-600 {
   --tw-border-opacity: 1;
@@ -1986,6 +1998,9 @@ video {
 }
 .to-transparent {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+.to-white {
+  --tw-gradient-to: #fff var(--tw-gradient-to-position);
 }
 .to-white\/70 {
   --tw-gradient-to: rgb(255 255 255 / 0.7) var(--tw-gradient-to-position);
@@ -2704,6 +2719,9 @@ video {
 }
 .duration-300 {
   transition-duration: 300ms;
+}
+.duration-500 {
+  transition-duration: 500ms;
 }
 .duration-75 {
   transition-duration: 75ms;
@@ -3476,6 +3494,11 @@ video {
   .sm\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
+  }
+
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   .sm\:text-sm {

@@ -50,7 +50,7 @@
             designed to revolutionize communication between citizens and law
             enforcement. It empowers communities by providing an intuitive interface for
             reporting crime incidents with precise location data, while equipping law
-            enforcement agencies with advanced tools such as dynamic heatmaps, AI-driven
+            enforcement agencies with advanced tools such as dynamic heatmaps, 
             predictive analytics, and real-time crime statistics dashboards.
           </p>
         </div>

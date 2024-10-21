@@ -10,20 +10,8 @@
         <!-- dark:text-gray-500 -->
       </p>
     </div>
-    <div
-      class="rounded bg-gray-50 col-span-2 shadow-lg p-1 border"
-      style="height: 40vh"
-    >
-      <!-- dark:text-gray-500 -->
-
-      <section class="text-gray-600 body-font relative w-full h-full">
-        <monitoringmap></monitoringmap>
-      </section>
-    </div>
-    <incidentReports class="col-span-2"></incidentReports>
-    <div
-      class="flex items-center justify-center col-span-4"
-    >
+    <monitoringmap />
+    <div class="flex items-center justify-center col-span-4">
       <lineCharts></lineCharts>
     </div>
     <div
@@ -35,57 +23,75 @@
       class="flex items-center justify-center rounded col-span-4 bg-gray-50 shadow-md"
     >
       <div class="w-full">
-        <h2 class="text-2xl font-bold text-gray-800 p-6 border-b border-gray-200">
+        <h2
+          class="text-2xl font-bold text-gray-800 p-6 border-b border-gray-200"
+        >
           Victim Analysis
         </h2>
         <p class="text-gray-600 px-6 pb-4 text-sm">
-          Comprehensive breakdown of victim demographics to aid in support and prevention strategies.
+          Comprehensive breakdown of victim demographics to aid in support and
+          prevention strategies.
         </p>
         <div class="flex flex-col md:flex-row gap-4 p-6">
-          <div class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Gender Distribution</h3>
+          <div
+            class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200"
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Gender Distribution
+            </h3>
             <pc-gender-victim
               class="w-full"
               :ids="'victimGenderPie'"
             ></pc-gender-victim>
           </div>
-          <div class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Age Demographics</h3>
-            <pc-victim-age
-              class="w-full"
-              :ids="'victimAgePie'"
-            ></pc-victim-age>
+          <div
+            class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200"
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Age Demographics
+            </h3>
+            <pc-victim-age class="w-full" :ids="'victimAgePie'"></pc-victim-age>
           </div>
         </div>
       </div>
-
     </div>
-      <div class="col-span-4 bg-white rounded-lg shadow-xl overflow-hidden">
-        <div class="w-full">
-          <h2 class="text-2xl font-bold text-gray-800 p-6 border-b border-gray-200">
-            Suspect Analysis
-          </h2>
-          <p class="text-gray-600 px-6 pb-4 text-sm">
-            Comprehensive breakdown of suspect demographics to aid in profiling and prevention strategies.
-          </p>
-          <div class="flex flex-col md:flex-row gap-4 p-6">
-            <div class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-2">Gender Distribution</h3>
-              <pc-gender-suspect
-                class="w-full"
-                :ids="'suspectGenderPie'"
-              ></pc-gender-suspect>
-            </div>
-            <div class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-2">Age Demographics</h3>
-              <pc-suspect-age
-                class="w-full"
-                :ids="'suspectAgePie'"
-              ></pc-suspect-age>
-            </div>
+    <div class="col-span-4 bg-white rounded-lg shadow-xl overflow-hidden">
+      <div class="w-full">
+        <h2
+          class="text-2xl font-bold text-gray-800 p-6 border-b border-gray-200"
+        >
+          Suspect Analysis
+        </h2>
+        <p class="text-gray-600 px-6 pb-4 text-sm">
+          Comprehensive breakdown of suspect demographics to aid in profiling
+          and prevention strategies.
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 p-6">
+          <div
+            class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200"
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Gender Distribution
+            </h3>
+            <pc-gender-suspect
+              class="w-full"
+              :ids="'suspectGenderPie'"
+            ></pc-gender-suspect>
+          </div>
+          <div
+            class="flex-1 bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200"
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Age Demographics
+            </h3>
+            <pc-suspect-age
+              class="w-full"
+              :ids="'suspectAgePie'"
+            ></pc-suspect-age>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -94,7 +100,6 @@ import barGraphs from "./dashboardComponents/DashBoardLowerComponents/barGraphs.
 import lineCharts from "./dashboardComponents/DashBoardLowerComponents/lineCharts.vue";
 import pieCharts from "./dashboardComponents/DashBoardLowerComponents/pieCharts.vue";
 import dashboardUpper from "./dashboardComponents/DashboardUpper.vue";
-import incidentReports from "./dashboardComponents/DashBoardLowerComponents/incidentReports.vue";
 import monitoringmap from "./dashboardComponents/MonitoringMap.vue";
 import pcGenderVictim from "../homeComponents/Contents/contentModals/homeC/victims/pieChartsAge.vue";
 import pcVictimAge from "../homeComponents/Contents/contentModals/homeC/victims/pieChartsMF.vue";
@@ -106,7 +111,6 @@ export default {
     barGraphs,
     pieCharts,
     dashboardUpper,
-    incidentReports,
     monitoringmap,
     pcGenderVictim,
     pcVictimAge,

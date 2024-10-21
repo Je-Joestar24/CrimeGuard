@@ -193,10 +193,14 @@ export default {
 
       this.lastScrollTop = scrollTop;
     },
-    logout() {
-      this.logoutToggle = !this.logoutToggle;
-      localStorage.removeItem('credentials');
-      window.location.reload();
+    async logout() {
+      
+      const res = await this.$store.dispatch('logout');
+      if(res){
+        window.location.reload();
+      }
+      /* 
+      this.$emit('reload') */
     },
     async sendData() {
       const data = await this.$store.dispatch("sendData", {

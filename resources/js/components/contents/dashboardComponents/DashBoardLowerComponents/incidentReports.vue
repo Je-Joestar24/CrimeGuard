@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl p-6 overflow-hidden">
+  <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl p-6 overflow-hidden col-span-2">
     <h2 class="text-2xl font-bold text-white mb-4 border-b border-gray-700 pb-2 ">Today's Incident Reports</h2>
     <div v-if="arr.length > 0" class="space-y-4 overflow-y-auto max-h-[280px]">
-      <div v-for="elem of arr" :key="elem.id" class="bg-gray-700 bg-opacity-50 rounded-lg p-4 transition-all duration-300 hover:bg-opacity-70">
+      <div v-for="elem of arr" :key="elem.id" class="bg-gray-700 bg-opacity-50 rounded-lg p-4 transition-all duration-300 hover:bg-opacity-70" @click="centerIt(elem)">
         <div class="flex items-center">
           <div :class="{
             'bg-yellow-500': elem.status === 'report',
@@ -40,19 +40,28 @@ export default {
       await this.getData("api/dashboard/generate/reports");
     })();
   },
-  created() {
-    (async () => {
-      await this.getData("api/dashboard/generate/reports");
-    })();
-  },
   methods: {
     async getData(param) {
+      this.arr = [];
       const data = await this.$store.dispatch("generateTableData", param);
       if (data["response"] == "Success") {
-        this.arr = await data["data"]["reportedIncidents"];
-        await console.log(this.arr);
+        let dt = await data["data"]["reportedIncidents"];
+        for (let i = 0; i < dt.length; i++) {
+          this.arr.push({
+            id: dt[i]['id'],
+            landmark: dt[i]['landmark'],
+            pos: {
+              lat: parseFloat(dt[i]["pos"]["lat"]),
+              lng: parseFloat(dt[i]["pos"]["lng"]),
+            },
+            message: dt[i]["message"],
+            location: dt[i]["location"],
+            status: dt[i]["status"],
+            time_reported: dt[i]["time_reported"],
+          });
+        }
       }
     },
-  },
+  },props: ['centerIt']
 };
 </script>

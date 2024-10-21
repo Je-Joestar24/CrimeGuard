@@ -369,15 +369,26 @@ class dashboardModule extends Controller
 
         $currentDate = new DateTime();
         $data = [];
-
-        $data['data']['reportedIncidents'] = Incidents::/* where(function ($query) use ($currentDate) {
-            $query->where('status', '=', 'report')
-                ->orWhere('status', '=', 'respond');
-        })
-            -> */whereDate('date_reported',  $currentDate->format('Y-m-d'))
-            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+        $inc = Incidents::whereDate('date_reported',  $currentDate->format('Y-m-d'))
+            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'latitude', 'longitude')
             ->get();
+        
+        $send = [];
 
+        foreach($inc->toArray() as $val){
+            $temp = [
+                'id' => $val['id'],
+                'time_reported' => $val['time_reported'],
+                'status' => $val['status'],
+                'message' => $val['message'],
+                'location' => $val['location'],
+                'landmark' => $val['landmark'],
+                'pos' => ['lat' => $val['latitude'],
+                'lng' => $val['longitude']]
+            ];
+            array_push($send, $temp);
+        }
+        $data['data']['reportedIncidents'] = $send;
         $data['response'] = 'Success';
 
         return response()->json($data);

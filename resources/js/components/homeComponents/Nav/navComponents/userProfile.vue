@@ -137,11 +137,12 @@ export default {
     };
   },
   methods: {
-    sendData() {
-      const formData = this.formData;
-      localStorage.removeItem("credentials");
-      this.logout();
-      window.location.reload();
+    async sendData() {
+      
+      const res = await this.$store.dispatch('logout');
+      if(res){
+        window.location.reload();
+      }
       /* 
       this.$emit('reload') */
     },

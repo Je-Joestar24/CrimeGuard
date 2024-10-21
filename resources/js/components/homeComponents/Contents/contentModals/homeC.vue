@@ -105,7 +105,7 @@
         </p>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 gap-8">
         <!-- Line Chart -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
           <div class="p-6">
@@ -121,20 +121,6 @@
           </div>
         </div>
 
-        <!-- Bar Graphs -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-          <div class="p-6">
-            <bar-graphs v-motion-slide-visible-right></bar-graphs>
-            <div class="mt-6 text-center">
-              <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                Crime Type Distribution
-              </h3>
-              <p class="text-gray-600">
-                Breakdown of various crime types, helping identify patterns and focus areas for law enforcement.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Victims Section -->

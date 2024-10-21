@@ -23,16 +23,28 @@
         <div class="container ps-5">
           <div class="mb-10">
             <h1
-              @click="playAudio"
               class="text-2xl font-bold p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out"
               :class="{
-                'bg-gray-800 text-white border-l-2 border-gray-500': $store.getters.theme,
-                'bg-white text-gray-800 border-l-2 border-gray-500': !$store.getters.theme,
+                'bg-gray-800 text-white border-l-2 border-gray-500':
+                  $store.getters.theme,
+                'bg-white text-gray-800 border-l-2 border-gray-500':
+                  !$store.getters.theme,
               }"
             >
               <span class="flex items-center">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <svg
+                  class="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  ></path>
                 </svg>
                 {{ $store.state.CurrentActiveTitleNavigation }}
               </span>
@@ -67,7 +79,9 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+          />
           <line x1="12" y1="9" x2="12" y2="13" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
@@ -82,20 +96,44 @@
     v-if="emergency && seenIncidents.length != incidents.length"
     class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 flex items-center justify-center"
   >
-    <div class="bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6">
+    <div
+      class="bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
+    >
       <div>
-        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-          <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <div
+          class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100"
+        >
+          <svg
+            class="h-6 w-6 text-red-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
           </svg>
         </div>
         <div class="mt-3 text-center sm:mt-5">
           <h3 class="text-lg leading-6 font-medium text-gray-900">
-            {{ cred.user_level == 1 ? "Emergency Report Detected" : "New Assignment" }}
+            {{
+              cred.user_level == 1
+                ? "Emergency Report Detected"
+                : "New Assignment"
+            }}
           </h3>
           <div class="mt-2">
             <p class="text-sm text-gray-500">
-              {{ cred.user_level == 1 ? "A new emergency report has been filed. Immediate attention is required." : "You have been assigned to a new incident. Please check your assignments for details." }}
+              {{
+                cred.user_level == 1
+                  ? "A new emergency report has been filed. Immediate attention is required."
+                  : "You have been assigned to a new incident. Please check your assignments for details."
+              }}
             </p>
           </div>
         </div>
@@ -220,16 +258,20 @@ export default {
       await setTimeout(() => {
         this.logged = true;
       }, 500);
-      await this.startPolling();
 
-      const credentials = JSON.parse(localStorage.getItem("credentials"));
-      this.cred = credentials;
+      const isValid = await this.$store.dispatch("checkToken");
 
-      if (
-        !credentials ||
-        !(credentials.user_level == 2 || credentials.user_level == 1)
-      ) {
+      if (!isValid) {
         this.$router.push("/");
+      } else {
+
+        const credentials = JSON.parse(localStorage.getItem("credentials"));
+        this.cred = credentials;
+
+        if (!credentials || !(credentials.user_level == 1)) {
+          this.$router.push("/");
+        }
+        await this.startPolling();
       }
       document.body.style.backgroundImage = "";
     })();

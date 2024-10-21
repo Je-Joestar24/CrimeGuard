@@ -17,8 +17,11 @@
       
       const credentials = JSON.parse(localStorage.getItem("credentials"));
       if(credentials){
-        if(credentials.user_level == 1 || credentials.user_level == 2){
+        if(credentials.user_level == 1){
           this.$router.push("/Admin/Dashboard");
+        }else if(credentials.user_level == 2){
+          
+          this.$router.push("/OFFICER/Dashboard");
         }
       }
     },

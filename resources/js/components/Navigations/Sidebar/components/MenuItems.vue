@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center justify-center mb-10">
       <img class="w-24 h-24 mb-3" src="./img/PoliceLogo.png" alt="Police Logo" />
       <div class="text-center">
-        <h2 class="text-xl font-bold text-gray-800">Police Station 1</h2>
+        <h2 v-if="cred.station != ''" class="text-xl font-bold text-gray-800">Police Station {{ cred.station }}</h2>
         <p class="text-sm text-gray-600">Serving and Protecting</p>
       </div>
     </div>
@@ -30,6 +30,21 @@ import NonSubMen from "./nonSubMen.vue";
 import subMenElems from "./subMenElems.vue";
 
 export default {
+  data(){
+    return{
+
+      info: {
+        last_name: "",
+        first_name: "",
+        middle_name: "",
+      },
+      cred: {
+        rank: "",
+        station: ""
+      },
+      id: -1
+    }
+  },
   props: ["page"],
   components: { subMenElems, NonSubMen },
   computed: {
@@ -37,6 +52,34 @@ export default {
       const credentials = JSON.parse(localStorage.getItem("credentials"));
       return credentials ? credentials.user_level == 1 : false;
     }
+  },
+  mounted() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.id = credentials.id;
+    this.generateData(this.id);
+  },
+  created() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.id = credentials.id;
+    this.generateData(this.id);
+  },
+  methods: {
+
+    async generateData(rID) {
+      const send = await {
+        data: { id: rID },
+        url: "api/officer/basic/myaccount/view/request",
+      };
+
+      const data = await this.$store.dispatch("sendData", send);
+
+      if (data.response == "Success") {
+        this.info = data.data;
+        this.cred.rank = data.data.rank;
+        console.log(this.cred);
+        this.cred.station = data.data.station ? data.data.station : "";
+      }
+    },
   }
 };
 </script>

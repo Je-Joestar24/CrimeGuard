@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 
-import axios from "axios";
+import axios from "./axios.js";
 
 export default createStore({
     state: {
@@ -351,7 +351,7 @@ export default createStore({
         userId: 1,
         userLevel: -1,
         api: '',
-        delete_api:''
+        delete_api: ''
     },
     mutations: {
         // Define your mutations to modify state variables
@@ -475,7 +475,28 @@ export default createStore({
                 console.error("Error:", error);
                 return 'err';
             }
-        }
+        }, async logout() {
+            try {
+                await axios.post('api/logout');
+
+                localStorage.removeItem('token');
+                localStorage.removeItem('credentials');
+
+                return true;
+            } catch (error) {
+                console.error('Error during logout:', error.response);
+                return false;
+            }
+        }, async checkToken({ commit }) {
+            try {
+                await axios.get('api/check-token');
+
+                return true;
+            } catch (error) {
+
+                return false;
+            }
+        },
     },
     getters: {
         // Define your getters to compute derived state based on store state

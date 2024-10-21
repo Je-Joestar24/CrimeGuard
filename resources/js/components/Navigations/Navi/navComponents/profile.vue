@@ -160,9 +160,15 @@ export default {
     this.generateData(this.id);
   },
   methods: {
-    sendData() {
+    /* sendData() {
       localStorage.removeItem("credentials");
       this.$router.push("/");
+    }, */
+    async sendData() {
+      const res = await this.$store.dispatch('logout');
+      if(res){
+        this.$router.push("/");
+      }
     },
     changeProf() {
       this.prof = "lightgray";

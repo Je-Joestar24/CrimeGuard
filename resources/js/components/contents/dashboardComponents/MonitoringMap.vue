@@ -1,8 +1,25 @@
 <template>
-  <div id="dashboardMonitoringMap" class="absolute inset-0 bg-gray-300"></div>
+  <div
+    class="rounded bg-gray-50 col-span-2 shadow-lg p-1 border"
+    style="height: 40vh"
+  >
+    <!-- dark:text-gray-500 -->
+
+    <section class="text-gray-600 body-font relative w-full h-full">
+      <div
+        id="dashboardMonitoringMap"
+        class="absolute inset-0 bg-gray-300"
+      ></div>
+    </section>
+  </div>
+
+  <incidentReports :centerIt="focusOnMarker"/>
 </template>
 
+
 <script>
+import incidentReports from "./DashBoardLowerComponents/incidentReports.vue";
+
 export default {
   data() {
     return {
@@ -34,6 +51,9 @@ export default {
       },
       map: null,
     };
+  },
+  components: {
+    incidentReports,
   },
   mounted() {
     //this.initializeMap()
@@ -168,7 +188,7 @@ export default {
       });
 
       if (this.data.markers.length > 0)
-          this.focusOnMarker(this.data.markers[this.data.markers.length - 1]);
+        this.focusOnMarker(this.data.markers[this.data.markers.length - 1]);
       /*       var marker = new google.maps.Marker({
         position: location,
         map: map,
