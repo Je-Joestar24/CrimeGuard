@@ -4,6 +4,8 @@ namespace App\Http\Controllers\crimeguardm;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
+use App\Mail\AccountAcceptedMail;
+use App\Mail\AccountRejectedMail;
 use App\Models\Addresses;
 use App\Models\CitizenCredentials;
 use App\Models\Logs;
@@ -15,6 +17,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 use function PHPUnit\Framework\isNull;
 use function PHPUnit\Framework\throwException;
@@ -233,7 +236,7 @@ class citizenUsersModule extends Controller
                 $search = $request->input('search');
                 $query = Addresses::select(['barangay'])->distinct()->where('barangay', 'like', "%{$search}%");
             }
-            
+
             $tempo = $this->dynamic->removeNuls($query->get()->toArray(), 'barangay');
             $data['data'] = $this->dynamic->convertArrayByKey($tempo, 'barangay');
             $data['response'] = 'Success';
@@ -683,30 +686,44 @@ class citizenUsersModule extends Controller
         return response()->json($data);
     }
 
-
     public function archive(Request $request)
     {
-
         date_default_timezone_set('Asia/Manila');
-
         $currentDate = new DateTime();
         $data = [];
-
+    
         try {
+            $user = User::find($request['id']);
+    
             $archive = [
                 'archived_at' => $currentDate->format('Y-m-d H:i:s'),
                 'deleted_by' => $request['archived_by']
             ];
-            User::where('id', $request['id'])->update($archive);
-
-            if($request->input('user_id') != NULL && $request->has('user_id')) TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'account']);
-            $data['response'] = 'Success';
+            $user->update($archive);
+    
+            if ($request->input('user_id') != null && $request->has('user_id')) {
+                TrailLog::create([
+                    'user_id' => $request->input('deleted_by'),
+                    'action' => 'deleted',
+                    'item' => 'account'
+                ]);
+            }
+    
+            if (is_null($user->accepted_at) || is_null($user->accepted_by)) {
+                Mail::to($user->email)->send(new AccountRejectedMail($user));
+    
+                $data['response'] = 'Success';
+            } else {
+                $data['response'] = 'Success';
+            }
         } catch (\Exception $e) {
             $data['response'] = 'Error';
-            $data['err'] = $e;
+            $data['err'] = $e->getMessage();
         }
+    
         return response()->json($data);
     }
+    
     /* Restore archived data */
     public function restore(Request $request)
     {
@@ -742,11 +759,14 @@ class citizenUsersModule extends Controller
         $data = [];
 
         try {
-            $add = [
+            $user = User::findOrFail($request['id']);
+    
+            $user->update([
                 'accepted_at' => $currentDate->format('Y-m-d H:i:s'),
                 'accepted_by' => $request['accepted_by']
-            ];
-            User::where('id', $request['id'])->update($add);
+            ]);
+
+            Mail::to($user->email)->send(new AccountAcceptedMail($user));
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';

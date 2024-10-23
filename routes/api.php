@@ -31,9 +31,9 @@ Route::middleware('auth:sanctum')->get('/check-token', function (Request $reques
         'user' => $request->user(), // Automatically retrieved user
     ], 200);
 });
+Route::post('dashboard/generate/incident/top/barangay/bar', [dashboardModule::class, 'topBarangays'])->name('json');
 
 Route::middleware('auth:sanctum', 'checkUserLevel:1,2,3')->group(function () {
-    Route::post('dashboard/generate/incident/top/barangay/bar', [dashboardModule::class, 'topBarangays'])->name('json');
 });
 
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum', 'checkUserLevel:1')->group(function () {
     Route::post('citizenusers/update/item/request', [citizenUsersModule::class, 'update'])->name('json');
     Route::post('officerusers/update/item/request', [officerUsersModule::class, 'update'])->name('json');
 });
+
 /* Admin Officer */
 Route::middleware('auth:sanctum', 'checkUserLevel:1,2')->group(function () {
 

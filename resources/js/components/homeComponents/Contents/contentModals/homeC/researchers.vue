@@ -75,6 +75,8 @@ export default {
             Vue.js, and Tailwind CSS. Responsible for designing and maintaining
             the backend infrastructure and ensuring smooth user-server
             communication.`,
+          github: "https://github.com/Je-Joestar24",
+          facebook: "https://www.facebook.com/jejomar.parrilla"
         },
 
         {

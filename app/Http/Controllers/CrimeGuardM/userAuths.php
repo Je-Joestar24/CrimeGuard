@@ -72,20 +72,17 @@ class userAuths extends Controller
             ->orderBy('expires_at', 'desc')
             ->first();
 
-        // Check if the token exists and has not expired
         if (!$passwordReset) {
-            return response()->json(["reset" => false]); // Token doesn't exist or has expired
+            return response()->json(["reset" => false]); 
         }
 
-        // Check if the provided token matches the hashed token in the database
         if (Hash::check($plainToken, $passwordReset->token)) {
 
-            /* $passwordReset->delete(); */
 
             return response()->json(["reset" => true]);
         }
 
-        return response()->json(["reset" => false]);  // Invalid token
+        return response()->json(["reset" => false]); 
     }
 
     public function resetMyPass(Request $request)

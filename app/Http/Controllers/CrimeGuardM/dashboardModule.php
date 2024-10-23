@@ -48,6 +48,8 @@ class dashboardModule extends Controller
             $end = Carbon::now()->toDateString();
         }
 
+
+
         $startC = Carbon::parse($start);
         $endC = Carbon::parse($end);
         $data['date'] = [$request->input('date_start'), $request->input('date_end')];
@@ -60,6 +62,11 @@ class dashboardModule extends Controller
             $temporary['count'] = Incidents::where('date_reported', '=', $date->format('Y-m-d'))
                 ->whereNull('incidents.archived_at')
                 ->whereNull('incidents.archived_by');
+
+            if ($request->has('barangay') && !empty($request->input('barangay'))) {
+                $temporary['count'] = $temporary['count']->where('barangay', '=', $request->input('barangay'));
+            }
+
             if ($request->has('incident_type') && $request->input('incident_type') != -1) {
                 $temporary['count'] = $temporary['count']->where('incidents.incident_type', $request->input('incident_type'));
             }
@@ -313,7 +320,7 @@ class dashboardModule extends Controller
         foreach ($statuses as $key => $status) {
             // Count for all time
             $query = Incidents::query();
-            
+
             if ($status[0] == '!=') {
                 foreach ($status[1] as $s) {
                     $query->where('status', '!=', $s);
@@ -325,10 +332,10 @@ class dashboardModule extends Controller
             }
 
             $totalCount = $query->count();
-            
+
             // Count for current month
             $currentMonthCount = (clone $query)->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
-            
+
             // Count for last month
             $lastMonthStart = (clone $firstDayOfMonth)->modify('-1 month');
             $lastMonthEnd = (clone $lastDayOfMonth)->modify('-1 month');
@@ -372,10 +379,10 @@ class dashboardModule extends Controller
         $inc = Incidents::whereDate('date_reported',  $currentDate->format('Y-m-d'))
             ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'latitude', 'longitude')
             ->get();
-        
+
         $send = [];
 
-        foreach($inc->toArray() as $val){
+        foreach ($inc->toArray() as $val) {
             $temp = [
                 'id' => $val['id'],
                 'time_reported' => $val['time_reported'],
@@ -383,8 +390,10 @@ class dashboardModule extends Controller
                 'message' => $val['message'],
                 'location' => $val['location'],
                 'landmark' => $val['landmark'],
-                'pos' => ['lat' => $val['latitude'],
-                'lng' => $val['longitude']]
+                'pos' => [
+                    'lat' => $val['latitude'],
+                    'lng' => $val['longitude']
+                ]
             ];
             array_push($send, $temp);
         }
@@ -414,7 +423,7 @@ class dashboardModule extends Controller
 
         return response()->json($data);
     }
-/* 
+    /* 
     public function emergencyReports0(Request $request)
     {
         // Set headers to keep the connection alive and mark it as a Server-Sent Event (SSE) response
@@ -464,44 +473,44 @@ class dashboardModule extends Controller
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
-    
+
         // Prevent script timeout, so the connection stays open
         set_time_limit(0);
-    
+
         date_default_timezone_set('Asia/Manila');
         $currentDate = new DateTime();
-    
+
         while (true) {
             // Fetch the incidents based on query parameters
             $init = Incidents::where('status', '=', 'report');
-    
+
             if (!$request->has('id')) {
                 $init = $init->where('report_type', 1);
             } else {
                 $init = $init->where('assigned_to', $request->input('id'));
             }
-    
+
             $init = $init->whereDate('date_reported', $currentDate->format('Y-m-d'))
-                         ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
-                         ->get();
-    
+                ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+                ->get();
+
             if ($init->isNotEmpty()) {
                 $data['data']['reportedIncidents'] = $init;
                 $data['response'] = 'Success';
-    
+
                 // Send data in the correct SSE format
                 echo "data: " . json_encode($data) . "\n\n";
-                
+
                 // Flush the buffer to send the response to the client immediately
                 ob_flush();
                 flush();
             }
-    
+
             // Sleep for 5 seconds before checking again
             sleep(5);
         }
     }
-    
+
 
     public function heatMap(Request $request)
     {
@@ -533,35 +542,35 @@ class dashboardModule extends Controller
                     'incident-sub-types.sub_type',
                     'incidents.status'
                 )->where('incidents.incident_type', '!=', NULL);
-                if($request->has('filter') ){
-                    $filter = $request->input('filter');
-                    if($filter['date_start'] != ''){
-                        $reports = $reports->whereDate('incidents.date_reported', '>=', $filter['date_start']);
-                    }
-                    if($filter['date_end'] != ''){
-                        $reports = $reports->whereDate('incidents.date_reported', '<=', $filter['date_end']);
-                    }
-                    if($filter['barangay'] != ''){
-                        $reports = $reports->where('incidents.barangay', '=', $filter['barangay']);
-                    }
-                    if($filter['incident'] != ''){
-                        $reports = $reports->where('incident-types.incident_name', 'like', '%' . $filter['incident'] . '%');
-                    }
-                };
-
-                if($request->has('searchQuery') && $request->input('searchQuery') != ''){
-                    $reports = $reports->where('incidents.message', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('incidents.location', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('incidents.landmark', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('users.user_name', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('users.first_name', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('users.last_name', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('incident-types.incident_name', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('incident-sub-types.sub_type', 'like', '%' . $request->input('searchQuery') . '%');
-                    $reports = $reports->orWhere('users.contact', 'like', '%' . $request->input('searchQuery') . '%');
+            if ($request->has('filter')) {
+                $filter = $request->input('filter');
+                if ($filter['date_start'] != '') {
+                    $reports = $reports->whereDate('incidents.date_reported', '>=', $filter['date_start']);
                 }
+                if ($filter['date_end'] != '') {
+                    $reports = $reports->whereDate('incidents.date_reported', '<=', $filter['date_end']);
+                }
+                if ($filter['barangay'] != '') {
+                    $reports = $reports->where('incidents.barangay', '=', $filter['barangay']);
+                }
+                if ($filter['incident'] != '') {
+                    $reports = $reports->where('incident-types.incident_name', 'like', '%' . $filter['incident'] . '%');
+                }
+            };
 
-                $reports = $reports->where('incidents.status', '!=', 'report')
+            if ($request->has('searchQuery') && $request->input('searchQuery') != '') {
+                $reports = $reports->where('incidents.message', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('incidents.location', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('incidents.landmark', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('users.user_name', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('users.first_name', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('users.last_name', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('incident-types.incident_name', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('incident-sub-types.sub_type', 'like', '%' . $request->input('searchQuery') . '%');
+                $reports = $reports->orWhere('users.contact', 'like', '%' . $request->input('searchQuery') . '%');
+            }
+
+            $reports = $reports->where('incidents.status', '!=', 'report')
                 ->where('incidents.latitude', '>', 0)
                 ->where('incidents.longitude', '>', 0)
                 ->get();
@@ -584,7 +593,7 @@ class dashboardModule extends Controller
                     'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
                     'report_type' => $report['report_type'],
-                    'incident_type' => $report['sub_type'] != NULL ? ($report['incident_name']."( ".$report['sub_type']." )") : $report['incident_name'],
+                    'incident_type' => $report['sub_type'] != NULL ? ($report['incident_name'] . "( " . $report['sub_type'] . " )") : $report['incident_name'],
                 ];
                 array_push($data['data'], $cleaned);
             }
