@@ -62,8 +62,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::post('api/file/upload', [DynamicFunctions::class, 'upload'])->name('file.upload');
-
 /* Table display */
 
 

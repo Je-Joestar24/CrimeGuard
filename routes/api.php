@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\crimeguardm\citizenUsersModule;
 use App\Http\Controllers\crimeguardm\dashboardModule;
+use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
 use App\Http\Controllers\CrimeGuardM\incidentModule;
 use App\Http\Controllers\crimeguardm\incidentNamesModule;
 use App\Http\Controllers\crimeguardm\officerUsersModule;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::post('file/upload', [DynamicFunctions::class, 'upload'])->name('file.upload');
 Route::middleware('auth:sanctum')->get('/check-token', function (Request $request) {
     // You don't need to pass the user explicitly
     // $request->user() gives you the authenticated user from the token
