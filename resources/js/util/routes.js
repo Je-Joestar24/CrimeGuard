@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "@/components/Home.vue";
+import Patrolman from "@/components/PatrolMan.vue";
 import Admin from "@/components/Admin.vue";
 import DashBoard from "@/components/contents/DashBoard.vue";
 import Incidents from "@/components/contents/Incidents.vue";
@@ -13,6 +14,7 @@ import archive from "@/components/contents/archive.vue";
 import Analytics from "@/components/contents/Analytics.vue";
 import ForgetPass from "@/components/homeComponents/Contents/forgotPass.vue";
 import Officer from "@/components/Officer.vue";
+
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -90,6 +92,7 @@ const router = createRouter({
                 component: Analytics
             }
         ] },
+        { path: '/Patrolman', component: Patrolman},
         { path: '/forgotPass', component: ForgetPass},
     ]
 })

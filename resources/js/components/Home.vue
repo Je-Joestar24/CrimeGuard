@@ -1,9 +1,7 @@
 <template>
   <loading class="z-50 fixed top-0" v-if="load"></loading>
   <div v-if="!load" class="HomePage w-full">
-    <nav
-      class="bg-blue-700  w-full fixed top-0 z-50"
-    >
+    <nav class="bg-blue-700 w-full fixed top-0 z-50">
       <Navigations
         :navs="navs"
         :active="active"
@@ -23,7 +21,7 @@
     class="flex flex-col fixed left-5 z-40 bottom-5 p-2 bg-red-500 rounded-md rounded-b-full"
     @click="reportIsOpen = !reportIsOpen"
   >
-    <span class="text-sm mx-auto font-bold  text-white">REPORT</span>
+    <span class="text-sm mx-auto font-bold text-white">REPORT</span>
     <svg
       v-if="!reportIsOpen"
       class="h-16 w-16 text-white p-1 rounded-full active:bg-red-300 active:mt-2 active:p-2 active:text-blue-600 active:border-blue-500 border-2 border-gray-300 shadow-sm"
@@ -105,14 +103,14 @@ export default {
     toggleReport() {
       this.reportIsOpen = !this.reportIsOpen;
     },
-  setBackground(imagePath) {
-    document.body.style.backgroundImage = `url("${imagePath}")`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
-    document.body.style.minHeight = '100vh';
-  },
+    setBackground(imagePath) {
+      document.body.style.backgroundImage = `url("${imagePath}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.minHeight = "100vh";
+    },
   },
   computed: {
     loggedIn() {
@@ -138,7 +136,14 @@ export default {
       this.navs.push("Login");
     }
 
-    this.setBackground('/storage/system/newBG.png');
+    if (credentials) {
+      if (credentials.user_level == 1) {
+        this.$router.push("/Admin/Dashboard");
+      } else if (credentials.user_level == 2) {
+        this.$router.push("/OFFICER/Dashboard");
+      }
+    }
+    this.setBackground("/storage/system/newBG.png");
     window.removeEventListener("scroll", this.handleScroll);
     //document.body.style.backgroundImage = 'url("background/background.jpg")';
   },
