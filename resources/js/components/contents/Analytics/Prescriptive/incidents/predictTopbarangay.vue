@@ -190,13 +190,12 @@ export default {
     },
     getDate(key, add = 0) {
       const today = new Date();
+      today.setMonth(today.getMonth() + add); // Adjust the month
       const year = today.getFullYear();
-      const month = String(today.getMonth() + 1 + parseInt(add)).padStart(
-        2,
-        "0"
-      ); // Month starts at 0, so add 1
+      const month = String(today.getMonth() + 1).padStart(2, "0"); // Month starts at 0, so add 1
       const day = String(today.getDate()).padStart(2, "0");
       this.filter[key] = `${year}-${month}-${day}`;
+      console.log(this.filter);
     },
   },
   watch: {

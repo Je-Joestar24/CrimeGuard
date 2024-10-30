@@ -120,8 +120,8 @@ export default {
   },
   mounted() {
     (async () => {
-      await this.getDate("date_start", 0);
-      await this.getDate("date_end", 1);
+      await this.getDate("date_start", -1);
+      await this.getDate("date_end", 0);
       this.smonth = this.months[parseInt(this.filter.date_start.split('-')[1])];
       this.emonth = this.months[parseInt(this.filter.date_end.split('-')[1])];
       await this.getData(this.filter);
@@ -261,11 +261,9 @@ export default {
     },
     getDate(key, add = 0) {
       const today = new Date();
+      today.setMonth(today.getMonth() + add); // Adjust the month
       const year = today.getFullYear();
-      const month = String(today.getMonth() + 1 + parseInt(add)).padStart(
-        2,
-        "0"
-      ); // Month starts at 0, so add 1
+      const month = String(today.getMonth() + 1).padStart(2, "0"); // Month starts at 0, so add 1
       const day = String(today.getDate()).padStart(2, "0");
       this.filter[key] = `${year}-${month}-${day}`;
       console.log(this.filter);
