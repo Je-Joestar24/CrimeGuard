@@ -1,9 +1,10 @@
 <template>
   <loading class="z-50 fixed top-0" v-if="load"></loading>
   <div v-if="!load" class="HomePage w-full">
-      <HomeContents :change-active="changeActive" :active="active"/>
+      <track-me v-if="active == 'Track'"/>
+      <my-account  :changeActive="changeActive"  v-if="active == 'account'"/>
       <div class="bottom-0 fixed  w-full right-0">
-        <navigations class=" "/>
+        <navigations :changeActive="changeActive" class=" "/>
       </div>
   </div>
 
@@ -12,9 +13,9 @@
 
 <script>
 import Navigations from "./patrolman/Nav/Navigations.vue";
-import HomeContents from "./patrolman/Contents/HomeContents.vue";
+import trackMe from "./patrolman/Contents/contentModals/trackMe.vue";
 import loading from "./loading.vue";
-import reportForm from "./patrolman/Contents/contentModals/ModalForms/reportForm.vue";
+import myAccount from "./patrolman/Contents/contentModals/myAccount.vue";
 
 export default {
   data() {
@@ -30,9 +31,9 @@ export default {
   },
   components: {
     Navigations,
-    HomeContents,
+    trackMe,
     loading,
-    reportForm,
+    myAccount
   },
   methods: {
     changeActive(param) {

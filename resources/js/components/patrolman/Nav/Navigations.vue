@@ -2,13 +2,13 @@
   <div
     class="max-w-screen-3xl flex flex-wrap items-end justify-between mx-auto md:p-4 md:px-20 lg:p-4 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3"
   >
-    <nav-buttons icon="home" label="Home" />
-    <nav-buttons icon="shield" label="Security" />
+    <nav-buttons  @click="changeActive('Home')" icon="home" label="Home" />
+    <nav-buttons  @click="changeActive('recents')" icon="shield" label="Recent Incidents" />
     <div class="border rounded-full border-violet-400 p-5">
-      <nav-buttons class=" borde" icon="pay" label="Pay" active />
+      <nav-buttons @click="changeActive('Track')" class="" icon="track" label="Track" active />
     </div>
-    <nav-buttons icon="bell" label="Messages" />
-    <nav-buttons icon="support" label="Support" />
+    <nav-buttons  @click="changeActive('Home')" icon="bell" label="Notifications" />
+    <nav-buttons   @click="changeActive('account')" icon="account" label="Account" />
   </div>
 
   <sidebar

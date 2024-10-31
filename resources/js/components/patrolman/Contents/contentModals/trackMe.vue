@@ -197,6 +197,7 @@
 </template>
 <script>
 import axios from "axios";
+import { map } from "highcharts";
 export default {
   components: {},
   data() {
@@ -216,6 +217,11 @@ export default {
         "NOV",
         "DEC",
       ],
+      user_track: {
+        latitude: 0.0,
+        longitude: 0.0
+      },
+      map: null
     };
   },
   mounted() {
@@ -223,8 +229,8 @@ export default {
     //console.log(document.head)
     (async () => {
       await this.generateData();
-      await this.loadGoogleMapsScript();
       await this.initializeMap();
+      this.track_me();
     })();
   },
   methods: {
@@ -258,22 +264,10 @@ export default {
         alert("Error!");
       }
     },
-    async loadGoogleMapsScript() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM";
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
     initializeMap() {
-      const location = { lat: 11.005, lng: 124.6077 };
-      const map = new google.maps.Map(document.getElementById("patrolmanMap"), {
-        zoom: 12,
+      const location = (this.user_track.latitude == 0.0 && this.user_track.longitude == 0.0) ? { lat: 11.005, lng: 124.6077 } : {lat: this.user_track.latitude, lng: this.user_track.longitude};
+      this.map = new google.maps.Map(document.getElementById("patrolmanMap"), {
+        zoom: 18,
         center: location,
       });
 
@@ -338,7 +332,7 @@ export default {
           });
 
           layer.addEventListener("click", () => {
-            infoWindow.open(map, marker);
+            infoWindow.open(this.map, marker);
           });
 
           const panes = this.getPanes();
@@ -355,19 +349,49 @@ export default {
           div.style.left = position.x + "px";
           div.style.top = position.y + "px";
         };
-        markerIcon.setMap(map);
+        markerIcon.setMap(this.map);
 
         // Dummy marker to keep the InfoWindow functionality
         const marker = new google.maps.Marker({
           position: mark.pos,
-          map: map,
+          map: this.map,
           visible: false,
         });
 
         marker.addListener("click", function () {
-          infoWindow.open(map, marker);
+          infoWindow.open(this.map, marker);
         });
       });
+    },
+    focusOnMarker(marker) {
+      const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
+      //this.active = marker.ctr;
+      this.map.setCenter(position);
+    },
+    async track_me() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const lati = position.coords.latitude;
+            const longi = position.coords.longitude;
+            console.log(lati, longi)
+            if (
+              this.user_track.latitude != lati ||
+              this.user_track.longitude != longi
+            ) {
+              this.user_track.latitude = position.coords.latitude;
+              this.user_track.longitude = position.coords.longitude;
+              this.focusOnMarker({pos:{lat: lati, lng: longi}})
+
+            }
+          },
+          (error) => {
+            alert("Error");
+          }
+        );
+      } else {
+        alert("Error!");
+      }
     },
     checkIfLogged() {
       const credentials = JSON.parse(localStorage.getItem("credentials"));
