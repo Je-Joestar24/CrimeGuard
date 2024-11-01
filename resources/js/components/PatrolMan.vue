@@ -3,6 +3,7 @@
   <div v-if="!load" class="HomePage w-full">
       <track-me v-if="active == 'Track'"/>
       <my-account  :changeActive="changeActive"  v-if="active == 'account'"/>
+      <recent-incidents  :changeActive="changeActive"  v-if="active == 'recents'"/>
       <div class="bottom-0 fixed  w-full right-0">
         <navigations :changeActive="changeActive" class=" "/>
       </div>
@@ -16,6 +17,7 @@ import Navigations from "./patrolman/Nav/Navigations.vue";
 import trackMe from "./patrolman/Contents/contentModals/trackMe.vue";
 import loading from "./loading.vue";
 import myAccount from "./patrolman/Contents/contentModals/myAccount.vue";
+import RecentIncidents from "./patrolman/Contents/contentModals/lists/RecentIncidents.vue";
 
 export default {
   data() {
@@ -33,7 +35,8 @@ export default {
     Navigations,
     trackMe,
     loading,
-    myAccount
+    myAccount,
+    RecentIncidents
   },
   methods: {
     changeActive(param) {

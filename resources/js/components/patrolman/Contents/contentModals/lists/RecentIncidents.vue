@@ -22,10 +22,10 @@
     <p v-if="arr.length === 0" class="text-center text-gray-500 mt-8">
       No recent incidents to display at this time.
     </p>
-
+<!-- 
     <p v-if="arr.length > 0" class="text-center text-gray-500 mt-8">
       End of recent incidents list. Stay vigilant and report any suspicious activities.
-    </p>
+    </p> -->
   </div>
 </template>
 

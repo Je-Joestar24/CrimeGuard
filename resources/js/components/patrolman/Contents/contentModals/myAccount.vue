@@ -43,7 +43,7 @@ export default {
       //window.location.reload();
       this.disapear = true;
       setTimeout(() => {
-        this.changeActive("Home");
+        this.changeActive("recents");
       }, 300);
     },
   },

@@ -1,8 +1,12 @@
 <template>
   <div class="flex justify-center">
-    <div class="m-5 max-w-screen-2xl w-11/12 px-6 py-6 rounded-lg border shadow-xl bg-white">
+    <div
+      class="m-5 max-w-screen-2xl w-11/12 px-6 py-6 rounded-lg border shadow-xl bg-white"
+    >
       <div class="flex space-x-6" style="width: 70vw; height: 70vh">
-        <section class="text-gray-600 body-font relative w-3/5 h-full rounded-lg overflow-hidden shadow-md">
+        <section
+          class="text-gray-600 body-font relative w-3/5 h-full rounded-lg overflow-hidden shadow-md"
+        >
           <div
             id="innerMonitoringMap"
             class="absolute inset-0 bg-gray-200"
@@ -11,7 +15,9 @@
         <div class="w-2/5 flex flex-col rounded-lg shadow-md overflow-hidden">
           <!-- Reporting Persons Section -->
           <div class="flex-1 flex flex-col">
-            <h2 class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b">
+            <h2
+              class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b"
+            >
               Reporting Persons
             </h2>
             <div class="overflow-auto flex-1 bg-white">
@@ -35,26 +41,44 @@
                       v-else
                       class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center shadow-sm"
                     >
-                      <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      <svg
+                        class="h-6 w-6 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
                       </svg>
                     </div>
                   </div>
                   <div class="ml-4">
-                    <p class="text-sm font-semibold text-gray-900">{{ marker.name }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ marker.con_no }}</p>
+                    <p class="text-sm font-semibold text-gray-900">
+                      {{ marker.name }}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      {{ marker.con_no }}
+                    </p>
                   </div>
                 </div>
               </template>
               <div v-else class="flex items-center justify-center h-full">
-                <p class="text-gray-500 text-sm">No reporting persons at the moment</p>
+                <p class="text-gray-500 text-sm">
+                  No reporting persons at the moment
+                </p>
               </div>
             </div>
           </div>
-          
+
           <!-- Reported Incidents Section -->
           <div class="flex-1 flex flex-col">
-            <h2 class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b">
+            <h2
+              class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b"
+            >
               Reported Incidents
             </h2>
             <div class="overflow-auto flex-1 bg-white">
@@ -68,18 +92,28 @@
                 >
                   <div class="flex justify-between items-start">
                     <div class="flex-1">
-                      <p class="text-sm font-semibold text-gray-900">{{ marker.message }}</p>
-                      <p class="text-xs text-gray-500 mt-2">{{ marker.location }}</p>
+                      <p class="text-sm font-semibold text-gray-900">
+                        {{ marker.message }}
+                      </p>
+                      <p class="text-xs text-gray-500 mt-2">
+                        {{ marker.location }}
+                      </p>
                     </div>
                     <div class="text-right">
-                      <p class="text-xs text-gray-500">{{ convertToNormalTime(marker.time) }}</p>
-                      <p class="text-xs font-medium text-gray-900 mt-1">{{ marker.month }} {{ marker.date }}</p>
+                      <p class="text-xs text-gray-500">
+                        {{ convertToNormalTime(marker.time) }}
+                      </p>
+                      <p class="text-xs font-medium text-gray-900 mt-1">
+                        {{ marker.month }} {{ marker.date }}
+                      </p>
                     </div>
                   </div>
                 </div>
               </template>
               <div v-else class="flex items-center justify-center h-full">
-                <p class="text-gray-500 text-sm">No reported incidents at the moment</p>
+                <p class="text-gray-500 text-sm">
+                  No reported incidents at the moment
+                </p>
               </div>
             </div>
           </div>
@@ -100,15 +134,13 @@ export default {
       markers: [],
       active: -1,
       ctr: 1,
-      intervalId: null
+      intervalId: null,
     };
   },
   mounted() {
     (async () => {
       await this.generateData();
       await this.generateData2();
-      await console.log(this.users);
-      await this.loadGoogleMapsScript();
       await this.initializeMap();
       await this.startLogging();
     })();
@@ -150,6 +182,13 @@ export default {
       this.ctr++;
       for (let i = 0; i < this.users.length; i++) {
         if (
+          parseFloat(citizen["pos"]["lat"]) == parseFloat(0.0) ||
+          parseFloat(citizen["pos"]["lat"]) == parseFloat(0.0)
+        ) {
+          delete this.users[i];
+          /* terminated */
+          return;
+        } else if (
           citizen["user_name"] == this.users[i]["user_name"] ||
           citizen["email"] == this.users[i]["email"]
         ) {
@@ -178,18 +217,6 @@ export default {
       const normalHours = hours % 12 || 12; // Convert to 12-hour format, ensuring 0 becomes 12
       return `${normalHours}:${String(minutes).padStart(2, "0")} ${period}`;
     },
-    async loadGoogleMapsScript() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM"; // Insert your Google Maps API Key
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
     initializeMap() {
       const defaultLocation = { lat: 11.005, lng: 124.6077 };
       this.map = new google.maps.Map(
@@ -201,12 +228,8 @@ export default {
       );
       this.loadMarkers();
     },
-    async createRoundedIcon(
-      profileUrl,
-      size = 50,
-      borderColor = "green",
-      borderWidth = 5
-    ) {
+    async createRoundedIcon(profileUrl, level, size = 50, borderWidth = 5) {
+      let borderColor = level == 3 ? "green" : "blue";
       return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
@@ -259,7 +282,7 @@ export default {
       });
     },
     async generateData2() {
-      if(this.users.length > 0)this.removeAllMarkers();
+      if (this.users.length > 0) this.removeAllMarkers();
       const dt = await this.$store.dispatch("sendData", {
         url: "api/track/location/map/req",
         data: {},
@@ -278,6 +301,7 @@ export default {
             month: data[i]["month"],
             date: data[i]["date"],
             profile: data[i]["profile"],
+            user_level: data[i]["user_level"],
           });
         }
         for (let i = 0; i < this.data2.markers.length; i++)
@@ -328,18 +352,30 @@ export default {
             : "border-yellow-600 bg-yellow-100";
         const infoWindow = new google.maps.InfoWindow({
           content: `
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
-          <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+          bg === "border-red-600 bg-red-100"
+            ? "border-red-600"
+            : "border-yellow-600"
+        }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
             <h2 class="text-xl font-bold text-white">Reported Incident Information</h2>
           </div>
           <div class="p-4 space-y-3">
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Reported by</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.name}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
             </div>
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Contact</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.con_no}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
             </div>
               <div class="border-b border-gray-200 pb-2">
                 <span class="text-sm font-medium text-gray-500">Location</span>
@@ -347,16 +383,22 @@ export default {
               </div>
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Report Type</span>
-              <span class="text-sm font-semibold ${mark.report_type == 1 ? 'text-red-600' : 'text-yellow-600'}">
-                ${mark.report_type == 1 ? 'Emergency' : 'Non-Emergency'}
+              <span class="text-sm font-semibold ${
+                mark.report_type == 1 ? "text-red-600" : "text-yellow-600"
+              }">
+                ${mark.report_type == 1 ? "Emergency" : "Non-Emergency"}
               </span>
             </div>
-            ${mark.message ? `
+            ${
+              mark.message
+                ? `
               <div>
                 <span class="text-sm font-medium text-gray-500">Message</span>
                 <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
       `,
@@ -368,8 +410,12 @@ export default {
       });
     },
     loadMarkers2() {
+      console.log(this.users);
       this.users.forEach(async (mark) => {
-        const roundedIconUrl = await this.createRoundedIcon(mark.profile);
+        const roundedIconUrl = await this.createRoundedIcon(
+          mark.profile,
+          mark.user_level
+        );
 
         // Add the marker with the rounded icon
         const markerIcon = new google.maps.Marker({
@@ -391,25 +437,41 @@ export default {
 
         const infoWindow = new google.maps.InfoWindow({
           content: `
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
-          <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+          bg === "border-red-600 bg-red-100"
+            ? "border-red-600"
+            : "border-yellow-600"
+        }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
             <h2 class="text-xl font-bold text-white">Citizen Information</h2>
           </div>
           <div class="p-4 space-y-3">
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Name</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.name}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
             </div>
             <div class="flex justify-between items-center border-b border-gray-200 pb-2">
               <span class="text-sm font-medium text-gray-500">Contact</span>
-              <span class="text-sm font-semibold text-gray-800">${mark.con_no}</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
             </div>
-            ${mark.message ? `
+            ${
+              mark.message
+                ? `
               <div>
                 <span class="text-sm font-medium text-gray-500">Message</span>
                 <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
       `,
@@ -425,14 +487,15 @@ export default {
       const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
       this.active = marker.ctr;
       this.map.setCenter(position);
+
     },
     removeAllMarkers() {
       if (this.markers.length > 0) {
-        console.log(this.markers); 
+        console.log(this.markers);
         this.markers.forEach((marker) => {
           marker.setVisible(false);
           setTimeout(() => {
-            marker.setMap(null); 
+            marker.setMap(null);
           }, 50);
         });
 
@@ -446,8 +509,8 @@ export default {
         /* if (this.counter == 10) {
           this.toggle();
         } */
-       await this.generateData2();
-       await this.loadMarkers2();
+        await this.generateData2();
+        await this.loadMarkers2();
         // this.counter++;
       }, 60000);
     },

@@ -53,7 +53,8 @@ class trackuser extends Controller
                     'users.last_name',
                     'users.contact',
                     'user_track.longitude',
-                    'user_track.latitude'
+                    'user_track.latitude',
+                    'users.user_level'
                 )
                 ->whereDate('user_track.created_at', $currentDate->format('Y-m-d'))
                 ->orderBy('user_track.created_at', 'asc')
@@ -74,7 +75,8 @@ class trackuser extends Controller
                     'time' => explode(' ', $report['created_at'])[1],
                     'month' => explode('-', explode(' ', $report['created_at'])[0])[1],
                     'date' => explode('-', explode(' ', $report['created_at'])[0])[2] . ", " . explode('-', explode(' ', $report['created_at'])[0])[0],
-                    'profile' => $report['profile']
+                    'profile' => $report['profile'],
+                    'user_level' => $report['user_level']
                 ];
                 array_push($data['data'], $cleaned);
             }

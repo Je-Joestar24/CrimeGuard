@@ -225,7 +225,7 @@
           <span class="text-sm text-gray-500">Live Tracking Active</span>
         </div>
         <div class="text-center">
-          <button @click="toggle()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+          <button @click="cancelEmergency()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
             Cancel Emergency
           </button>
         </div>
@@ -358,6 +358,11 @@ export default {
       } else {
         alert("Error");
       }
+    },cancelEmergency(){
+      this.user_track.latitude = 0.0;
+      this.user_track.longitude = 0.0;
+      this.userTrack();
+      setTimeout(()=>{this.toggle()}, 300)
     },
     reportRequest() {},
     async rqSend() {

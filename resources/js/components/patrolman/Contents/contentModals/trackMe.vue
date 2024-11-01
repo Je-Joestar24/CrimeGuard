@@ -264,6 +264,48 @@ export default {
         alert("Error!");
       }
     },
+    async track_me() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const lati = position.coords.latitude;
+            const longi = position.coords.longitude;
+
+            if (
+              this.user_track.latitude != lati ||
+              this.user_track.longitude != longi
+            ) {
+              this.user_track.latitude = position.coords.latitude;
+              this.user_track.longitude = position.coords.longitude;
+
+              this.userTrack();
+            }
+          },
+          (error) => {
+            alert("Error");
+          }
+        );
+      } else {
+        alert("Error!");
+      }
+    },
+    async userTrack() {
+      const send = await {
+        data: { data: this.user_track },
+        url: "api/track/my/location/req",
+      };
+
+      let data;
+      data = await this.$store.dispatch("sendData", send);
+      this.res = await data["response"];
+
+      if (this.res == "Success") {
+        
+      } else {
+        await alert("An error occured, please try again.");
+        console.log(data);
+      }
+    },
     initializeMap() {
       const location = (this.user_track.latitude == 0.0 && this.user_track.longitude == 0.0) ? { lat: 11.005, lng: 124.6077 } : {lat: this.user_track.latitude, lng: this.user_track.longitude};
       this.map = new google.maps.Map(document.getElementById("patrolmanMap"), {
