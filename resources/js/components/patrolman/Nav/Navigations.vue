@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-screen-3xl flex flex-wrap items-end justify-evenly mx-auto md:p-4 md:px-20 lg:p-4 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3"
+    class="max-w-screen-3xl flex flex-wrap items-end shadow-lg justify-evenly mx-auto md:p-4 md:px-20 lg:p-4 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3 bg-white"
   ><!-- 
     <nav-buttons  @click="changeActive('Home')" icon="home" label="Home" /> -->
     <nav-buttons  @click="changeActive('recents')" icon="shield" label="Recent" />

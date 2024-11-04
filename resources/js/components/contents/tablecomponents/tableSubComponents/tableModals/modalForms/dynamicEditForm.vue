@@ -48,7 +48,7 @@
               >
                 <div class="relative" v-for="mdl in model.infos" :key="mdl.label">
                   <input
-                    v-if="['text', 'number', 'date', 'email', 'tel'].includes(mdl.type)"
+                    v-if="['text', 'number', 'date', 'email', 'tel', 'password'].includes(mdl.type)"
                     :type="mdl.type"
                     v-model="mdl.input"
                     class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"

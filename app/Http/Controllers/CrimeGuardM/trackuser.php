@@ -56,6 +56,8 @@ class trackuser extends Controller
                     'user_track.latitude',
                     'users.user_level'
                 )
+                ->where('user_track.latitude', '!=', 0.0)
+                ->where('user_track.longitude', '!=', 0.0)
                 ->whereDate('user_track.created_at', $currentDate->format('Y-m-d'))
                 ->orderBy('user_track.created_at', 'asc')
                 ->orderBy('user_track.user', 'asc')  // Order by created_at from oldest to newest

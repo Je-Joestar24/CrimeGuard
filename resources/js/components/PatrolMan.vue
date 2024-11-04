@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       navs: ["Home"],
-      active: "Home",
+      active: "recents",
       Logged: false,
       load: true,
       lastScrollTop: 0,

@@ -77,120 +77,165 @@
       </div>
     </div>
   </div>
-  <div class="bg-black m-2 rounded-sm">
-    <div class="flex p-2 gap-2">
+  <div class="m-2 rounded-sm bg-white shadow-lg">
+    <div class="flex p-t-2 gap-2">
       <button
         type="button"
-        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+        class="w-full focus:ring-4font-mediumtext-sm px-5 py-2.5 transition-all duration-200"
+        @click="open = 'incident'"
+        :class="{
+          'text-gray-50 bg-gray-500 rounded-t-full': open == 'incident',
+          ' focus:ring-red-300 hover:bg-red-600 text-white bg-red-500 rounded-full ':
+            open != 'incident',
+        }"
       >
-        Incident</button
-      ><button
+        Incident
+      </button>
+      <button
         type="button"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full"
+        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200"
+        @click="open = 'patrolman'"
+        :class="{
+          'text-gray-50 bg-gray-500 rounded-t-full': open == 'patrolman',
+          ' text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 rounded-full ':
+            open != 'patrolman',
+        }"
       >
-        Ally</button
-      ><button
+        Ally
+      </button>
+      <button
         type="button"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full"
+        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200"
+        @click="open = 'citizen'"
+        :class="{
+          'text-gray-50 bg-gray-500 rounded-t-full': open == 'citizen',
+          ' text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  rounded-full ':
+            open != 'citizen',
+        }"
       >
         Citizen
       </button>
     </div>
-    <div class="p-1 bg-gray-600">
-      <div class="h-[25vh] p-1 bg-violet-50 rounded-lg overflow-auto">
-        <ul class="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
-           <li class="pb-3 sm:pb-4">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                 <div class="flex-shrink-0">
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Neil image">
-                 </div>
-                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Neil Sims
-                    </p>
-                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                       email@flowbite.com
-                    </p>
-                 </div>
-                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    $320
-                 </div>
+    <div
+      class="p-3 bg-gray-500 shadow-sm"
+      :class="{
+        ' rounded-r-lg': open == 'incident',
+        ' rounded-lg': open == 'patrolman',
+        'rounded-none rounded-s-lg': open == 'citizen',
+      }"
+    >
+      <div class="h-[28vh] p-2 bg-white rounded-lg overflow-auto shadow-inner">
+        <ul class="max-w-md divide-y divide-gray-300">
+          <li
+            v-if="open == 'citizen'"
+            v-for="user of accounts.citizen"
+            @click="focusOnMarker(user)"
+            class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="flex-shrink-0">
+                <img
+                  class="w-10 h-10 rounded-full border-2 border-blue-500"
+                  :src="user['profile']"
+                  alt="Neil image"
+                />
               </div>
-           </li>
-           <li class="py-3 sm:py-4">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                 <div class="flex-shrink-0">
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Neil image">
-                 </div>
-                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Bonnie Green
-                    </p>
-                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                       email@flowbite.com
-                    </p>
-                 </div>
-                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    $3467
-                 </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-800 truncate">
+                  {{ user["name"] }}
+                </p>
+                <p class="text-xs text-gray-500 truncate">
+                  {{ user["con_no"] }}
+                </p>
               </div>
-           </li>
-           <li class="py-3 sm:py-4">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                 <div class="flex-shrink-0">
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Neil image">
-                 </div>
-                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Michael Gough
-                    </p>
-                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                       email@flowbite.com
-                    </p>
-                 </div>
-                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    $67
-                 </div>
+              <div
+                class="inline-flex items-center text-base font-semibold text-gray-700"
+              >
+                Citizen
               </div>
-           </li>
-           <li class="py-3 sm:py-4">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                 <div class="flex-shrink-0">
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="Neil image">
-                 </div>
-                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Thomas Lean
-                    </p>
-                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                       email@flowbite.com
-                    </p>
-                 </div>
-                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    $2367
-                 </div>
+            </div>
+          </li>
+          <li
+            v-if="open == 'patrolman'"
+            v-for="user of accounts.patrolman"
+            @click="focusOnMarker(user)"
+            class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="flex-shrink-0">
+                <img
+                  class="w-10 h-10 rounded-full border-2 border-blue-500"
+                  :src="user['profile']"
+                  alt="Neil image"
+                />
               </div>
-           </li>
-           <li class="pt-3 pb-0 sm:pt-4">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                 <div class="flex-shrink-0">
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Neil image">
-                 </div>
-                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Lana Byrd
-                    </p>
-                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                       email@flowbite.com
-                    </p>
-                 </div>
-                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    $367
-                 </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-800 truncate">
+                  {{ user["name"] }}
+                </p>
+                <p class="text-xs text-gray-500 truncate">
+                  {{ user["con_no"] }}
+                </p>
               </div>
-           </li>
+              <div
+                class="inline-flex items-center text-base font-semibold text-gray-700"
+              >
+                Ally
+              </div>
+            </div>
+          </li>
+          <li
+            v-if="open == 'incident'"
+            v-for="incident of data.markers"
+            class="p-4 bg-white shadow-md rounded-lg mb-4 transition-all duration-200 hover:shadow-lg"
+            @click="focusOnMarker(incident)"
+          >
+            <div class="flex justify-between items-center">
+              <div class="text-sm font-semibold text-gray-800">
+                {{ incident["message"] }}
+              </div>
+              <span
+                class="px-2 py-1 text-xs font-medium rounded-full"
+                :class="
+                  incident['report_type'] == 1
+                    ? 'bg-red-100 text-red-600'
+                    : 'bg-orange-100 text-orange-600'
+                "
+              >
+                {{
+                  incident["report_type"] == 1 ? "Emergency" : "Non-Emergency"
+                }}
+              </span>
+            </div>
+            <p class="text-gray-600 text-xs mt-1">{{ incident["location"] }}</p>
+            <p class="text-gray-500 text-xs mt-1">
+              {{ `${incident["month"]}, ${incident["date"]}` }}
+            </p>
+
+            <div class="mt-3 flex items-center space-x-4">
+              <div class="flex-shrink-0">
+                <img
+                  class="w-8 h-8 rounded-full border-2 border-blue-500"
+                  :src="incident['profile']"
+                  alt="Reporter profile image"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate">
+                  {{ incident["name"] }}
+                </p>
+                <p class="text-xs text-gray-500 truncate">
+                  {{ incident["contact"] }}
+                </p>
+                <p class="text-xs text-gray-500 truncate">
+                  {{ incident["email"] }}
+                </p>
+              </div>
+            </div>
+          </li>
+
+          <!-- Repeat for other items with similar structure -->
         </ul>
-        
       </div>
     </div>
   </div>
@@ -218,52 +263,46 @@ export default {
         "DEC",
       ],
       user_track: {
+        user: -1,
         latitude: 0.0,
-        longitude: 0.0
+        longitude: 0.0,
       },
-      map: null
+      intervalId: null,
+      map: null,
+      data2: { markers: [] },
+      users: [],
+      markers: [],
+      accounts: {
+        citizen: [],
+        patrolman: [],
+      },
+      active: -1,
+      open: "incident",
     };
   },
-  mounted() {
-    //this.initializeMap()
-    //console.log(document.head)
+  created() {
     (async () => {
+      const credentials = JSON.parse(localStorage.getItem("credentials"));
+      this.user_track.user = credentials.id;
+      await this.startLogging();
       await this.generateData();
+      await this.generateData2();
       await this.initializeMap();
-      this.track_me();
     })();
   },
+  beforeDestroy() {
+    this.stopLogging();
+    this.user_track.latitude = 0.0;
+    this.user_track.longitude = 0.0;
+    this.userTrack();
+  },
+  beforeUnmount() {
+    this.stopLogging();
+    this.user_track.latitude = 0.0;
+    this.user_track.longitude = 0.0;
+    this.userTrack();
+  },
   methods: {
-    async generateData() {
-      const dt = await this.$store.dispatch("sendData", {
-        url: "api/incidents/citizen/heat/map/marker/Display",
-        data: {},
-      });
-
-      if (dt["response"] == "Success") {
-        let data = dt["data"];
-        for (let i = 0; i < data.length; i++) {
-          this.data.markers.push({
-            pos: {
-              lat: parseFloat(data[i]["pos"]["lat"]),
-              lng: parseFloat(data[i]["pos"]["lng"]),
-            },
-            location: data[i]["location"],
-            suspects: data[i]["suspects"],
-            victims: data[i]["victims"],
-            name: data[i]["name"],
-            report_type: data[i]["report_type"],
-            date:
-              this.months[parseInt(data[i]["month"]) - 1] +
-              ", " +
-              data[i]["date"],
-          });
-          //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
-        }
-      } else {
-        alert("Error!");
-      }
-    },
     async track_me() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -300,78 +339,181 @@ export default {
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        
       } else {
         await alert("An error occured, please try again.");
         console.log(data);
       }
     },
     initializeMap() {
-      const location = (this.user_track.latitude == 0.0 && this.user_track.longitude == 0.0) ? { lat: 11.005, lng: 124.6077 } : {lat: this.user_track.latitude, lng: this.user_track.longitude};
+      const location =
+        this.user_track.latitude == 0.0 || this.user_track.longitude == 0.0
+          ? { lat: 11.005, lng: 124.6077 }
+          : { lat: this.user_track.latitude, lng: this.user_track.longitude };
       this.map = new google.maps.Map(document.getElementById("patrolmanMap"), {
         zoom: 18,
         center: location,
       });
 
+      this.loadMarkers();
+    },
+    async generateData() {
+      const dt = await this.$store.dispatch(
+        "generateTableData",
+        "api/incidents/report/marker/Display"
+      );
+      if (dt["response"] === "Success") {
+        let data = dt["data"];
+        for (let i = 0; i < data.length; i++) {
+          this.data.markers.push({
+            pos: {
+              lat: parseFloat(data[i]["pos"]["lat"]),
+              lng: parseFloat(data[i]["pos"]["lng"]),
+            },
+            message: data[i]["message"],
+            location: data[i]["location"],
+            name: data[i]["name"],
+            con_no: data[i]["contact"],
+            report_type: data[i]["report_type"],
+            time: data[i]["time"],
+            month: data[i]["month"],
+            date: data[i]["date"],
+            profile: data[i]["profile"],
+            ctr: this.ctr,
+          });
+          this.ctr++;
+        }
+      } else {
+        alert("Error loading data!");
+      }
+    },
+    containsUser(citizen) {
+      const cit = citizen;
+      cit["ctr"] = this.ctr;
+      this.ctr++;
+      if (
+        !this.findThem(citizen, this.accounts.citizen) &&
+        citizen["user_level"] == 3
+      ) {
+        this.accounts.citizen.push(citizen);
+      } else if (
+        !this.findThem(citizen, this.accounts.patrolman) &&
+        citizen["user_level"] == 4
+      )  this.accounts.patrolman.push(citizen);
+      for (let i = 0; i < this.users.length; i++) {
+        if (
+          citizen["user_name"] == this.users[i]["user_name"] ||
+          citizen["email"] == this.users[i]["email"]
+        ) {
+          this.users[i] = citizen;
+          return;
+        }
+      }
+      this.users.push(citizen);
+      console.log(citizen);
+
+      return;
+    },
+    findThem(user, users) {
+      console.log(user);
+      for (let i = 0; i < users.length; i++) {
+        if (
+          user["user_name"] == users[i]["user_name"] ||
+          user["email"] == users[i]["email"]
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+    async createRoundedIcon(profileUrl, level, size = 50, borderWidth = 5) {
+      let borderColor = level == 3 ? "green" : "blue";
+      return new Promise((resolve) => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const image = new Image();
+
+        // Set canvas size to accommodate the border and the image size
+        canvas.width = size + 2 * borderWidth;
+        canvas.height = size + 2 * borderWidth;
+
+        image.onload = () => {
+          // Draw the border (circle around the image)
+          context.beginPath();
+          context.arc(
+            canvas.width / 2,
+            canvas.height / 2,
+            size / 2 + borderWidth,
+            0,
+            2 * Math.PI
+          );
+          context.fillStyle = borderColor;
+          context.fill();
+
+          // Clip to create a circular area for the image
+          context.beginPath();
+          context.arc(
+            canvas.width / 2,
+            canvas.height / 2,
+            size / 2,
+            0,
+            2 * Math.PI
+          );
+          context.closePath();
+          context.clip();
+
+          // Draw the profile image inside the clipped circle
+          context.drawImage(image, borderWidth, borderWidth, size, size);
+
+          // Convert canvas to a data URL and resolve the promise
+          resolve(canvas.toDataURL());
+        };
+
+        // Handle errors in loading the image
+        image.onerror = () => {
+          console.error("Failed to load image:", profileUrl);
+          resolve(null); // You can handle fallback logic here if needed
+        };
+
+        // Set the image source to start loading
+        image.src = profileUrl;
+      });
+    },
+    async generateData2() {
+      if (this.users.length > 0) this.removeAllMarkers();
+      const dt = await this.$store.dispatch("sendData", {
+        url: "api/track/location/map/req",
+        data: {},
+      });
+      if (dt["response"] === "Success") {
+        let data = dt["data"];
+        for (let i = 0; i < data.length; i++) {
+          this.data2.markers.push({
+            pos: {
+              lat: parseFloat(data[i]["pos"]["lat"]),
+              lng: parseFloat(data[i]["pos"]["lng"]),
+            },
+            name: data[i]["name"],
+            con_no: data[i]["contact"],
+            time: data[i]["time"],
+            month: data[i]["month"],
+            date: data[i]["date"],
+            profile: data[i]["profile"],
+            user_level: data[i]["user_level"],
+          });
+        }
+        for (let i = 0; i < this.data2.markers.length; i++)
+          this.containsUser(this.data2.markers[i]);
+      } else {
+        alert("Error loading data!");
+      }
+    },
+    loadMarkers() {
+      this.loadMarkers2();
       this.data.markers.forEach((mark) => {
-        // Custom Overlay for animated marker
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "redM" : "yellowM");
-
-          // Marker info
-          let bg =
-            mark.report_type == 1
-              ? "border-red-600 bg-red-100"
-              : "border-yellow-600 bg-yellow-100";
-          let infoWindow = new google.maps.InfoWindow({
-            content: `
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
-              bg === "border-red-600 bg-red-100"
-                ? "border-red-600"
-                : "border-yellow-600"
-            }">
-              <div class="bg-gradient-to-r ${
-                bg === "border-red-600 bg-red-100"
-                  ? "from-red-500 to-red-600"
-                  : "from-yellow-500 to-yellow-600"
-              } px-4 py-3">
-                <h2 class="text-xl font-bold text-white">Incident Details</h2>
-              </div>
-              <div class="p-4 space-y-3">
-                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                  <span class="text-sm font-medium text-gray-500">Incident</span>
-                  <span class="text-sm font-semibold text-gray-800">${
-                    mark.name
-                  }</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                  <span class="text-sm font-medium text-gray-500">Date</span>
-                  <span class="text-sm font-semibold text-gray-800">${
-                    mark.date
-                  }</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                  <span class="text-sm font-medium text-gray-500">Suspects</span>
-                  <span class="text-sm font-semibold text-gray-800">${
-                    mark.suspects
-                  }</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                  <span class="text-sm font-medium text-gray-500">Victims</span>
-                  <span class="text-sm font-semibold text-gray-800">${
-                    mark.victims
-                  }</span>
-                </div>
-                <div>
-                  <span class="text-sm font-medium text-gray-500">Location</span>
-                  <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
-                </div>
-              </div>
-            </div>
-            `,
-          });
+          layer.classList.add(mark.report_type == 1 ? "pulse" : "pulse2");
 
           layer.addEventListener("click", () => {
             infoWindow.open(this.map, marker);
@@ -382,6 +524,7 @@ export default {
 
           this.div = layer;
         };
+
         markerIcon.draw = function () {
           const projection = this.getProjection();
           const position = projection.fromLatLngToDivPixel(
@@ -391,48 +534,183 @@ export default {
           div.style.left = position.x + "px";
           div.style.top = position.y + "px";
         };
+
         markerIcon.setMap(this.map);
 
-        // Dummy marker to keep the InfoWindow functionality
         const marker = new google.maps.Marker({
           position: mark.pos,
           map: this.map,
           visible: false,
         });
 
-        marker.addListener("click", function () {
+        const bg =
+          mark.report_type == 1
+            ? "border-red-600 bg-red-100"
+            : "border-yellow-600 bg-yellow-100";
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+          bg === "border-red-600 bg-red-100"
+            ? "border-red-600"
+            : "border-yellow-600"
+        }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
+            <h2 class="text-xl font-bold text-white">Reported Incident Information</h2>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Reported by</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Contact</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
+            </div>
+              <div class="border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Location</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
+              </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Report Type</span>
+              <span class="text-sm font-semibold ${
+                mark.report_type == 1 ? "text-red-600" : "text-yellow-600"
+              }">
+                ${mark.report_type == 1 ? "Emergency" : "Non-Emergency"}
+              </span>
+            </div>
+            ${
+              mark.message
+                ? `
+              <div>
+                <span class="text-sm font-medium text-gray-500">Message</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
+              </div>
+            `
+                : ""
+            }
+          </div>
+        </div>
+      `,
+        });
+
+        marker.addListener("click", () => {
           infoWindow.open(this.map, marker);
         });
       });
+    },
+    loadMarkers2() {
+      console.log(this.users);
+      this.users.forEach(async (mark) => {
+        const roundedIconUrl = await this.createRoundedIcon(
+          mark.profile,
+          mark.user_level
+        );
+
+        // Add the marker with the rounded icon
+        const markerIcon = new google.maps.Marker({
+          position: mark.pos,
+          map: this.map,
+          icon: {
+            url: roundedIconUrl, // Use the generated rounded icon URL
+            scaledSize: new google.maps.Size(40, 40), // Adjust marker size to include border
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(20, 20), // Set anchor point to center
+          },
+        });
+
+        this.markers.push(markerIcon);
+        const bg =
+          mark.report_type == 1
+            ? "border-red-600 bg-red-100"
+            : "border-yellow-600 bg-yellow-100";
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+          bg === "border-red-600 bg-red-100"
+            ? "border-red-600"
+            : "border-yellow-600"
+        }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
+            <h2 class="text-xl font-bold text-white">Citizen Information</h2>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Name</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Contact</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
+            </div>
+            ${
+              mark.message
+                ? `
+              <div>
+                <span class="text-sm font-medium text-gray-500">Message</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
+              </div>
+            `
+                : ""
+            }
+          </div>
+        </div>
+      `,
+        });
+
+        markerIcon.addListener("click", () => {
+          infoWindow.open(this.map, markerIcon);
+        });
+      });
+    },
+    removeAllMarkers() {
+      if (this.markers.length > 0) {
+        console.log(this.markers);
+        this.markers.forEach((marker) => {
+          marker.setVisible(false);
+          setTimeout(() => {
+            marker.setMap(null);
+          }, 50);
+        });
+
+        this.markers = [];
+      } else {
+      }
+      this.users = [];
     },
     focusOnMarker(marker) {
       const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
       //this.active = marker.ctr;
       this.map.setCenter(position);
     },
-    async track_me() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const lati = position.coords.latitude;
-            const longi = position.coords.longitude;
-            console.log(lati, longi)
-            if (
-              this.user_track.latitude != lati ||
-              this.user_track.longitude != longi
-            ) {
-              this.user_track.latitude = position.coords.latitude;
-              this.user_track.longitude = position.coords.longitude;
-              this.focusOnMarker({pos:{lat: lati, lng: longi}})
-
-            }
-          },
-          (error) => {
-            alert("Error");
-          }
-        );
-      } else {
-        alert("Error!");
+    startLogging() {
+      this.track_me();
+      this.intervalId = setInterval(async () => {
+        await this.track_me();
+        await this.generateData2();
+        await this.loadMarkers2();
+      }, 10000);
+    },
+    stopLogging() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
       }
     },
     checkIfLogged() {
@@ -445,7 +723,6 @@ export default {
   computed: {
     loggedIn() {
       const logged = this.checkIfLogged();
-
       return logged;
     },
     isPhone() {

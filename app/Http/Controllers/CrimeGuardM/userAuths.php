@@ -210,7 +210,7 @@ class userAuths extends Controller
             return response()->json(['response' => false, 'error' => 'User not found'], 404);
         }
 
-        if ($user->user_level == 3 && (is_null($user->accepted_at) || is_null($user->accepted_by))) {
+        if (($user->user_level == 3 || $user->user_level == 4) && (is_null($user->accepted_at) || is_null($user->accepted_by))) {
             return response()->json([
                 'response' => false,
                 'error' => 'User not yet accepted',
