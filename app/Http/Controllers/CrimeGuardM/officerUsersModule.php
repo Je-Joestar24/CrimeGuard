@@ -55,6 +55,7 @@ class officerUsersModule extends Controller
                 'users.contact',
                 DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
             ])->where('users.user_level', '=', '2')
+                ->orWhere('users.user_level', '=', '4')
                 ->whereNull('users.archived_at')
                 ->whereNull('users.deleted_by');
 
@@ -362,6 +363,4 @@ class officerUsersModule extends Controller
         }
         return response()->json($data);
     }
-
-    
 }

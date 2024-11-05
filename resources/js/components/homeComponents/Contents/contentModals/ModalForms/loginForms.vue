@@ -304,6 +304,8 @@ export default {
             this.$router.push("/OFFICER/Dashboard");
           } else if (dt.data.user_level === 3) {
             window.location.reload();
+          } else if (dt.data.user_level === 4) {
+            this.$router.push("/PATROLMAN");
           }
         } 
         else if (dt.response === "Too many login attempts") {

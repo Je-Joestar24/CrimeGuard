@@ -244,7 +244,8 @@
 import axios from "axios";
 import { map } from "highcharts";
 export default {
-  components: {},
+  components: {
+  },
   data() {
     return {
       data: { markers: [] },
@@ -386,45 +387,6 @@ export default {
         alert("Error loading data!");
       }
     },
-    containsUser(citizen) {
-      const cit = citizen;
-      cit["ctr"] = this.ctr;
-      this.ctr++;
-      if (
-        !this.findThem(citizen, this.accounts.citizen) &&
-        citizen["user_level"] == 3
-      ) {
-        this.accounts.citizen.push(citizen);
-      } else if (
-        !this.findThem(citizen, this.accounts.patrolman) &&
-        citizen["user_level"] == 4
-      )  this.accounts.patrolman.push(citizen);
-      for (let i = 0; i < this.users.length; i++) {
-        if (
-          citizen["user_name"] == this.users[i]["user_name"] ||
-          citizen["email"] == this.users[i]["email"]
-        ) {
-          this.users[i] = citizen;
-          return;
-        }
-      }
-      this.users.push(citizen);
-      console.log(citizen);
-
-      return;
-    },
-    findThem(user, users) {
-      console.log(user);
-      for (let i = 0; i < users.length; i++) {
-        if (
-          user["user_name"] == users[i]["user_name"] ||
-          user["email"] == users[i]["email"]
-        ) {
-          return true;
-        }
-      }
-      return false;
-    },
     async createRoundedIcon(profileUrl, level, size = 50, borderWidth = 5) {
       let borderColor = level == 3 ? "green" : "blue";
       return new Promise((resolve) => {
@@ -486,8 +448,12 @@ export default {
       });
       if (dt["response"] === "Success") {
         let data = dt["data"];
+        this.users = [];
+        this.accounts.citizen = [];
+        this.accounts.patrolman = [];
         for (let i = 0; i < data.length; i++) {
-          this.data2.markers.push({
+
+          let tmp = {
             pos: {
               lat: parseFloat(data[i]["pos"]["lat"]),
               lng: parseFloat(data[i]["pos"]["lng"]),
@@ -499,10 +465,12 @@ export default {
             date: data[i]["date"],
             profile: data[i]["profile"],
             user_level: data[i]["user_level"],
-          });
+          };
+          this.data2.markers.push(tmp);
+          this.users.push(tmp);
+          if(tmp.user_level == 3)this.accounts.citizen.push(tmp)
+          if(tmp.user_level == 4)this.accounts.patrolman.push(tmp)
         }
-        for (let i = 0; i < this.data2.markers.length; i++)
-          this.containsUser(this.data2.markers[i]);
       } else {
         alert("Error loading data!");
       }

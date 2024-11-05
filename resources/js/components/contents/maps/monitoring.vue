@@ -182,13 +182,6 @@ export default {
       this.ctr++;
       for (let i = 0; i < this.users.length; i++) {
         if (
-          parseFloat(citizen["pos"]["lat"]) == parseFloat(0.0) ||
-          parseFloat(citizen["pos"]["lat"]) == parseFloat(0.0)
-        ) {
-          delete this.users[i];
-          /* terminated */
-          return;
-        } else if (
           citizen["user_name"] == this.users[i]["user_name"] ||
           citizen["email"] == this.users[i]["email"]
         ) {
@@ -289,8 +282,9 @@ export default {
       });
       if (dt["response"] === "Success") {
         let data = dt["data"];
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
-          this.data2.markers.push({
+          let tmp = {
             pos: {
               lat: parseFloat(data[i]["pos"]["lat"]),
               lng: parseFloat(data[i]["pos"]["lng"]),
@@ -302,10 +296,10 @@ export default {
             date: data[i]["date"],
             profile: data[i]["profile"],
             user_level: data[i]["user_level"],
-          });
+          };
+          this.data2.markers.push(tmp);
+          this.users.push(tmp);
         }
-        for (let i = 0; i < this.data2.markers.length; i++)
-          this.containsUser(this.data2.markers[i]);
       } else {
         alert("Error loading data!");
       }
@@ -487,7 +481,6 @@ export default {
       const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
       this.active = marker.ctr;
       this.map.setCenter(position);
-
     },
     removeAllMarkers() {
       if (this.markers.length > 0) {

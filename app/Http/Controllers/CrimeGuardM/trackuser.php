@@ -59,28 +59,34 @@ class trackuser extends Controller
                 ->where('user_track.latitude', '!=', 0.0)
                 ->where('user_track.longitude', '!=', 0.0)
                 ->whereDate('user_track.created_at', $currentDate->format('Y-m-d'))
-                ->orderBy('user_track.created_at', 'asc')
-                ->orderBy('user_track.user', 'asc')  // Order by created_at from oldest to newest
+                ->orderBy('user_track.created_at', 'desc')
+                ->orderBy('user_track.user', 'desc')  // Order by created_at from oldest to newest
                 ->get();
 
+
+
+            $userNames = [];
             foreach ($reports as $report) {
-                $cleaned = [
-                    'id' => $report['id'],
-                    'user_name' => $report['user_name'],
-                    'name' => $report['first_name'] . " " . $report["last_name"],
-                    'email' => $report['email'],
-                    'contact' => $report['contact'],
-                    'pos' => [
-                        'lat' => $report['latitude'],
-                        'lng' => $report['longitude']
-                    ],
-                    'time' => explode(' ', $report['created_at'])[1],
-                    'month' => explode('-', explode(' ', $report['created_at'])[0])[1],
-                    'date' => explode('-', explode(' ', $report['created_at'])[0])[2] . ", " . explode('-', explode(' ', $report['created_at'])[0])[0],
-                    'profile' => $report['profile'],
-                    'user_level' => $report['user_level']
-                ];
-                array_push($data['data'], $cleaned);
+                if (!in_array($report->user_name, $userNames)) {
+                    $cleaned = [
+                        'id' => $report['id'],
+                        'user_name' => $report['user_name'],
+                        'name' => $report['first_name'] . " " . $report["last_name"],
+                        'email' => $report['email'],
+                        'contact' => $report['contact'],
+                        'pos' => [
+                            'lat' => $report['latitude'],
+                            'lng' => $report['longitude']
+                        ],
+                        'time' => explode(' ', $report['created_at'])[1],
+                        'month' => explode('-', explode(' ', $report['created_at'])[0])[1],
+                        'date' => explode('-', explode(' ', $report['created_at'])[0])[2] . ", " . explode('-', explode(' ', $report['created_at'])[0])[0],
+                        'profile' => $report['profile'],
+                        'user_level' => $report['user_level']
+                    ];
+                    array_push($data['data'], $cleaned);
+                    $userNames[] = $report->user_name;
+                }
             }
             $data['response'] = 'Success';
         } catch (\Exception $e) {

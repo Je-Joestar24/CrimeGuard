@@ -141,6 +141,8 @@ export default {
         this.$router.push("/Admin/Dashboard");
       } else if (credentials.user_level == 2) {
         this.$router.push("/OFFICER/Dashboard");
+      } else if (credentials.user_level == 4) {
+        this.$router.push("/PATROLMAN");
       }
     }
     this.setBackground("/storage/system/newBG.png");

@@ -87,7 +87,7 @@
                   >
                     <option value="">{{ mdl.options.selected }}</option>
                     <option v-for="opt in mdl.options.option" :key="opt.val" :value="opt.val">
-                      {{ opt.val }}
+                      {{ opt.nm }}
                     </option>
                   </select>
         
@@ -467,6 +467,18 @@ export default {
               { type: "text", label: "MOBILE NUMBER", input: "" },
               { type: "text", label: "RANK", input: "" },
               { type: "file", label: "PROFILE", input: "" },
+              {
+                type: "select",
+                label: "OFFICER TYPE",
+                input: 2,
+                options: {
+                  selected: "SELECT OFFICER TYPE",
+                  option: [
+                    { nm: "PATROL GROUP", val: 4 },
+                    { nm: "OFFICE GROUP", val: 2 },
+                  ],
+                },
+              },
             ],
           },
           {
@@ -955,6 +967,7 @@ export default {
           contact: this.formModel.innerOfficerAccounts[0].infos[6].input,
           profile: this.formModel.innerOfficerAccounts[0].infos[8].input,
           user_name: this.formModel.innerOfficerAccounts[3].infos[0].input,
+          user_level:  this.formModel.innerOfficerAccounts[0].infos[9].input,
         },
         current_address: {
           street: this.formModel.innerOfficerAccounts[1].infos[0].input,
