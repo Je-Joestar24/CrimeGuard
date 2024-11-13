@@ -93,7 +93,7 @@
           </div>
           <div class="relative">
             <button
-              v-if="!(barangayToggle && !incidentToggle)"
+              v-if="!(barangayToggle && !incidentToggle) && cred['user_level'] == 1"
               @click="toggleB"
               class="bg-white hover:bg-blue-100 text-gray-700 font-semibold py-2 px-4 border border-blue-300 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
               :disabled="incidentToggle"
@@ -145,6 +145,9 @@ export default {
     barangayLists,
   },
   mounted() {
+
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.generateData();
       await this.loadGoogleMapsScript();
@@ -165,6 +168,7 @@ export default {
       barangayToggle: false,
       incidentToggle: false,
       searchQuery: "",
+      cred: {}
     };
   },
   methods: {
@@ -281,68 +285,10 @@ export default {
       this.filter.barangay = param;
       this.toggleB();
     },
-    /*     loadMarkers() {
-      this.removeAllMarkers(); // Clear existing markers before adding new ones
-      this.data.markers.forEach((mark) => {
-        // Custom Overlay for animated marker
-        const markerIcon = new google.maps.OverlayView();
-
-        markerIcon.onAdd = function () {
-          const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "redM" : "yellowM");
-
-          // Marker info
-          let bg =
-            mark.report_type == 1
-              ? "border-red-600 bg-red-100"
-              : "border-yellow-600 bg-yellow-100";
-          let infoWindow = new google.maps.InfoWindow({
-            content: `
-            <div class="p-4 rounded-lg shadow-lg max-w-xs border-2 ${bg}">
-              <h1 class="font-bold text-lg mb-2">Incident Information:</h1>
-              <p><span class="font-semibold">Message:</span> ${mark.message}</p>
-              <p><span class="font-semibold">Location:</span> ${mark.location}</p>
-              <p><span class="font-semibold">Reported by:</span> ${mark.name}</p>
-              <p><span class="font-semibold">Contact no:</span>${mark.con_no}</p>
-            </div>
-            `,
-          });
-
-          layer.addEventListener("click", () => {
-            infoWindow.open(this.map, this);
-          });
-
-          const panes = this.getPanes();
-          panes.overlayMouseTarget.appendChild(layer);
-
-          this.div = layer;
-        };
-        markerIcon.draw = function () {
-          const projection = this.getProjection();
-          const position = projection.fromLatLngToDivPixel(
-            new google.maps.LatLng(mark.pos.lat, mark.pos.lng)
-          );
-          const div = this.div;
-          div.style.left = position.x + "px";
-          div.style.top = position.y + "px";
-        };
-        markerIcon.setMap(this.map);
-
-        this.markers.push(markerIcon);
-      });
-    }, */
-    /*     removeAllMarkers() {
-      if (this.markers.length > 0) {
-        this.markers.forEach((marker) => {
-          marker.setVisible(false);
-        });
-        this.markers = [];
-      }
-    }, */
     async generateData() {
       const dt = await this.$store.dispatch("sendData", {
         url: "api/incidents/heat/map/marker/Display",
-        data: { filter: this.filter },
+        data: {id: this.cred['id'], filter: this.filter },
       });
       this.data.markers = [];
 
@@ -386,7 +332,7 @@ export default {
     async searchIncident() {
       const dt = await this.$store.dispatch("sendData", {
         url: "api/incidents/heat/map/marker/Display",
-        data: { searchQuery: this.searchQuery },
+        data: {id: this.cred['id'], searchQuery: this.searchQuery },
       });
       if (dt["response"] == "Success") {
         let data = dt["data"];
@@ -405,7 +351,7 @@ export default {
     async sendFilter() {
       const dt = await this.$store.dispatch("sendData", {
         url: "api/incidents/heat/map/marker/Display",
-        data: { filter: this.filter },
+        data: { id: this.cred['id'],filter: this.filter },
       });
 
       if (dt["response"] == "Success") {

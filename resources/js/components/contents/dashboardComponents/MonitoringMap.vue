@@ -13,7 +13,7 @@
     </section>
   </div>
 
-  <incidentReports :centerIt="focusOnMarker"/>
+  <incidentReports :centerIt="focusOnMarker" />
 </template>
 
 
@@ -49,6 +49,7 @@ export default {
           }, */
         ],
       },
+      cred: {},
       map: null,
     };
   },
@@ -57,6 +58,8 @@ export default {
   },
   mounted() {
     //this.initializeMap()
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.generateData();
       await this.loadGoogleMapsScript();
@@ -217,10 +220,11 @@ export default {
       this.map.setCenter(position);
     },
     async generateData() {
-      const dt = await this.$store.dispatch(
-        "generateTableData",
-        "api/incidents/report/marker/Display"
-      );
+      console.log(this.cred)
+      const dt = await this.$store.dispatch("sendData", {
+        url: "api/incidents/report/marker/Display",
+        data: {id: this.cred['id']},
+      });
 
       if (dt["response"] == "Success") {
         let data = dt["data"];

@@ -57,10 +57,18 @@
         
                   <div v-else-if="['file', 'file2'].includes(mdl.type)" class="relative border border-gray-300 rounded-md p-2">
                     <input
+                      v-if="mdl.type === 'file' "
                       class="hidden"
-                      :type="mdl.type"
+                      type="file"
                       :id="mdl.label"
-                      @change="mdl.type === 'file' ? onFileChange : onFileChange2"
+                      @change="onFileChange"
+                    />
+                    <input
+                      v-if="mdl.type === 'file2' "
+                      class="hidden"
+                      type="file"
+                      :id="mdl.label"
+                      @change="onFileChange2"
                     />
                     <label :for="mdl.label" class="flex items-center justify-center w-full h-4 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                       <span class="flex items-center space-x-2">
@@ -116,6 +124,7 @@
 </template>
   
   <script>
+import respondedVue from '../../../../requests/incidentRequests/responded.vue';
 import editLoading from '../loading/editLoading.vue';
 
 export default {
@@ -744,6 +753,7 @@ export default {
     async uploadFile() {
       if (!this.file) {
         this.responseMessage = "No file selected.";
+        alert(this.responseMessage);
         return;
       }
 

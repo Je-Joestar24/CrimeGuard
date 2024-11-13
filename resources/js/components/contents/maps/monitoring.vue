@@ -135,9 +135,12 @@ export default {
       active: -1,
       ctr: 1,
       intervalId: null,
+      cred: {},
     };
   },
   mounted() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.generateData();
       await this.generateData2();
@@ -147,10 +150,10 @@ export default {
   },
   methods: {
     async generateData() {
-      const dt = await this.$store.dispatch(
-        "generateTableData",
-        "api/incidents/report/marker/Display"
-      );
+      const dt = await this.$store.dispatch("sendData", {
+        url: "api/incidents/report/marker/Display",
+        data: { id: this.cred["id"] },
+      });
       if (dt["response"] === "Success") {
         let data = dt["data"];
         for (let i = 0; i < data.length; i++) {

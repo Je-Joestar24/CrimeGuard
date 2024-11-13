@@ -55,9 +55,9 @@ class officerUsersModule extends Controller
                 'users.contact',
                 DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
             ])->where('users.user_level', '=', '2')
-                ->orWhere('users.user_level', '=', '4')
                 ->whereNull('users.archived_at')
-                ->whereNull('users.deleted_by');
+                ->whereNull('users.deleted_by')
+                ->orWhere('users.user_level', '=', '4');
 
             if ($request->has('search') && !empty($request->input('search'))) {
                 $searchTerm = $request->input('search');

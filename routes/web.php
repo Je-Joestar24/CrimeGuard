@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 
 
 /* google map markers*/
-Route::get('api/incidents/report/marker/Display', [incidentModule::class, 'incidentReportMarkers'])->name('json');
+Route::post('api/incidents/report/marker/Display', [incidentModule::class, 'incidentReportMarkers'])->name('json');
 Route::post('api/incidents/heat/map/marker/Display', [dashboardModule::class, 'heatMap'])->name('json');
 Route::post('api/incidents/citizen/heat/map/marker/Display', [dashboardModule::class, 'citizenHeatMap'])->name('json');
 
@@ -98,9 +98,9 @@ Route::post('api/notifications/notifed/request', [notificationModule::class, 'no
 
 /* Component Display */
 /* dashboard components */
-Route::get('api/dashboard/counts/Display', [dashboardModule::class, 'displayCount'])->name('json');
-Route::get('api/dashboard/lineraph/generate', [dashboardModule::class, 'generateLine'])->name('json');
-Route::get('api/dashboard/generate/reports', [dashboardModule::class, 'displayReports'])->name('json');
+Route::post('api/dashboard/counts/Display', [dashboardModule::class, 'displayCount'])->name('json');
+Route::post('api/dashboard/lineraph/generate', [dashboardModule::class, 'generateLine'])->name('json');
+Route::post('api/dashboard/generate/reports', [dashboardModule::class, 'displayReports'])->name('json');
 Route::post('api/dashboard/generate/emergency/reports', [dashboardModule::class, 'emergencyReports'])->name('json');
 Route::get('api/stream-emergency-reports', [dashboardModule::class, 'emergencyReports0']);
 
@@ -137,6 +137,7 @@ Route::post('api/my/password/reset', [userAuths::class, 'resetMyPass']);
 Route::post('api/temporary/login/user/request', [userAuths::class, 'temporaryLogin'])->name('json');
 
 /* Clickable displays */
+
 
 /* requests */
 Route::get('api/request/log/addLog', [logsModule::class, 'addLog']);

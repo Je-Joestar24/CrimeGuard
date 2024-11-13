@@ -4,6 +4,7 @@ namespace App\Http\Controllers\crimeguardm;
 
 use App\Events\IncidentReported;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
 use App\Models\Addresses;
 use App\Models\Incidents;
 use App\Models\incidentSuspects;
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\DB;
 
 class dashboardModule extends Controller
 {
+
+    protected $dynamic;
+
+    public function __construct(DynamicFunctions $dynamic)
+    {
+        $this->dynamic = $dynamic;
+    }
     //
     public function generateLine(Request $request)
     {
@@ -36,6 +44,8 @@ class dashboardModule extends Controller
         /* For Line Graph data */
         $dates = [];
 
+        $station = $this->dynamic->getUserStation($request['id']);
+        $station = $station['response'] ? $station['station'] : null;
         if ($request->has('date_start')) {
             $start = $request->input('date_start') != "" ? $request->input('date_start') : $defaultDate;
         } else {
@@ -59,8 +69,11 @@ class dashboardModule extends Controller
         for ($i = $difference; $i >= 0; $i--) {
             $date = $endC->copy()->subDays($i);
             $temporary['date'] = $date->toDateString();
-            $temporary['count'] = Incidents::where('date_reported', '=', $date->format('Y-m-d'))
-                ->whereNull('incidents.archived_at')
+            $temporary['count'] = Incidents::where('date_reported', '=', $date->format('Y-m-d'));
+            if ($station != 100) {
+                $temporary['count'] = $temporary['count']->where('incidents.station', $station);
+            }
+            $temporary['count'] = $temporary['count']->whereNull('incidents.archived_at')
                 ->whereNull('incidents.archived_by');
 
             if ($request->has('barangay') && !empty($request->input('barangay'))) {
@@ -95,9 +108,26 @@ class dashboardModule extends Controller
     {
         $data = [];
         try {
+            // Get user station
+            $station = $this->dynamic->getUserStation($request['id']);
+            $station = $station['response'] ? $station['station'] : null;
 
-            $male = Victims::where('gender', 'male')->count();
-            $female = Victims::where('gender', 'female')->count();
+            // Male count with station filter through incident_victims and incidents
+            $male = Victims::query()
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->where('victims.gender', 'male')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Female count with station filter through incident_victims and incidents
+            $female = Victims::query()
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->where('victims.gender', 'female')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
             $data['data'] = [
                 'male' => $male,
                 'female' => $female
@@ -115,10 +145,34 @@ class dashboardModule extends Controller
     {
         $data = [];
         try {
+            // Get user station
+            $station = $this->dynamic->getUserStation($request['id']);
+            $station = $station['response'] ? $station['station'] : null;
 
-            $children = Victims::where('age', '<=', '19')->count();
-            $adult = Victims::where('age', '>=', '20')->where('age', '<=', '59')->count();
-            $old = Victims::where('age', '>=', '60')->count();
+            // Children count (age <= 19) with station filter through incident_victims and incidents
+            $children = Victims::query()
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->where('victims.age', '<=', '19')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Adult count (20 <= age <= 59) with station filter through incident_victims and incidents
+            $adult = Victims::query()
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->whereBetween('victims.age', [20, 59])
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Old count (age >= 60) with station filter through incident_victims and incidents
+            $old = Victims::query()
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->where('victims.age', '>=', '60')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
 
             $data['data'] = [
                 'children' => $children,
@@ -138,9 +192,26 @@ class dashboardModule extends Controller
     {
         $data = [];
         try {
+            // Get user station
+            $station = $this->dynamic->getUserStation($request['id']);
+            $station = $station['response'] ? $station['station'] : null;
 
-            $male = Suspects::where('gender', 'male')->count();
-            $female = Suspects::where('gender', 'female')->count();
+            // Male count with station filter through incident_suspects and incidents
+            $male = Suspects::query()
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+                ->where('suspects.gender', 'male')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Female count with station filter through incident_suspects and incidents
+            $female = Suspects::query()
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+                ->where('suspects.gender', 'female')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
             $data['data'] = [
                 'male' => $male,
                 'female' => $female
@@ -158,10 +229,36 @@ class dashboardModule extends Controller
     {
         $data = [];
         try {
+            // Get user station
+            $station = $this->dynamic->getUserStation($request['id']);
+            $station = $station['response'] ? $station['station'] : null;
 
-            $children = Suspects::where('age', '<=', '19')->count();
-            $adult = Suspects::where('age', '>=', '20')->where('age', '<=', '59')->count();
-            $old = Suspects::where('age', '>=', '60')->count();
+            // Children count (age <= 19) with station filter through incident_suspects and incidents
+            $children = Suspects::query()
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+                ->where('suspects.age', '<=', '19')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Adult count (20 <= age <= 59) with station filter through incident_suspects and incidents
+            $adult = Suspects::query()
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+                ->whereBetween('suspects.age', [20, 59])
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+            // Old count (age >= 60) with station filter through incident_suspects and incidents
+            $old = Suspects::query()
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+                ->where('suspects.age', '>=', '60')
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->count();
+
+
+
 
             $data['data'] = [
                 'children' => $children,
@@ -183,6 +280,9 @@ class dashboardModule extends Controller
         $data = [];
         try {
 
+            $station = $this->dynamic->getUserStation($request['id']);
+            $station = $station['response'] ? $station['station'] : null;
+
             $initial = incidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
                 ->join('victims', 'incident-victims.victim', '=', 'victims.id')
                 ->select('victims.id', 'victims.firstname', 'victims.lastname', 'victims.mobile_phone')
@@ -190,7 +290,9 @@ class dashboardModule extends Controller
                 ->whereNull('victims.deleted_by')
                 ->whereNull('incidents.archived_at')
                 ->whereNull('incidents.archived_by');
-
+            if ($station != 100) {
+                $initial = $initial->where('incidents.station', $station);
+            }
             if ($request->has('barangay')) {
                 $initial = $initial->where('incidents.barangay', $request->input('barangay'));
             }
@@ -296,17 +398,20 @@ class dashboardModule extends Controller
 
         return response()->json($data);
     }
-    public function displayCount()
+    public function displayCount(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
 
+        // Define date ranges
         $currentDate = new DateTime();
         $firstDayOfMonth = new DateTime('first day of this month');
         $lastDayOfMonth = new DateTime('last day of this month');
+        $lastMonthStart = (clone $firstDayOfMonth)->modify('-1 month');
+        $lastMonthEnd = (clone $lastDayOfMonth)->modify('-1 month');
 
-        $data = [];
-        $data['data']['upper'] = [];
+        $data = ['data' => ['upper' => []]];
 
+        // Define statuses with their filter types and values
         $statuses = [
             'incidentCount' => ['!=', ['report', 'reject', 'respond']],
             'clearedCount' => ['=', 'clear'],
@@ -317,10 +422,18 @@ class dashboardModule extends Controller
             'respondCount' => ['=', 'respond']
         ];
 
-        foreach ($statuses as $key => $status) {
-            // Count for all time
-            $query = Incidents::query();
+        // Get user station
+        $station = $this->dynamic->getUserStation($request['id']);
+        $station = $station['response'] ? $station['station'] : null;
 
+        foreach ($statuses as $key => $status) {
+            // Build query with station filter applied at each step
+            $query = Incidents::query();
+            if ($station != 100) {
+                $query->where('incidents.station', $station);
+            }
+
+            // Apply status condition
             if ($status[0] == '!=') {
                 foreach ($status[1] as $s) {
                     $query->where('status', '!=', $s);
@@ -328,22 +441,52 @@ class dashboardModule extends Controller
             } elseif ($status[0] == 'in') {
                 $query->whereIn('status', $status[1]);
             } else {
-                $query->where('status', $status[0], $status[1]);
+                $query->where('status', $status[1]);
             }
 
+            // Total count with station filter
             $totalCount = $query->count();
 
-            // Count for current month
-            $currentMonthCount = (clone $query)->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
+            // Current month count with station and date filter
+            $currentMonthCount = Incidents::query()
+                ->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->where(function ($q) use ($status) {
+                    if ($status[0] == '!=') {
+                        foreach ($status[1] as $s) {
+                            $q->where('status', '!=', $s);
+                        }
+                    } elseif ($status[0] == 'in') {
+                        $q->whereIn('status', $status[1]);
+                    } else {
+                        $q->where('status', $status[1]);
+                    }
+                })
+                ->count();
 
-            // Count for last month
-            $lastMonthStart = (clone $firstDayOfMonth)->modify('-1 month');
-            $lastMonthEnd = (clone $lastDayOfMonth)->modify('-1 month');
-            $lastMonthCount = (clone $query)->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+            // Last month count with station and date filter
+            $lastMonthCount = Incidents::query()
+                ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station))
+                ->where(function ($q) use ($status) {
+                    if ($status[0] == '!=') {
+                        foreach ($status[1] as $s) {
+                            $q->where('status', '!=', $s);
+                        }
+                    } elseif ($status[0] == 'in') {
+                        $q->whereIn('status', $status[1]);
+                    } else {
+                        $q->where('status', $status[1]);
+                    }
+                })
+                ->count();
 
             // Calculate growth
-            $growth = $lastMonthCount > 0 ? (($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100 : ($currentMonthCount > 0 ? 100 : 0);
+            $growth = $lastMonthCount > 0
+                ? (($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100
+                : ($currentMonthCount > 0 ? 100 : 0);
 
+            // Store the data
             $data['data']['upper'][$key] = [
                 'totalCount' => $totalCount,
                 'currentMonthCount' => $currentMonthCount,
@@ -351,34 +494,53 @@ class dashboardModule extends Controller
             ];
         }
 
-        // Calculate total incidents
-        $totalIncidents = Incidents::count();
-        $currentMonthTotalIncidents = Incidents::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
-        $lastMonthTotalIncidents = Incidents::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
-        $totalGrowth = $lastMonthTotalIncidents > 0 ? (($currentMonthTotalIncidents - $lastMonthTotalIncidents) / $lastMonthTotalIncidents) * 100 : ($currentMonthTotalIncidents > 0 ? 100 : 0);
+        // Calculate total incidents with station filter
+        $incidentQuery = Incidents::query();
+        if ($station != 100) {
+            $incidentQuery->where('station', $station);
+        }
+        $totalIncidents = $incidentQuery->count();
 
+        $currentMonthTotalIncidents = Incidents::query()
+            ->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+            ->when($station != 100, fn($q) => $q->where('station', $station))
+            ->count();
+
+        $lastMonthTotalIncidents = Incidents::query()
+            ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+            ->when($station != 100, fn($q) => $q->where('station', $station))
+            ->count();
+
+        $totalGrowth = $lastMonthTotalIncidents > 0
+            ? (($currentMonthTotalIncidents - $lastMonthTotalIncidents) / $lastMonthTotalIncidents) * 100
+            : ($currentMonthTotalIncidents > 0 ? 100 : 0);
+
+        // Store total incidents data
         $data['data']['upper']['totalIncidents'] = [
             'totalCount' => $totalIncidents,
             'currentMonthCount' => $currentMonthTotalIncidents,
             'growth' => round($totalGrowth, 2)
         ];
-
         $data['response'] = 'Success';
 
         return response()->json($data);
     }
 
-    public function displayReports()
+
+    public function displayReports(Request $request)
     {
 
 
         date_default_timezone_set('Asia/Manila');
 
+        $station = $this->dynamic->getUserStation($request['id']);
+        $station = $station['response'] ? $station['station'] : null;
         $currentDate = new DateTime();
         $data = [];
         $inc = Incidents::whereDate('date_reported',  $currentDate->format('Y-m-d'))
-            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'latitude', 'longitude')
-            ->get();
+            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'latitude', 'longitude');
+        if ($station != 100) $inc = $inc->where('incidents.station', $station);
+        $inc = $inc->get();
 
         $send = [];
 
@@ -519,6 +681,10 @@ class dashboardModule extends Controller
         $currentDate = new DateTime();
 
         $data['data'] = [];
+// Get user station
+$station = $this->dynamic->getUserStation($request['id']);
+$station = $station['response'] ? $station['station'] : null;
+
 
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
@@ -541,7 +707,8 @@ class dashboardModule extends Controller
                     'incident-types.incident_name',
                     'incident-sub-types.sub_type',
                     'incidents.status'
-                )->where('incidents.incident_type', '!=', NULL);
+                )->where('incidents.incident_type', '!=', NULL)
+                ->when($station != 100, fn($q) => $q->where('incidents.station', $station));
             if ($request->has('filter')) {
                 $filter = $request->input('filter');
                 if ($filter['date_start'] != '') {

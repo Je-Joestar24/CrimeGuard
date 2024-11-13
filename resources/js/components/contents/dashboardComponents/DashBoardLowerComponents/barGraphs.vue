@@ -15,9 +15,12 @@ export default {
         barangay: [],
         count:[]
       },
+      cred: {}
     };
   },
   mounted() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.generateData();
       await this.highChartsBargraphy();
@@ -94,7 +97,7 @@ export default {
     async generateData() {
       const dt = await this.$store.dispatch("sendData", {
         url: "api/dashboard/generate/incident/top/barangay/bar",
-        data: {},
+        data: {id: this.cred['id']},
       });
 
       if (dt["response"] == "Success") {

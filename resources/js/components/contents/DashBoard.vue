@@ -101,10 +101,10 @@ import lineCharts from "./dashboardComponents/DashBoardLowerComponents/lineChart
 import pieCharts from "./dashboardComponents/DashBoardLowerComponents/pieCharts.vue";
 import dashboardUpper from "./dashboardComponents/DashboardUpper.vue";
 import monitoringmap from "./dashboardComponents/MonitoringMap.vue";
-import pcGenderVictim from "../homeComponents/Contents/contentModals/homeC/victims/pieChartsAge.vue";
-import pcVictimAge from "../homeComponents/Contents/contentModals/homeC/victims/pieChartsMF.vue";
-import pcSuspectAge from "../homeComponents/Contents/contentModals/homeC/Suspects/sPieChartsAge.vue";
-import pcGenderSuspect from "../homeComponents/Contents/contentModals/homeC/Suspects/sPieChartsMF.vue";
+import pcGenderVictim from "./dashboardComponents/DashBoardLowerComponents/victims/pieChartsAge.vue";
+import pcVictimAge from "./dashboardComponents/DashBoardLowerComponents/victims/pieChartsMF.vue";
+import pcSuspectAge from "./dashboardComponents/DashBoardLowerComponents/Suspects/sPieChartsAge.vue";
+import pcGenderSuspect from "./dashboardComponents/DashBoardLowerComponents/Suspects/sPieChartsMF.vue";
 export default {
   components: {
     lineCharts,

@@ -422,7 +422,10 @@ class citizenUsersModule extends Controller
 
             User::find($user['id'])->update($user);
             $user_credentials['user_id'] = $user['id'];
-            CitizenCredentials::where('user_id', $user['id'])->first()->update($user_credentials);
+            $credC = CitizenCredentials::where('user_id', $user['id'])->first();
+            if ($credC) $credC->update($user_credentials);
+            else CitizenCredentials::create($user_credentials);
+
             TrailLog::create(['user_id' => $request->input('id'), 'action' => 'edited', 'item' => 'citizen account']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
@@ -691,27 +694,27 @@ class citizenUsersModule extends Controller
         date_default_timezone_set('Asia/Manila');
         $currentDate = new DateTime();
         $data = [];
-    
+
         try {
             $user = User::find($request['id']);
-    
+
             $archive = [
                 'archived_at' => $currentDate->format('Y-m-d H:i:s'),
                 'deleted_by' => $request['archived_by']
             ];
             $user->update($archive);
-    
+
             if ($request->input('user_id') != null && $request->has('user_id')) {
                 TrailLog::create([
-                    'user_id' => $request->input('deleted_by'),
+                    'user_id' => $request->input('archived_by'),
                     'action' => 'deleted',
                     'item' => 'account'
                 ]);
             }
-    
+
             if (is_null($user->accepted_at) || is_null($user->accepted_by)) {
                 Mail::to($user->email)->send(new AccountRejectedMail($user));
-    
+
                 $data['response'] = 'Success';
             } else {
                 $data['response'] = 'Success';
@@ -720,10 +723,10 @@ class citizenUsersModule extends Controller
             $data['response'] = 'Error';
             $data['err'] = $e->getMessage();
         }
-    
+
         return response()->json($data);
     }
-    
+
     /* Restore archived data */
     public function restore(Request $request)
     {
@@ -760,7 +763,7 @@ class citizenUsersModule extends Controller
 
         try {
             $user = User::findOrFail($request['id']);
-    
+
             $user->update([
                 'accepted_at' => $currentDate->format('Y-m-d H:i:s'),
                 'accepted_by' => $request['accepted_by']
@@ -891,7 +894,9 @@ class citizenUsersModule extends Controller
                 $user['password'] = $password['newPass'];
             }
             $init->update($user);
-            CitizenCredentials::where('user_id', $request->input('id'))->update(['edited_by' => $request->input('id')]);
+
+            $cred = CitizenCredentials::where('user_id', $request->input('id'))->first();
+            if ($cred) $cred->update(['edited_by' => $request->input('id')]);
 
             $data['response'] = 'Success';
         } catch (\Exception $e) {

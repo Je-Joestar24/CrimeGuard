@@ -248,11 +248,8 @@ export default {
   },
   mounted() {
     this.pages = this.$store.getters.pages;
-    this.soundA = new Audio("/storage/files/emergency.mp3");
-    this.soundA.addEventListener("ended", () => {
-      this.stopAudio();
+    this.soundA = new Audio("/storage/files/notif.mp3");
       this.playAudio();
-    });
     this.checkIncidents();
     (async () => {
       await setTimeout(() => {

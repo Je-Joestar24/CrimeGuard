@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\CrimeGUardM\Dynamic;
 
 use App\Http\Controllers\Controller;
+use App\Models\OfficerCredential;
+use App\Models\PoliceStation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +30,20 @@ class DynamicFunctions extends Controller
             return response()->json(["response" => "Success", "file_path" => Storage::url($path)]);
         }
         return response()->json(["response" => "Error"]);
+    }
+    public function getUserStation($id)
+    {
+        date_default_timezone_set('Asia/Manila');
+
+
+        // Retrieve the station associated with the user ID
+        $station = OfficerCredential::select('station')->where('user_id',  $id)->first();
+
+        if (!$station) {
+            return ['response' => false, 'message' => 'Station not found'];
+        }
+
+        return ['response' => true, 'station' => $station['station']];
     }
 
     /* use for pure foreign key */

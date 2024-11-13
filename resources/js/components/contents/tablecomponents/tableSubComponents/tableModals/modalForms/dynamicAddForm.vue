@@ -1,6 +1,10 @@
 <template>
   <form class="p-3 md:p-4 space-y-4 border border-gray-300 rounded-lg">
-    <div v-for="model in formModel[$store.getters.CurrentActiveSideBar]" :key="model.title" class="space-y-3 border-b border-gray-200 pb-4 last:border-b-0">
+    <div
+      v-for="model in formModel[$store.getters.CurrentActiveSideBar]"
+      :key="model.title"
+      class="space-y-3 border-b border-gray-200 pb-4 last:border-b-0"
+    >
       <h3 v-if="model.title" class="text-sm font-semibold text-gray-700 mb-2">
         {{ model.title }}
       </h3>
@@ -8,35 +12,69 @@
         :class="`grid gap-4`"
         :style="{
           display: 'grid',
-          gridTemplateColumns: `repeat(${model.cols}, minmax(0, 1fr))`
+          gridTemplateColumns: `repeat(${model.cols}, minmax(0, 1fr))`,
         }"
       >
         <div class="relative" v-for="mdl in model.infos" :key="mdl.label">
           <input
-            v-if="['text', 'number', 'date', 'email', 'tel'].includes(mdl.type)"
+            v-if="
+              ['text', 'number', 'date', 'email', 'tel', 'password'].includes(
+                mdl.type
+              )
+            "
             :type="mdl.type"
             v-model="mdl.input"
             class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
 
-          <div v-else-if="['file', 'file2'].includes(mdl.type)" class="relative border border-gray-300 rounded-md p-2">
+          <div
+            v-else-if="['file', 'file2'].includes(mdl.type)"
+            class="relative border border-gray-300 rounded-md p-2"
+          >
             <input
+              v-if="mdl.type === 'file'"
               class="hidden"
-              :type="mdl.type"
+              type="file"
               :id="mdl.label"
-              @change="mdl.type === 'file' ? onFileChange : onFileChange2"
+              @change="onFileChange"
             />
-            <label :for="mdl.label" class="flex items-center justify-center w-full h-4 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+            <input
+              v-if="mdl.type === 'file2'"
+              class="hidden"
+              type="file"
+              :id="mdl.label"
+              @change="onFileChange2"
+            />
+            <label
+              :for="mdl.label"
+              class="flex items-center justify-center w-full h-4 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+            >
               <span class="flex items-center space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-6 h-3 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
                 </svg>
               </span>
             </label>
           </div>
 
-          <signatures v-else-if="mdl.type === 'signature'" class="w-full" :setData="changeSignature" :data="mdl.input" />
+          <signatures
+            v-else-if="mdl.type === 'signature'"
+            class="w-full"
+            :setData="changeSignature"
+            :data="mdl.input"
+          />
 
           <textarea
             v-else-if="mdl.type === 'area'"
@@ -51,12 +89,18 @@
             class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">{{ mdl.options.selected }}</option>
-            <option v-for="opt in mdl.options.option" :key="opt.val" :value="opt.val">
+            <option
+              v-for="opt in mdl.options.option"
+              :key="opt.val"
+              :value="opt.val"
+            >
               {{ opt.val }}
             </option>
           </select>
 
-          <label class="absolute left-2 -top-2.5 px-1 bg-white text-xs font-medium text-gray-600">
+          <label
+            class="absolute left-2 -top-2.5 px-1 bg-white text-xs font-medium text-gray-600"
+          >
             {{ mdl.label }}
           </label>
         </div>
@@ -495,9 +539,9 @@ export default {
       }
       //console.log(form);
     },
-    changeSignature(param){
+    changeSignature(param) {
       this.formModel.innerWitnesses[3].infos[5].input = param;
-      console.log(this.formModel.innerWitnesses)
+      console.log(this.formModel.innerWitnesses);
     },
     async sendData() {
       this.loadinging();
@@ -577,10 +621,10 @@ export default {
       this.res = await data["response"];
 
       if (this.res == "Success") {
-        this.outLoading()
+        this.outLoading();
         await this.clearForm();
       } else {
-        this.outLoading()
+        this.outLoading();
         await alert("An error occured, please try again.");
       }
     },
@@ -641,7 +685,7 @@ export default {
         this.outLoading();
         await this.clearForm();
       } else {
-        this.outLoading()
+        this.outLoading();
         await alert("An error occured, please try again.");
       }
     },
@@ -729,7 +773,7 @@ export default {
         this.outLoading();
         await this.clearForm();
       } else {
-        this.outLoading()
+        this.outLoading();
         await alert("An error occured, please try again.");
       }
     },
@@ -754,7 +798,7 @@ export default {
         this.outLoading();
         await this.clearForm();
       } else {
-        this.outLoading()
+        this.outLoading();
         await alert("An error occured, please try again.");
       }
     },
@@ -824,10 +868,10 @@ export default {
         this.res = await data["response"];
 
         if (this.res == "Success") {
-          this.outLoading()
+          this.outLoading();
           await this.clearForm();
         } else {
-          this.outLoading()
+          this.outLoading();
           await alert("An error occured, please try again.");
         }
       }
@@ -887,7 +931,7 @@ export default {
           this.outLoading();
           await this.clearForm();
         } else {
-          this.outLoading()
+          this.outLoading();
           await alert("An error occured, please try again.");
         }
       }
@@ -1048,7 +1092,7 @@ export default {
     },
   },
   components: {
-    signatures
+    signatures,
   },
 };
 </script>

@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\IncidentAssignedMail;
+use App\Models\PoliceStation;
 
 use function PHPUnit\Framework\isNull;
 
@@ -111,6 +112,7 @@ class incidentModule extends Controller
         return response()->json($data);
     }
 
+    /* mod */
     public function generateReport(Request $request)
     {
 
@@ -198,6 +200,7 @@ class incidentModule extends Controller
 
         return response()->json($data);
     }
+
     /* Map markers */
     public function incidentReportMarkers(Request $request)
     {
@@ -208,7 +211,8 @@ class incidentModule extends Controller
 
         $data['data'] = [];
 
-
+        $station = $this->dynamic->getUserStation($request['id']);
+        $station = $station['response'] ? $station['station']: null;
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->select(
@@ -226,11 +230,13 @@ class incidentModule extends Controller
                     'incidents.longitude',
                     'incidents.latitude',
                     'incidents.report_type'
-                )
-                ->where(function ($query) use ($currentDate) {
-                    $query->where('incidents.status', '=', 'report')
-                        ->orWhere('incidents.status', '=', 'respond');
-                })
+                );
+
+            if ($station != 100) $reports = $reports->where('incidents.station', $station);
+            $reports = $reports->where(function ($query) use ($currentDate) {
+                $query->where('incidents.status', '=', 'report')
+                    ->orWhere('incidents.status', '=', 'respond');
+            })
                 ->whereDate('incidents.date_reported',  $currentDate->format('Y-m-d'))
                 ->get();
 
@@ -631,7 +637,7 @@ class incidentModule extends Controller
             // Validate request
             // Retrieve user data
             $user = User::with('citizenCredentials')->find($request->id);
-
+            $closestStationId = $this->getClosestStationId($request->latitude, $request->longitude);
             // Map user data to reporting person data
             $reportingPersonData = [
                 'firstname' => $user->first_name,
@@ -672,7 +678,8 @@ class incidentModule extends Controller
                 'street' => $request['address']['street'],
                 'city' => $request['address']['city'],
                 'province' => $request['address']['province'],
-                'report_type' => $request['report_type']
+                'report_type' => $request['report_type'],
+                'station' => $closestStationId
             ]);
 
             $inc_id = $incid->id;
@@ -685,7 +692,48 @@ class incidentModule extends Controller
         }
         return response()->json($data);
     }
+    /**
+     * Private function to get the closest police station ID based on latitude and longitude
+     */
+    private function getClosestStationId($latitude, $longitude)
+    {
+        $stations = PoliceStation::where('id', '!=', 100)->get();
+        $closestStation = null;
+        $minDistance = PHP_FLOAT_MAX;
 
+        foreach ($stations as $station) {
+            $distance = $this->calculateDistance($latitude, $longitude, $station->latitude, $station->longitude);
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $closestStation = $station;
+            }
+        }
+
+        return $closestStation->id ?? null;
+    }
+
+    /**
+     * Calculate the Haversine distance between two points in kilometers.
+     */
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // Radius of the Earth in kilometers
+
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        $latDifference = $lat2 - $lat1;
+        $lonDifference = $lon2 - $lon1;
+
+        $a = sin($latDifference / 2) * sin($latDifference / 2) +
+            cos($lat1) * cos($lat2) * sin($lonDifference / 2) * sin($lonDifference / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c; // Distance in kilometers
+    }
     /* View */
 
     public function viewBasic(Request $request)

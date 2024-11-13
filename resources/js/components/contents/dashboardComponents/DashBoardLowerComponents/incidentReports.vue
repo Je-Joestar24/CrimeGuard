@@ -33,9 +33,12 @@ export default {
   data() {
     return {
       arr: [],
+      cred: {},
     };
   },
   mounted() {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.getData("api/dashboard/generate/reports");
     })();
@@ -43,7 +46,8 @@ export default {
   methods: {
     async getData(param) {
       this.arr = [];
-      const data = await this.$store.dispatch("generateTableData", param);
+      const data = await this.$store.dispatch("sendData", {url: param, 
+        data: {id: this.cred['id']},});
       if (data["response"] == "Success") {
         let dt = await data["data"]["reportedIncidents"];
         for (let i = 0; i < dt.length; i++) {

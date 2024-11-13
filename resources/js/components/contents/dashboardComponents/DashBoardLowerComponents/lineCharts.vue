@@ -18,9 +18,13 @@ export default {
   data() {
     return {
       arr: [],
+      cred: {}
     };
   },
   mounted() {
+    
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    this.cred = credentials;
     (async () => {
       await this.getData("api/dashboard/lineraph/generate");
       await this.chartify();
@@ -104,7 +108,7 @@ export default {
       });
     },
     async getData(param) {
-      const data = await this.$store.dispatch("generateTableData", param);
+      const data = await this.$store.dispatch("sendData", {url: param, data: {id: this.cred['id']}});
       if (data["response"] == "Success") {
         this.arr = await data["data"]["linegraph"];
       }
