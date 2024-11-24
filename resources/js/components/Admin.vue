@@ -248,7 +248,7 @@ export default {
   },
   mounted() {
     this.pages = this.$store.getters.pages;
-    this.soundA = new Audio("/storage/files/notif.mp3");
+    this.soundA = new Audio("images/system/notif.mp3");
       this.playAudio();
     this.checkIncidents();
     (async () => {

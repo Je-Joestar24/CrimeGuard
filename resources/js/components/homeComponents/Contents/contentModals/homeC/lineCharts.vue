@@ -99,7 +99,7 @@ export default {
       });
     },
     async getData(param) {
-      const data = await this.$store.dispatch("generateTableData", param);
+      const data = await this.$store.dispatch("sendData", {url: param, data: {}});
       if (data["response"] == "Success") {
         this.arr = await data["data"]["linegraph"];
       }

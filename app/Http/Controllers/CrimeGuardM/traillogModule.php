@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
 use App\Models\TrailLog;
@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class traillogModule extends Controller
+class TrailLogModule extends Controller
 {
     //
     public function listDisplay(Request $request)

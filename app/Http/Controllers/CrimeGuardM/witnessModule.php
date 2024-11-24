@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
 use App\Models\Addresses;
@@ -10,7 +10,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class witnessModule extends Controller
+class WitnessModule extends Controller
 {
     //Table displays
 

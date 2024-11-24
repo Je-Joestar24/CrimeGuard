@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
 use App\Models\IncidentCategories;
@@ -11,7 +11,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 
-class incidentNamesModule extends Controller
+class IncidentNamesModule extends Controller
 {
     //table display
     public function tableDisplay(Request $request)

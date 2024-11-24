@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
-use App\Events\IncidentReported;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
 use App\Models\Addresses;
 use App\Models\Incidents;
-use App\Models\incidentSuspects;
-use App\Models\incidentVictims;
+use App\Models\IncidentSuspects;
+use App\Models\IncidentVictims;
 use App\Models\OfficerCredential;
 use App\Models\RankChangedReports;
 use App\Models\Suspects;
@@ -20,7 +19,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class dashboardModule extends Controller
+class DashboardModule extends Controller
 {
 
     protected $dynamic;
@@ -35,7 +34,6 @@ class dashboardModule extends Controller
 
         date_default_timezone_set('Asia/Manila');
 
-        $currentDate = new DateTime();
 
         $defautlD = Carbon::now();
         $defaultDate = $defautlD->subDays((29))->toDateString();
@@ -44,8 +42,9 @@ class dashboardModule extends Controller
         /* For Line Graph data */
         $dates = [];
 
-        $station = $this->dynamic->getUserStation($request['id']);
-        $station = $station['response'] ? $station['station'] : null;
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
+
         if ($request->has('date_start')) {
             $start = $request->input('date_start') != "" ? $request->input('date_start') : $defaultDate;
         } else {
@@ -97,6 +96,7 @@ class dashboardModule extends Controller
 
         $data['data']['linegraph'] = $dates;
         $data['response'] = 'Success';
+        $data['station'] = $station;
 
         return response()->json($data);
     }
@@ -109,8 +109,8 @@ class dashboardModule extends Controller
         $data = [];
         try {
             // Get user station
-            $station = $this->dynamic->getUserStation($request['id']);
-            $station = $station['response'] ? $station['station'] : null;
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
 
             // Male count with station filter through incident_victims and incidents
             $male = Victims::query()
@@ -146,8 +146,8 @@ class dashboardModule extends Controller
         $data = [];
         try {
             // Get user station
-            $station = $this->dynamic->getUserStation($request['id']);
-            $station = $station['response'] ? $station['station'] : null;
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
 
             // Children count (age <= 19) with station filter through incident_victims and incidents
             $children = Victims::query()
@@ -193,8 +193,8 @@ class dashboardModule extends Controller
         $data = [];
         try {
             // Get user station
-            $station = $this->dynamic->getUserStation($request['id']);
-            $station = $station['response'] ? $station['station'] : null;
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
 
             // Male count with station filter through incident_suspects and incidents
             $male = Suspects::query()
@@ -230,8 +230,8 @@ class dashboardModule extends Controller
         $data = [];
         try {
             // Get user station
-            $station = $this->dynamic->getUserStation($request['id']);
-            $station = $station['response'] ? $station['station'] : null;
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
 
             // Children count (age <= 19) with station filter through incident_suspects and incidents
             $children = Suspects::query()
@@ -280,10 +280,10 @@ class dashboardModule extends Controller
         $data = [];
         try {
 
-            $station = $this->dynamic->getUserStation($request['id']);
-            $station = $station['response'] ? $station['station'] : null;
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
 
-            $initial = incidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+            $initial = IncidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
                 ->join('victims', 'incident-victims.victim', '=', 'victims.id')
                 ->select('victims.id', 'victims.firstname', 'victims.lastname', 'victims.mobile_phone')
                 ->whereNull('victims.archived_at')
@@ -423,8 +423,8 @@ class dashboardModule extends Controller
         ];
 
         // Get user station
-        $station = $this->dynamic->getUserStation($request['id']);
-        $station = $station['response'] ? $station['station'] : null;
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
 
         foreach ($statuses as $key => $status) {
             // Build query with station filter applied at each step
@@ -533,8 +533,8 @@ class dashboardModule extends Controller
 
         date_default_timezone_set('Asia/Manila');
 
-        $station = $this->dynamic->getUserStation($request['id']);
-        $station = $station['response'] ? $station['station'] : null;
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
         $currentDate = new DateTime();
         $data = [];
         $inc = Incidents::whereDate('date_reported',  $currentDate->format('Y-m-d'))
@@ -682,8 +682,8 @@ class dashboardModule extends Controller
 
         $data['data'] = [];
 // Get user station
-$station = $this->dynamic->getUserStation($request['id']);
-$station = $station['response'] ? $station['station'] : null;
+$station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+$station = $station['response'] ? $station['station'] : 100;
 
 
         try {
@@ -811,7 +811,7 @@ $station = $station['response'] ? $station['station'] : null;
                 ->get();
 
             foreach ($reports as $report) {
-                $suspect = incidentSuspects::join('suspects', 'incident-suspects.suspect', '=', 'suspects.id')
+                $suspect = IncidentSuspects::join('suspects', 'incident-suspects.suspect', '=', 'suspects.id')
                     ->where('incident-suspects.incident', $report['id'])
                     ->whereNull('suspects.archived_at')
                     ->whereNull('suspects.deleted_by')->count();

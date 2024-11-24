@@ -3,7 +3,7 @@
     class="max-w-screen-3xl flex flex-wrap items-center justify-between mx-auto md:p-4 md:px-20 lg:p-4 lg:px-20 xl:p-4 xl:px-20 2xl:p-4 2xl:px-20 p-3"
   >
     <div class="flex items-center space-x-4">
-      <img class="h-10 w-10" :src="'/storage/system/bg.png'" alt="CrimeGuard Logo" />
+      <img class="h-10 w-10" :src="'/images/system/bg.png'" alt="CrimeGuard Logo" />
       <span class="text-2xl font-semibold text-white tracking-tight">CrimeGuard</span>
     </div>
     <div class="flex items-center space-x-6">

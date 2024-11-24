@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\CrimeGUardM\Dynamic;
+namespace App\Http\Controllers\CrimeGuardM\Dynamic;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfficerCredential;
@@ -31,12 +31,12 @@ class DynamicFunctions extends Controller
         }
         return response()->json(["response" => "Error"]);
     }
+
     public function getUserStation($id)
     {
         date_default_timezone_set('Asia/Manila');
 
 
-        // Retrieve the station associated with the user ID
         $station = OfficerCredential::select('station')->where('user_id',  $id)->first();
 
         if (!$station) {
@@ -120,7 +120,7 @@ class DynamicFunctions extends Controller
             $query = $model::query();
 
             foreach ($param as $key => $value) {
-                if($key != 'password')$query->where($key, $value);
+                if ($key != 'password') $query->where($key, $value);
             }
 
             $result = $query->select('id')->first();
@@ -130,8 +130,9 @@ class DynamicFunctions extends Controller
             return -1;
         }
     }
-    
-    public function insertBeforeKey($array, $newPairs, $key) {
+
+    public function insertBeforeKey($array, $newPairs, $key)
+    {
         $newArray = [];
         foreach ($array as $k => $v) {
             if ($k === $key) {
@@ -144,50 +145,54 @@ class DynamicFunctions extends Controller
         return $newArray;
     }
 
-    public function cleanInsertId($array){
+    public function cleanInsertId($array)
+    {
         $noID = [];
         $ids = [];
-        foreach($array as $item){
-            if($this->doestKeyExists($item, 'id')){
+        foreach ($array as $item) {
+            if ($this->doestKeyExists($item, 'id')) {
                 array_push($ids, $item['id']);
-            }else{
+            } else {
                 array_push($noID, $item);
             }
-        }   
-        $arr = ['no_id' => $noID, 'id' => $ids];
-        return $arr;
-    }
-    
-    public function deepCleanInsertId($array, $key){
-        $noID = [];
-        $ids = [];
-        foreach($array as $item){
-            if($this->doestKeyExists($item[$key], 'id')){
-                array_push($ids, $item[$key]['id']);
-            }else{
-                array_push($noID, $item);
-            }
-        }   
+        }
         $arr = ['no_id' => $noID, 'id' => $ids];
         return $arr;
     }
 
-    public function removeNuls($array, $key){
-        
+    public function deepCleanInsertId($array, $key)
+    {
+        $noID = [];
+        $ids = [];
+        foreach ($array as $item) {
+            if ($this->doestKeyExists($item[$key], 'id')) {
+                array_push($ids, $item[$key]['id']);
+            } else {
+                array_push($noID, $item);
+            }
+        }
+        $arr = ['no_id' => $noID, 'id' => $ids];
+        return $arr;
+    }
+
+    public function removeNuls($array, $key)
+    {
+
         $arr = [];
-        foreach($array as $item){
-             if($item[$key]) {
+        foreach ($array as $item) {
+            if ($item[$key]) {
                 array_push($arr, $item);
             }
         }
         return $arr;
     }
 
-    public function convertArrayByKey($array, $key){
-        
+    public function convertArrayByKey($array, $key)
+    {
+
         $arr = [];
-        foreach($array as $item) array_push($arr, $item[$key]);
-        
+        foreach ($array as $item) array_push($arr, $item[$key]);
+
         return $arr;
     }
 }

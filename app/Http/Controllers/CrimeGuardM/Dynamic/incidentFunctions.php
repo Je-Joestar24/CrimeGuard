@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\CrimeGuardM\Dynamic;
 
 use App\Http\Controllers\Controller;
-use App\Models\incidentReportingPerson;
+use App\Models\IncidentReportingPerson;
 use App\Models\Incidents;
-use App\Models\incidentSuspects;
-use App\Models\incidentVictims;
+use App\Models\IncidentSuspects;
+use App\Models\IncidentVictims;
 
-class incidentFunctions extends Controller
+class IncidentFunctions extends Controller
 {
     //
 
@@ -17,7 +17,7 @@ class incidentFunctions extends Controller
 
         $counta = $this->isIncidentArchive($request['id']);
 
-        $query = incidentReportingPerson::join('incidents', 'incident-reporting-persons.incident', '=', 'incidents.id')
+        $query = IncidentReportingPerson::join('incidents', 'incident-reporting-persons.incident', '=', 'incidents.id')
             ->join('reporting-persons', 'incident-reporting-persons.reporting_person', '=', 'reporting-persons.id')
             ->select('reporting-persons.id', 'reporting-persons.firstname', 'reporting-persons.lastname', 'reporting-persons.mobile_phone');
         if ($counta == 0) {
@@ -30,12 +30,12 @@ class incidentFunctions extends Controller
         return $query->where('incidents.id', $request['id'])->get()->toArray();
     }
 
-    public function incidentSuspects( $request)
+    public function IncidentSuspects( $request)
     {
 
         $counta = $this->isIncidentArchive($request['id']);
 
-        $query = incidentSuspects::join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
+        $query = IncidentSuspects::join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
             ->join('suspects', 'incident-suspects.suspect', '=', 'suspects.id')
             ->select('suspects.id', 'suspects.firstname', 'suspects.lastname', 'suspects.mobile_phone');
         if ($counta == 0) {
@@ -47,11 +47,11 @@ class incidentFunctions extends Controller
         return $query->where('incidents.id', $request['id'])->get()->toArray();
     }
     
-    public function incidentVictims($request)
+    public function IncidentVictims($request)
     {
             $counta = $this->isIncidentArchive($request['id']);
 
-            $query = incidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+            $query = IncidentVictims::join('incidents', 'incident-victims.incident', '=', 'incidents.id')
                 ->join('victims', 'incident-victims.victim', '=', 'victims.id')
                 ->select('victims.id', 'victims.firstname', 'victims.lastname', 'victims.mobile_phone');
 

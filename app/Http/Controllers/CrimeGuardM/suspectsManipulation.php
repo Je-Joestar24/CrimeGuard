@@ -11,7 +11,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class suspectsManipulation extends Controller
+class SuspectsManipulation extends Controller
 {
 
 

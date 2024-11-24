@@ -303,7 +303,6 @@ export default {
     //console.log(document.head)
     (async () => {
       await this.generateData();
-      await this.loadGoogleMapsScript();
       await this.initializeMap();
     })();
   },
@@ -337,18 +336,6 @@ export default {
       } else {
         alert("Error!");
       }
-    },
-    async loadGoogleMapsScript() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM";
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
     },
     initializeMap() {
       const location = { lat: 11.005, lng: 124.6077 };

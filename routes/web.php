@@ -1,23 +1,16 @@
 <?php
 
 
-use App\Http\Controllers\crimeguardm\citizenUsersModule;
-use App\Http\Controllers\crimeguardm\dashboardModule;
-use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
-use App\Http\Controllers\CrimeGuardM\incidentModule;
-use App\Http\Controllers\crimeguardm\incidentNamesModule;
-use App\Http\Controllers\crimeguardm\logsModule;
-use App\Http\Controllers\crimeGuardm\notificationModule;
-use App\Http\Controllers\crimeguardm\officerUsersModule;
-use App\Http\Controllers\crimeguardm\predictiveAnalytics;
-use App\Http\Controllers\CrimeGuardM\suspectsManipulation;
-use App\Http\Controllers\CrimeGuardM\trackuser;
-use App\Http\Controllers\crimeguardm\traillogModule;
-use App\Http\Controllers\CrimeGuardM\userAuths;
-use App\Http\Controllers\CrimeGuardM\victimsModule;
-use App\Http\Controllers\crimeguardm\witnessModule;
+use App\Http\Controllers\CrimeGuardM\CitizenUsersModule;
+use App\Http\Controllers\CrimeGuardM\DashboardModule;
+use App\Http\Controllers\CrimeGuardM\IncidentModule;
+use App\Http\Controllers\CrimeGuardM\LogsModule;
+use App\Http\Controllers\CrimeGuardM\NotificationModule;
+use App\Http\Controllers\CrimeGuardM\OfficerUsersModule;
+use App\Http\Controllers\CrimeGuardM\TrackUser;
+use App\Http\Controllers\CrimeGuardM\TrailLogModule;
+use App\Http\Controllers\CrimeGuardM\UserAuths;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -66,81 +59,81 @@ Route::middleware('auth')->group(function () {
 
 
 /* google map markers*/
-Route::post('api/incidents/report/marker/Display', [incidentModule::class, 'incidentReportMarkers'])->name('json');
-Route::post('api/incidents/heat/map/marker/Display', [dashboardModule::class, 'heatMap'])->name('json');
-Route::post('api/incidents/citizen/heat/map/marker/Display', [dashboardModule::class, 'citizenHeatMap'])->name('json');
+Route::post('api/incidents/report/marker/Display', [IncidentModule::class, 'incidentReportMarkers'])->name('json');
+Route::post('api/incidents/heat/map/marker/Display', [DashboardModule::class, 'heatMap'])->name('json');
+Route::post('api/incidents/citizen/heat/map/marker/Display', [DashboardModule::class, 'citizenHeatMap'])->name('json');
 
 /* address display */
-Route::post('api/address/request', [citizenUsersModule::class, 'displayAddress'])->name('json');
-Route::post('api/barangay/request', [citizenUsersModule::class, 'displayBarangay'])->name('json');
+Route::post('api/address/request', [CitizenUsersModule::class, 'displayAddress'])->name('json');
+Route::post('api/barangay/request', [CitizenUsersModule::class, 'displayBarangay'])->name('json');
 
 /* my account */
-Route::post('api/citizen/basic/myaccount/view/request', [citizenUsersModule::class, 'viewMyAccountBasic'])->name('json');
-Route::post('api/citizen/personal/myaccount/view/request', [citizenUsersModule::class, 'viewMyAccountPersonal'])->name('json');
-Route::post('api/citizen/account/myaccount/view/request', [citizenUsersModule::class, 'viewMyAccountCred'])->name('json');
+Route::post('api/citizen/basic/myaccount/view/request', [CitizenUsersModule::class, 'viewMyAccountBasic'])->name('json');
+Route::post('api/citizen/personal/myaccount/view/request', [CitizenUsersModule::class, 'viewMyAccountPersonal'])->name('json');
+Route::post('api/citizen/account/myaccount/view/request', [CitizenUsersModule::class, 'viewMyAccountCred'])->name('json');
 
-Route::post('api/citizen/personal/myaccount/update/request', [citizenUsersModule::class, 'basicUpdate'])->name('json');
+Route::post('api/citizen/personal/myaccount/update/request', [CitizenUsersModule::class, 'basicUpdate'])->name('json');
 /* officer */
-Route::post('api/officer/basic/myaccount/view/request', [officerUsersModule::class, 'viewMyAccountBasic'])->name('json');
-Route::post('api/officer/account/myaccount/view/request', [officerUsersModule::class, 'viewMyAccountCred'])->name('json');
-Route::post('api/officer/personal/myaccount/view/request', [officerUsersModule::class, 'viewPersonal'])->name('json');
-Route::post('api/officer/updatebasic/myaccount/update/request', [officerUsersModule::class, 'updateBasicData'])->name('json');
-Route::post('api/officer/search/request', [officerUsersModule::class, 'searchOfficer'])->name('json');
+Route::post('api/officer/basic/myaccount/view/request', [OfficerUsersModule::class, 'viewMyAccountBasic'])->name('json');
+Route::post('api/officer/account/myaccount/view/request', [OfficerUsersModule::class, 'viewMyAccountCred'])->name('json');
+Route::post('api/officer/personal/myaccount/view/request', [OfficerUsersModule::class, 'viewPersonal'])->name('json');
+Route::post('api/officer/updatebasic/myaccount/update/request', [OfficerUsersModule::class, 'updateBasicData'])->name('json');
+Route::post('api/officer/search/request', [OfficerUsersModule::class, 'searchOfficer'])->name('json');
 
 
-Route::post('api/logs/list/Display', [logsModule::class, 'listDisplay'])->name('json');
-Route::post('api/activity/list/Display', [traillogModule::class, 'listDisplay'])->name('json');
-Route::post('api/notifications/list/Display', [notificationModule::class, 'listDisplay'])->name('json');
+Route::post('api/logs/list/Display', [LogsModule::class, 'listDisplay'])->name('json');
+Route::post('api/activity/list/Display', [TrailLogModule::class, 'listDisplay'])->name('json');
+Route::post('api/notifications/list/Display', [NotificationModule::class, 'listDisplay'])->name('json');
 
-Route::post('api/notifications/notify/incidentReported/Display', [notificationModule::class, 'notifyUser'])->name('json');
+Route::post('api/notifications/notify/incidentReported/Display', [NotificationModule::class, 'notifyUser'])->name('json');
 
-Route::post('api/notifications/notifed/request', [notificationModule::class, 'notified'])->name('json');
+Route::post('api/notifications/notifed/request', [NotificationModule::class, 'notified'])->name('json');
 
 /* Component Display */
 /* dashboard components */
-Route::post('api/dashboard/counts/Display', [dashboardModule::class, 'displayCount'])->name('json');
-Route::post('api/dashboard/lineraph/generate', [dashboardModule::class, 'generateLine'])->name('json');
-Route::post('api/dashboard/generate/reports', [dashboardModule::class, 'displayReports'])->name('json');
-Route::post('api/dashboard/generate/emergency/reports', [dashboardModule::class, 'emergencyReports'])->name('json');
-Route::get('api/stream-emergency-reports', [dashboardModule::class, 'emergencyReports0']);
+Route::post('api/dashboard/counts/Display', [DashboardModule::class, 'displayCount'])->name('json');
+Route::post('api/dashboard/lineraph/generate', [DashboardModule::class, 'generateLine'])->name('json');
+Route::post('api/dashboard/generate/reports', [DashboardModule::class, 'displayReports'])->name('json');
+Route::post('api/dashboard/generate/emergency/reports', [DashboardModule::class, 'emergencyReports'])->name('json');
+Route::get('api/stream-emergency-reports', [DashboardModule::class, 'emergencyReports0']);
 
-Route::post('api/dashboard/generate/victims/gender/pie', [dashboardModule::class, 'victimsPieGender'])->name('json');
-Route::post('api/dashboard/generate/victims/age/pie', [dashboardModule::class, 'victimsAge'])->name('json');
+Route::post('api/dashboard/generate/victims/gender/pie', [DashboardModule::class, 'victimsPieGender'])->name('json');
+Route::post('api/dashboard/generate/victims/age/pie', [DashboardModule::class, 'victimsAge'])->name('json');
 /* suspect */
-Route::post('api/dashboard/generate/suspects/gender/pie', [dashboardModule::class, 'suspectsPieGender'])->name('json');
-Route::post('api/dashboard/generate/suspects/age/pie', [dashboardModule::class, 'suspectsAge'])->name('json');
+Route::post('api/dashboard/generate/suspects/gender/pie', [DashboardModule::class, 'suspectsPieGender'])->name('json');
+Route::post('api/dashboard/generate/suspects/age/pie', [DashboardModule::class, 'suspectsAge'])->name('json');
 
 /* deep filter */
-Route::post('api/dashboard/generate/barangay/victim/age/bar', [dashboardModule::class, 'victimsAgeArea'])->name('json');
-Route::post('api/dashboard/generate/my/officers', [dashboardModule::class, 'generateOfficerAccounts'])->name('json');
+Route::post('api/dashboard/generate/barangay/victim/age/bar', [DashboardModule::class, 'victimsAgeArea'])->name('json');
+Route::post('api/dashboard/generate/my/officers', [DashboardModule::class, 'generateOfficerAccounts'])->name('json');
 
 /* dashboard end */
 
 /* Ctitizen side API */
-Route::post('api/user/request/registration', [citizenUsersModule::class, 'requestAccount'])->name('json');
+Route::post('api/user/request/registration', [CitizenUsersModule::class, 'requestAccount'])->name('json');
 
 /* incident lists */
-Route::get('api/incidents/citizen/view/display', [incidentModule::class, 'incidentsCitizenDisplay'])->name('json');
-Route::post('api/incidents/citizen/view/display2', [incidentModule::class, 'incidentsCitizenDisplay'])->name('json');
+Route::get('api/incidents/citizen/view/display', [IncidentModule::class, 'incidentsCitizenDisplay'])->name('json');
+Route::post('api/incidents/citizen/view/display2', [IncidentModule::class, 'incidentsCitizenDisplay'])->name('json');
 
 /* report incident */
-Route::post('api/incidents/report/request', [incidentModule::class, 'reportIncident'])->name('json');
+Route::post('api/incidents/report/request', [IncidentModule::class, 'reportIncident'])->name('json');
 
 /* tracker */
-Route::post('api/track/my/location/req', [trackuser::class, 'add'])->name('json');
-Route::post('api/track/location/map/req', [trackuser::class, 'usermarker'])->name('json');
+Route::post('api/track/my/location/req', [TrackUser::class, 'add'])->name('json');
+Route::post('api/track/location/map/req', [TrackUser::class, 'usermarker'])->name('json');
 
 /* Auths Controller */
-Route::post('api/create/reset/token', [userAuths::class, 'createResetToken']);
-Route::post('api/validate/reset/token', [userAuths::class, 'validateResetToken']);
-Route::post('api/my/password/reset', [userAuths::class, 'resetMyPass']);
-Route::post('api/temporary/login/user/request', [userAuths::class, 'temporaryLogin'])->name('json');
+Route::post('api/create/reset/token', [UserAuths::class, 'createResetToken']);
+Route::post('api/validate/reset/token', [UserAuths::class, 'validateResetToken']);
+Route::post('api/my/password/reset', [UserAuths::class, 'resetMyPass']);
+Route::post('api/temporary/login/user/request', [UserAuths::class, 'temporaryLogin'])->name('json');
 
 /* Clickable displays */
 
 
 /* requests */
-Route::get('api/request/log/addLog', [logsModule::class, 'addLog']);
-Route::get('api/request/activity/addLog', [traillogModule::class, 'addLog']);
+Route::get('api/request/log/addLog', [LogsModule::class, 'addLog']);
+Route::get('api/request/activity/addLog', [TrailLogModule::class, 'addLog']);
 
 require __DIR__ . '/auth.php';

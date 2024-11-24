@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
-use App\Http\Controllers\CrimeGuardM\Dynamic\incidentFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\IncidentFunctions;
 use App\Mail\IncidentResponseMail;
 use App\Models\Addresses;
 use App\Models\IncidentNarative;
-use App\Models\incidentReportingPerson;
+use App\Models\IncidentReportingPerson;
 use App\Models\Incidents;
-use App\Models\incidentSuspects;
-use App\Models\incidentVictims;
+use App\Models\IncidentSuspects;
+use App\Models\IncidentVictims;
 use App\Models\OfficerCredential;
 use App\Models\Rejections;
 use App\Models\ReportingPerson;
@@ -28,12 +28,12 @@ use App\Models\PoliceStation;
 
 use function PHPUnit\Framework\isNull;
 
-class incidentModule extends Controller
+class IncidentModule extends Controller
 {
     protected $dynamic;
     protected $incidentFun;
 
-    public function __construct(DynamicFunctions $dynamic, incidentFunctions $incident)
+    public function __construct(DynamicFunctions $dynamic, IncidentFunctions $incident)
     {
         $this->dynamic = $dynamic;
         $this->incidentFun = $incident;
@@ -684,7 +684,7 @@ class incidentModule extends Controller
 
             $inc_id = $incid->id;
             $data['data'] = [$id, $inc_id];
-            incidentReportingPerson::create(['reporting_person' => $id, 'incident' => $inc_id]);
+            IncidentReportingPerson::create(['reporting_person' => $id, 'incident' => $inc_id]);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -790,7 +790,7 @@ class incidentModule extends Controller
         $data = [];
         try {
 
-            $data['data'] = $this->incidentFun->incidentSuspects($request);
+            $data['data'] = $this->incidentFun->IncidentSuspects($request);
             $data['response'] = "Success";
         } catch (\Exception $e) {
             $data['response'] = "Error";
@@ -818,7 +818,7 @@ class incidentModule extends Controller
     {
         $data = [];
         try {
-            $data['data'] = $this->incidentFun->incidentVictims($request);
+            $data['data'] = $this->incidentFun->IncidentVictims($request);
 
             $data['response'] = "Success";
         } catch (\Exception $e) {
@@ -926,9 +926,9 @@ class incidentModule extends Controller
             $incidentID = Incidents::create($incident)->id;
 
             if ($incidentID != -1 && $incidentID != null) {
-                foreach ($victimIDS as $id) $this->addByKeyValue(incidentVictims::class, 'incident', 'victim', $incidentID, $id);
-                foreach ($suspectIDS as $id) $this->addByKeyValue(incidentSuspects::class, 'incident', 'suspect', $incidentID, $id);
-                foreach ($witnessIDS as $id) $this->addByKeyValue(incidentReportingPerson::class, 'incident', 'reporting_person', $incidentID, $id);
+                foreach ($victimIDS as $id) $this->addByKeyValue(IncidentVictims::class, 'incident', 'victim', $incidentID, $id);
+                foreach ($suspectIDS as $id) $this->addByKeyValue(IncidentSuspects::class, 'incident', 'suspect', $incidentID, $id);
+                foreach ($witnessIDS as $id) $this->addByKeyValue(IncidentReportingPerson::class, 'incident', 'reporting_person', $incidentID, $id);
             }
 
             TrailLog::create(['user_id' => $request->input('id'), 'action' => 'added', 'item' => 'incident']);
@@ -971,8 +971,8 @@ class incidentModule extends Controller
                 ])->find($request['id']);
             $incidentNarrative = $incidentNarrative ? $incidentNarrative : ['details' => NULL];
 
-            $Suspects = $this->incidentFun->incidentSuspects($request);
-            $Victims = $this->incidentFun->incidentVictims($request);
+            $Suspects = $this->incidentFun->IncidentSuspects($request);
+            $Victims = $this->incidentFun->IncidentVictims($request);
             $Witnesses = $this->incidentFun->incidentWitness($request);
             $incident['time_reported'] = explode(' ', $incident['time_reported'])[1];
             $incident['time_of_incident'] = explode(' ', $incident['time_of_incident'])[1];
@@ -1048,14 +1048,14 @@ class incidentModule extends Controller
 
             $incidentID = $incident['id'];
 
-            incidentVictims::where('incident', $incidentID)->delete();
-            incidentSuspects::where('incident', $incidentID)->delete();
-            incidentReportingPerson::where('incident', $incidentID)->delete();
+            IncidentVictims::where('incident', $incidentID)->delete();
+            IncidentSuspects::where('incident', $incidentID)->delete();
+            IncidentReportingPerson::where('incident', $incidentID)->delete();
 
             if ($incidentID != -1 && $incidentID != null) {
-                foreach ($victimIDS as $id) $this->addByKeyValue(incidentVictims::class, 'incident', 'victim', $incidentID, $id);
-                foreach ($suspectIDS as $id) $this->addByKeyValue(incidentSuspects::class, 'incident', 'suspect', $incidentID, $id);
-                foreach ($witnessIDS as $id) $this->addByKeyValue(incidentReportingPerson::class, 'incident', 'reporting_person', $incidentID, $id);
+                foreach ($victimIDS as $id) $this->addByKeyValue(IncidentVictims::class, 'incident', 'victim', $incidentID, $id);
+                foreach ($suspectIDS as $id) $this->addByKeyValue(IncidentSuspects::class, 'incident', 'suspect', $incidentID, $id);
+                foreach ($witnessIDS as $id) $this->addByKeyValue(IncidentReportingPerson::class, 'incident', 'reporting_person', $incidentID, $id);
             }
 
             Incidents::find($incidentID)->update($incident);

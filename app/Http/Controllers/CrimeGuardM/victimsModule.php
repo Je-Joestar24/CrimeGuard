@@ -10,7 +10,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class victimsModule extends Controller
+class VictimsModule extends Controller
 {
     //table display
 

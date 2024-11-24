@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 
-class userAuths extends Controller
+class UserAuths extends Controller
 {
     //
     public function createResetToken(Request $request)

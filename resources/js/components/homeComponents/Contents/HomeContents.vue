@@ -30,7 +30,7 @@
     <div class="flex">
       <img
         class="w-8 h-8"
-        :src="'/storage/system/bg.png'"
+        :src="logo"
         alt="Jese Leos image"
       />
       <div class="ms-3 text-sm font-normal">
@@ -82,6 +82,7 @@ export default {
       intervalId: null,
       user: -1,
       logid: -1,
+      logo: "/images/system/bg.png"
     };
   },
   props: ["active", "changeActive"],
@@ -160,7 +161,7 @@ export default {
 
 <style scoped>
 body {
-  background-image: url('/storage/system/newBG.png');
+  background-image: url('/images/system/newBG.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

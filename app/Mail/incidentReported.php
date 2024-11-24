@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\Incidents;
 use Carbon\Carbon;
 
-class incidentReported extends Mailable
+class IncidentReported extends Mailable
 {
     use Queueable, SerializesModels;
 

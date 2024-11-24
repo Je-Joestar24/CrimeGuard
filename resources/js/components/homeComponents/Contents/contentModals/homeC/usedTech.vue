@@ -29,27 +29,27 @@ export default {
       data: [
         {
           link: "https://vuejs.org/",
-          icon: "/storage/system/Vuelog.png",
+          icon: "/images/system/Vuelog.png",
           name: "Vue.js",
           disc: ` Vue.js is used as the frontend framework for building interactive user interfaces.`,
         },
         {
           link: "https://laravel.com/",
-          icon: "/storage/system/laravellog.png",
+          icon: "/images/system/laravellog.png",
           name: "Laravel",
           disc: `Laravel serves as the backend framework, handling routing,
         authentication, and API development.`,
         },
         {
           link: "https://tailwindcss.com/",
-          icon: "/storage/system/tailwindlog.png",
+          icon: "/images/system/tailwindlog.png",
           name: "Tailwind CSS",
           disc: `Tailwind CSS is used to style the application with a utility-first
         approach to design.`,
         },
         {
           link: "https://developers.google.com/maps/documentation/javascript",
-          icon: "/storage/system/googlelog.png",
+          icon: "/images/system/googlelog.png",
           name: "Google Maps API",
           disc: `Google Maps API is integrated for real-time location tracking and
         map-based crime monitoring.`,

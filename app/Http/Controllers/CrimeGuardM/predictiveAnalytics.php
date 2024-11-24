@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
 use App\Models\Incidents;
@@ -9,7 +9,7 @@ use App\Models\IncidentTypes;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class predictiveAnalytics extends Controller
+class PredictiveAnalytics extends Controller
 {
 
     public function generateIncidentData(Request $request)

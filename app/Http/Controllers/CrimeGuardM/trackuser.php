@@ -7,7 +7,7 @@ use App\Models\UserTrack;
 use DateTime;
 use Illuminate\Http\Request;
 
-class trackuser extends Controller
+class TrackUser extends Controller
 {
     //
     public function add(Request $request)

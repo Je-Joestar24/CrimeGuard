@@ -3,12 +3,12 @@
     class="fixed z-50 bg-white top-0 flex animate-popup"
     style="
       height: 100vh;
-      background-image: url('/storage/system/bg.jpg');
+      background-image: url('/images/system/bg.jpg');
       width: 100vw;
     "
   >
     <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
-      <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
+      <img class="p-20" :src="'/images/system/logo.png'" alt="logo" />
     </div>
     <div v-if="!isPhone" class="w-full border-l shadow-lg">
       <div class="w-full flex justify-end p-4">
@@ -37,7 +37,7 @@
         <div class="text-center mb-8">
           <img
             class="w-24 h-24 mx-auto mb-4"
-            :src="'/storage/system/bg.png'"
+            :src="'/images/system/bg.png'"
             alt="Crime Guard Logo"
           />
           <h1 class="text-3xl font-bold text-gray-800">Login to Crime Guard</h1>

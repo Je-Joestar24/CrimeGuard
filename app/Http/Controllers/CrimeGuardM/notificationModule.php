@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\crimeGuardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
 use App\Models\Incidents;
@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 
-class notificationModule extends Controller
+class NotificationModule extends Controller
 {
     //
 

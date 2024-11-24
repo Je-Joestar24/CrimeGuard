@@ -3,12 +3,12 @@
     class="fixed z-50 bg-white top-0 flex animate-popup"
     style="
       height: 100vh;
-      background-image: url('/storage/system/bg.jpg');
+      background-image: url('/images/system/bg.jpg');
       width: 100vw;
     "
   >
   <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
-    <img class="p-20" :src="'/storage/system/logo.png'" alt="logo" />
+    <img class="p-20" :src="'/images/system/logo.png'" alt="logo" />
   </div>
     <div class="w-full border-l">
       <div class="w-full flex justify-end p-4 mt-10">
@@ -19,7 +19,7 @@
         </button>
       </div>
       <div class="text-center mb-8">
-        <img class="w-24 h-24 mx-auto mb-4" :src="'/storage/system/bg.png'" alt="Crime Guard Logo" />
+        <img class="w-24 h-24 mx-auto mb-4" :src="'/images/system/bg.png'" alt="Crime Guard Logo" />
         <h1 class="text-3xl font-bold text-gray-800">Join Crime Guard</h1>
         <p class="text-gray-600 mt-2">Create your account to help keep our community safe</p>
       </div>

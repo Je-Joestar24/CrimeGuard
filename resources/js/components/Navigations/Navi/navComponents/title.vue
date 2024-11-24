@@ -24,7 +24,7 @@
       </svg>
     </button>
     <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-      <img class=" h-8" :src="'/storage/system/bg.png'" alt="">
+      <img class=" h-8" :src="'/images/system/bg.png'" alt="">
       <span
         class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap"
         :class="{'text-white':$store.getters.theme,'':!$store.getters.theme}"

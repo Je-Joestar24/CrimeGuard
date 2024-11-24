@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
 use App\Mail\AccountAcceptedMail;
 use App\Mail\AccountRejectedMail;
 use App\Models\Addresses;
@@ -13,16 +13,13 @@ use App\Models\OfficerCredential;
 use App\Models\TrailLog;
 use App\Models\User;
 use DateTime;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-use function PHPUnit\Framework\isNull;
-use function PHPUnit\Framework\throwException;
 
-class citizenUsersModule extends Controller
+class CitizenUsersModule extends Controller
 {
 
     //

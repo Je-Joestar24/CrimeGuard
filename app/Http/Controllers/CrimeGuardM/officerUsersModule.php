@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\crimeguardm;
+namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CrimeGUardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
 use App\Models\Addresses;
 use App\Models\OfficerCredential;
 use App\Models\RankChangedReports;
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class officerUsersModule extends Controller
+class OfficerUsersModule extends Controller
 {
     //
     protected $dynamic;

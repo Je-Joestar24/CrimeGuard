@@ -1,7 +1,7 @@
 <template>
   <div class="h-full px-4 py-6 overflow-y-auto bg-white border-r border-gray-200" style="width: 280px;">
     <div class="flex flex-col items-center justify-center mb-10">
-      <img class="w-24 h-24 mb-3" src="./img/PoliceLogo.png" alt="Police Logo" />
+      <img class="w-24 h-24 mb-3" src="/images/system/PoliceLogo.png" alt="Police Logo" />
       <div class="text-center">
         <h2 v-if="cred.station != ''" class="text-xl font-bold text-gray-800">{{ (cred.station != 100) ? `Police Station ${cred.station}` : 'HEAD QUARTERS' }}</h2>
         <p class="text-sm text-gray-600">Serving and Protecting</p>
