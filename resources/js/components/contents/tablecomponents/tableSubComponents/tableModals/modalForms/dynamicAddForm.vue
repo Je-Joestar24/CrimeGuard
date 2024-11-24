@@ -812,7 +812,7 @@ export default {
           data.input = null;
         }
       }
-      this.reloadTab1("", this.$store.getters.api);
+      this.reloadTab1({}, this.$store.getters.api);
       //console.log(form);
       this.toggle();
     },

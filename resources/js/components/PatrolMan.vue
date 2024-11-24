@@ -1,12 +1,12 @@
 <template>
   <loading class="z-50 fixed top-0" v-if="load"></loading>
   <div v-if="!load" class="HomePage w-full">
-      <track-me v-if="active == 'Track'"/>
-      <my-account  :changeActive="changeActive"  v-if="active == 'account'"/>
-      <recent-incidents  :changeActive="changeActive"  v-if="active == 'recents'"/>
-      <div class="bottom-0 fixed  w-full right-0">
-        <navigations :changeActive="changeActive" class=" "/>
-      </div>
+    <track-me v-if="active == 'Track'" />
+    <my-account :changeActive="changeActive" v-if="active == 'account'" />
+    <recent-incidents :changeActive="changeActive" v-if="active == 'recents'" />
+    <div class="bottom-0 fixed w-full right-0">
+      <navigations :changeActive="changeActive" class=" " />
+    </div>
   </div>
 
   <report-form v-if="reportIsOpen" :toggle="toggleReport"></report-form>
@@ -36,7 +36,7 @@ export default {
     trackMe,
     loading,
     myAccount,
-    RecentIncidents
+    RecentIncidents,
   },
   methods: {
     changeActive(param) {
@@ -70,14 +70,14 @@ export default {
     toggleReport() {
       this.reportIsOpen = !this.reportIsOpen;
     },
-  setBackground(imagePath) {
-    document.body.style.backgroundImage = `url("${imagePath}")`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
-    document.body.style.minHeight = '100vh';
-  },
+    setBackground(imagePath) {
+      document.body.style.backgroundImage = `url("${imagePath}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.minHeight = "100vh";
+    },
   },
   computed: {
     loggedIn() {
@@ -95,15 +95,25 @@ export default {
     }, 1000);
 
     const credentials = JSON.parse(localStorage.getItem("credentials"));
-    if (credentials && credentials.user_level == 3) {
-      this.navs.push("Recent Incidents");
-      this.navs.push("Reported Incidents");
-    } else {
-      this.navs.push("Sign up");
-      this.navs.push("Login");
-    }
 
-    this.setBackground('/storage/system/newBG.png');
+    (async () => {
+      await setTimeout(() => {
+        this.logged = true;
+      }, 500);
+
+      const isValid = await this.$store.dispatch("checkUserAccess", "api/check-level-4");;
+
+      if (!isValid) {
+        this.$store.dispatch("logout");
+        this.$router.push("/");
+      } else {
+        const credentials = JSON.parse(localStorage.getItem("credentials"));
+        this.cred = credentials;
+      }
+      document.body.style.backgroundImage = "";
+    })();
+
+    this.setBackground("/storage/system/newBG.png");
     window.removeEventListener("scroll", this.handleScroll);
     //document.body.style.backgroundImage = 'url("background/background.jpg")';
   },

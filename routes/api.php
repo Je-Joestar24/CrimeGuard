@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('file/upload', [DynamicFunctions::class, 'upload'])->name('file.upload');
+
 Route::middleware('auth:sanctum')->get('/check-token', function (Request $request) {
     // You don't need to pass the user explicitly
     // $request->user() gives you the authenticated user from the token
@@ -34,9 +35,39 @@ Route::middleware('auth:sanctum')->get('/check-token', function (Request $reques
         'user' => $request->user(), // Automatically retrieved user
     ], 200);
 });
-Route::post('dashboard/generate/incident/top/barangay/bar', [DashboardModule::class, 'topBarangays'])->name('json');
 
-Route::middleware('auth:sanctum', 'checkUserLevel:1,2,3')->group(function () {
+Route::post('dashboard/generate/incident/top/barangay/bar', [DashboardModule::class, 'topBarangays']);
+
+Route::middleware('auth:sanctum', 'checkUserLevel:1')->get('/check-level-1', function (Request $request) {
+    return response()->json([
+        'message' => true,
+        'user' => $request->user(),
+        'level' => 1
+    ], 200);
+});
+
+Route::middleware('auth:sanctum', 'checkUserLevel:2')->get('/check-level-2', function (Request $request) {
+    return response()->json([
+        'message' => true,
+        'user' => $request->user(),
+        'level' => 2
+    ], 200);
+});
+
+Route::middleware('auth:sanctum', 'checkUserLevel:3')->get('/check-level-3', function (Request $request) {
+    return response()->json([
+        'message' => true,
+        'user' => $request->user(), 
+        'level' => 3
+    ], 200);
+});
+
+Route::middleware('auth:sanctum', 'checkUserLevel:4')->get('/check-level-4', function (Request $request) {
+    return response()->json([
+        'message' => true,
+        'user' => $request->user(),
+        'level' => 4
+    ], 200);
 });
 
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {

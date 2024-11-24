@@ -542,7 +542,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully updated Incident."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         await this.toggle();
       } else {
         await alert("An error occured, please try again.");
@@ -600,7 +600,7 @@ export default {
           details: "",
         },
       };
-      this.reloadTab("", "api/incidents/table/Display");
+      this.reloadTab({}, "api/incidents/table/Display");
     },
     async search(key, param) {
       const send = await {

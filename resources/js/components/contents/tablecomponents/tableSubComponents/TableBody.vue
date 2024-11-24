@@ -188,7 +188,7 @@ export default {
         this.hiddenTogggle('delete');
         this.loading.delete = false;
         /* Use to reload the api data */
-        this.getTData('', this.$store.getters.api);
+        this.getTData({}, this.$store.getters.api);
       } else {
         await alert("An error occured, please try again.");
       }
@@ -203,7 +203,7 @@ export default {
       if (res == "Success") {
         this.loading.restore = false;
         this.restoreModalToggle();
-        this.getTData('', this.$store.getters.api);
+        this.getTData({}, this.$store.getters.api);
       } else {
         await alert("An error occured, please try again.");
         this.loading.restore = false;

@@ -163,17 +163,20 @@ export default {
         itemsPerPage: 5,
         totalItems: 0,
         totalPages: 0
-      }
+      },
+      id: -1,
     };
   },
   mounted() {
-    this.getTableData('',this.$store.getters.api);
+    const credentials = JSON.parse(localStorage.getItem('credentials'));
+    this.id = parseInt(credentials.id);
+    this.getTableData({},this.$store.getters.api);
   },
   watch: {
     "$store.getters.api": {
       handler(newVal, oldVal) {
         /* console.log("API getter changed:", newVal, oldVal); */
-        this.getTableData('',newVal);
+        this.getTableData({},newVal);
         this.search1 = '';
       }
     },'search1': function(newVal, oldVal){
@@ -219,6 +222,8 @@ export default {
         data: param,
         url: url,
       };
+
+      send.data.id = this.id;
 
       await console.log(send);
       const data = await this.$store.dispatch("sendData", send);

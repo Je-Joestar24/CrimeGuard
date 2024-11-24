@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\IncidentFunctions;
 use App\Models\Addresses;
 use App\Models\Suspects;
 use App\Models\TrailLog;
@@ -14,7 +16,14 @@ use Illuminate\Support\Facades\DB;
 class SuspectsManipulation extends Controller
 {
 
+    protected $dynamic;
+    protected $incidentFun;
 
+    public function __construct(DynamicFunctions $dynamic, IncidentFunctions $incident)
+    {
+        $this->dynamic = $dynamic;
+        $this->incidentFun = $incident;
+    }
 
     /* Displayed data on the table */
     public function tableDisplay(Request $request)
@@ -35,7 +44,14 @@ class SuspectsManipulation extends Controller
                 'current address'
             ];
 
-            $query = Suspects::leftJoin('addresses', 'suspects.current_address_id', '=', 'addresses.id')
+
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+
+            $query = Suspects::query();
+            if ($station != 100) $query = $query->leftJoin('addresses', 'suspects.current_address_id', '=', 'addresses.id')
+                ->join('incident-suspects', 'suspects.id', '=', 'incident-suspects.suspect')
+                ->join('incidents', 'incident-suspects.incident', '=', 'incidents.id')
                 ->select([
                     'suspects.id',
                     'suspects.profile',
@@ -47,8 +63,22 @@ class SuspectsManipulation extends Controller
                     'suspects.gender',
                     'suspects.civil_status',
                     DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
-                ])
-                ->where('suspects.archived_at', '=', NULL)
+                ])->where('incidents.station', $station);
+            else $query = Suspects::leftJoin('addresses', 'suspects.current_address_id', '=', 'addresses.id')
+                ->select([
+                    'suspects.id',
+                    'suspects.profile',
+                    'suspects.firstname',
+                    'suspects.lastname',
+                    'suspects.email',
+                    'suspects.mobile_phone',
+                    'suspects.age',
+                    'suspects.gender',
+                    'suspects.civil_status',
+                    DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
+                ]);
+
+            $query = $query->where('suspects.archived_at', '=', NULL)
                 ->where('suspects.deleted_by', '=', NULL);
 
             if ($request->has('search') && !empty($request->input('search'))) {
@@ -213,8 +243,8 @@ class SuspectsManipulation extends Controller
                 'deleted_by' => $request['archived_by']
             ];
             Suspects::where('id', $request['id'])->update($archive);
-            
-            TrailLog::create(['user_id'=> $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'suspect']);
+
+            TrailLog::create(['user_id' => $request->input('deleted_by'), 'action' => 'deleted', 'item' => 'suspect']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -237,7 +267,7 @@ class SuspectsManipulation extends Controller
                 'deleted_by' => NULL
             ];
             Suspects::where('id', $request['id'])->update($archive);
-            TrailLog::create(['user_id'=> $request->input('user_id'), 'action' => 'restored', 'item' => 'suspect']);
+            TrailLog::create(['user_id' => $request->input('user_id'), 'action' => 'restored', 'item' => 'suspect']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -494,8 +524,8 @@ class SuspectsManipulation extends Controller
             $suspectData = $suspect;
 
             Suspects::create($suspectData);
-            
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'added', 'item' => 'suspect']);
+
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'added', 'item' => 'suspect']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -506,7 +536,8 @@ class SuspectsManipulation extends Controller
         return response()->json($data);
     }
 
-    public function editDisplayData(Request $request){
+    public function editDisplayData(Request $request)
+    {
         $data = [];
         $current_address = ['street' => NULL, 'village' => NULL, 'barangay' => NULL, 'city' => NULL, 'province' => NULL];
         $other_address = ['street' => NULL, 'village' => NULL, 'barangay' => NULL, 'city' => NULL, 'province' => NULL];
@@ -561,8 +592,8 @@ class SuspectsManipulation extends Controller
             $suspectData = $suspect;
 
             Suspects::find($suspectData['id'])->update($suspectData);
-            
-            TrailLog::create(['user_id'=> $request->input('id'), 'action' => 'edited', 'item' => 'suspect']);
+
+            TrailLog::create(['user_id' => $request->input('id'), 'action' => 'edited', 'item' => 'suspect']);
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';

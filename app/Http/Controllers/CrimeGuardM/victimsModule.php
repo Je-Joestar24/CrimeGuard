@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\IncidentFunctions;
 use App\Models\Addresses;
 use App\Models\TrailLog;
 use App\Models\Victims;
@@ -14,6 +16,14 @@ class VictimsModule extends Controller
 {
     //table display
 
+    protected $dynamic;
+    protected $incidentFun;
+
+    public function __construct(DynamicFunctions $dynamic, IncidentFunctions $incident)
+    {
+        $this->dynamic = $dynamic;
+        $this->incidentFun = $incident;
+    }
     public function tableDisplay(Request $request)
     {
 
@@ -36,8 +46,31 @@ class VictimsModule extends Controller
 
             /* table data */
 
+
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+
+            $query = Victims::query();
+
+            if ($station != 100) $query = $query->leftJoin('addresses', 'victims.current_address_id', '=', 'addresses.id')
+                ->join('incident-victims', 'victims.id', '=', 'incident-victims.victim')
+                ->join('incidents', 'incident-victims.incident', '=', 'incidents.id')
+                ->select([
+                    'victims.id',
+                    'victims.id_card_presented as profile',
+                    'victims.firstname',
+                    'victims.lastname',
+                    'victims.email',
+                    'victims.mobile_phone',
+                DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
+                'victims.age',
+                    'victims.gender',
+                    'victims.civil_status',
+
+                ])->where('incidents.station', $station);
+
             /* Build the initial query */
-            $query = Victims::leftJoin('addresses', 'victims.current_address_id', '=', 'addresses.id')->select([
+            else $query = $query->leftJoin('addresses', 'victims.current_address_id', '=', 'addresses.id')->select([
 
                 'victims.id',
                 'victims.id_card_presented as profile',
@@ -50,8 +83,9 @@ class VictimsModule extends Controller
                 'victims.gender',
                 'victims.civil_status',
 
-            ])
-                ->whereNull('victims.archived_at')
+            ]);
+
+            $query = $query->whereNull('victims.archived_at')
                 ->whereNull('victims.deleted_by');
 
             /* Apply search if the search term is provided */

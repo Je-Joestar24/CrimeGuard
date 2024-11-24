@@ -646,7 +646,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully updated Witness."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");
@@ -707,7 +707,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully Updated Victim."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");
@@ -810,7 +810,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully updated Incident Name."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");
@@ -900,7 +900,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully updated Suspect."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");
@@ -958,7 +958,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully updated User."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
         await this.clearForm();
       } else {
@@ -1018,7 +1018,7 @@ export default {
 
       if (this.res == "Success") {/* 
         await alert("Successfully Updated User."); */
-        this.reloadTab("", this.$store.getters.api);
+        this.reloadTab({}, this.$store.getters.api);
         this.toggle(-1);
       } else {
         await alert("An error occured, please try again.");

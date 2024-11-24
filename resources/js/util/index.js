@@ -496,6 +496,13 @@ export default createStore({
 
                 return false;
             }
+        }, async checkUserAccess({ commit }, param = 'api/check-level-1') {
+            try {
+                const response = await axios.get(param);
+                return true; // Returns the user's level directly from token data
+            } catch (error) {
+                return false;
+            }
         },
     },
     getters: {

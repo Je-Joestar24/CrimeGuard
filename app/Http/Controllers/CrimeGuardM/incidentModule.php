@@ -51,6 +51,10 @@ class IncidentModule extends Controller
         ];
 
         try {
+
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+
             $query = Incidents::leftJoin('incident-suspects', 'incidents.id', '=', 'incident-suspects.incident')
                 ->leftJoin('suspects', 'incident-suspects.suspect', '=', 'suspects.id')
                 ->leftJoin('incident-types', 'incidents.incident_type', '=', 'incident-types.id')
@@ -59,10 +63,11 @@ class IncidentModule extends Controller
                 ->select('incidents.id', 'incident-types.incident_name', 'incidents.location', 'incidents.time_of_incident', 'incidents.status')
                 ->where('incidents.status', '!=', 'report')
                 ->where('incidents.status', '!=', 'reject')
-                ->where('incidents.status', '!=', 'respond')
+                ->where('incidents.status', '!=', 'respond');
+            if ($station != 100) $query = $query->where('incidents.station', $station);
+            $query = $query->distinct()
                 ->whereNull('incidents.archived_at')
-                ->whereNull('incidents.archived_by')
-                ->distinct();
+                ->whereNull('incidents.archived_by');
 
             if ($request->has('search') && !empty($request->input('search'))) {
                 $search = $request->input('search');
@@ -212,7 +217,7 @@ class IncidentModule extends Controller
         $data['data'] = [];
 
         $station = $this->dynamic->getUserStation($request['id']);
-        $station = $station['response'] ? $station['station']: null;
+        $station = $station['response'] ? $station['station'] : null;
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->select(

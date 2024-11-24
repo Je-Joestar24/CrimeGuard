@@ -256,9 +256,10 @@ export default {
         this.logged = true;
       }, 500);
 
-      const isValid = await this.$store.dispatch("checkToken");
+      const isValid = await this.$store.dispatch("checkUserAccess", "api/check-level-1");
 
       if (!isValid) {
+        this.$store.dispatch("logout");
         this.$router.push("/");
       } else {
 

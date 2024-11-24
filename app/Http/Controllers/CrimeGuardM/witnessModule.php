@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
+use App\Http\Controllers\CrimeGuardM\Dynamic\IncidentFunctions;
 use App\Models\Addresses;
 use App\Models\ReportingPerson;
 use App\Models\TrailLog;
@@ -14,6 +16,15 @@ class WitnessModule extends Controller
 {
     //Table displays
 
+
+    protected $dynamic;
+    protected $incidentFun;
+
+    public function __construct(DynamicFunctions $dynamic, IncidentFunctions $incident)
+    {
+        $this->dynamic = $dynamic;
+        $this->incidentFun = $incident;
+    }
 
     public function tableDisplay(Request $request)
     {
@@ -34,7 +45,26 @@ class WitnessModule extends Controller
                 'gender',
             ];
 
-            $query = ReportingPerson::leftJoin('addresses', 'reporting-persons.current_address_id', '=', 'addresses.id')->select([
+
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+            $query = ReportingPerson::query();
+
+            if ($station != 100) $query = $query->leftJoin('addresses', 'reporting-persons.current_address_id', '=', 'addresses.id')
+                ->join('incident-reporting-persons', 'reporting-persons.id', '=', 'incident-reporting-persons.reporting_person')
+                ->join('incidents', 'incident-reporting-persons.incident', '=', 'incidents.id')
+                ->select([
+                    'reporting-persons.id',
+                    'reporting-persons.id_card_presented as profile',
+                    'reporting-persons.firstname',
+                    'reporting-persons.lastname',
+                    'reporting-persons.email',
+                    'reporting-persons.mobile_phone',
+                    DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
+                    'reporting-persons.age',
+                    'reporting-persons.gender',
+                ])->where('incidents.station', $station);
+            else $query = $query->leftJoin('addresses', 'reporting-persons.current_address_id', '=', 'addresses.id')->select([
                 'reporting-persons.id',
                 'reporting-persons.id_card_presented as profile',
                 'reporting-persons.firstname',
@@ -44,9 +74,12 @@ class WitnessModule extends Controller
                 DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
                 'reporting-persons.age',
                 'reporting-persons.gender',
-            ])
-                ->whereNull('reporting-persons.archived_at')
+            ]);
+
+
+            $query = $query->whereNull('reporting-persons.archived_at')
                 ->whereNull('reporting-persons.deleted_by');
+
 
             /* search */
             if ($request->has('search') && !empty($request->input('search'))) {

@@ -533,7 +533,7 @@ export default {
           details: "",
         },
       };
-      this.reloadTab("", "api/incidents/table/Display");
+      this.reloadTab({}, "api/incidents/table/Display");
     },
     /* search functions */
     async search(key, param) {
