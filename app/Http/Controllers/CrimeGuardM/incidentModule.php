@@ -887,10 +887,16 @@ class IncidentModule extends Controller
 
 
         try {
+
+            
             $incident = $request['incident'];
             $incident['time_reported'] = $incident['date_reported'] . ' ' . $incident['time_reported'] . ':00';
             $incident['time_of_incident'] = $incident['date_of_incident'] . ' ' . $incident['time_of_incident'] . ':00';
 
+            $station = $incident['added_by'] ? $this->dynamic->getUserStation($incident['added_by']) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+
+             $incident['station'] = $station;
 
             $victims = $this->doesItExists($request['victims'], 'victim') ? $this->addByKey($request['victims'], 'victim') : [];
             $suspects = $this->doesItExists($request['suspects'], 'suspect') ? $this->addByKey($request['suspects'], 'suspect') : [];
