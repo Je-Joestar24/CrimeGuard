@@ -99,19 +99,22 @@ class TrackUser extends Controller
 
                     // Get today's first incident for this user and station if they are level 3
                     $todayIncident = null;
-                    if ($report->user_level == 3) {
+                    if ($cleaned['user_level'] == 3) {
                         $todayIncident = Incidents::where('reported_by_user', $report['id'])
-                            ->where('station', $station)
                             ->whereDate('created_at', $currentDate->format('Y-m-d'))
                             ->orderBy('created_at', 'asc')
                             ->first();
                     }
 
-                    if ($station == 100 || $todayIncident) {
+                    // If station is 100 (all stations) OR
+                    // If user is not level 3 OR 
+                    // If user is level 3 and has an incident today with matching station
+                    if ($station == 100 || 
+                        $cleaned['user_level'] == 3 || 
+                        ($cleaned['user_level'] == 3 && $todayIncident && $todayIncident->station == $station)) {
                         array_push($data['data'], $cleaned);
+                        array_push($userNames, $report->user_name);
                     }
-
-                    $userNames[] = $report->user_name;
                 }
             }
             $data['response'] = 'Success';
