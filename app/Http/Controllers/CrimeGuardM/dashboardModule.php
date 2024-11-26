@@ -596,50 +596,7 @@ class DashboardModule extends Controller
 
         return response()->json($data);
     }
-    /* 
-    public function emergencyReports0(Request $request)
-    {
-        // Set headers to keep the connection alive and mark it as a Server-Sent Event (SSE) response
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('Connection: keep-alive');
 
-        // Set the timezone
-        date_default_timezone_set('Asia/Manila');
-        $currentDate = new DateTime();
-
-        // Loop to continually send data
-        while (true) {
-            // Query the incidents based on the request data
-            $init = Incidents::where('status', '=', 'report');
-
-            if (!$request->has('id')) {
-                $init = $init->where('report_type', 1);  // Report type 1 for general reports
-            } else {
-                $init = $init->where('assigned_to', $request->input('id'));  // Assigned to specific user
-            }
-
-            $init = $init->whereDate('date_reported', $currentDate->format('Y-m-d'))
-                ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
-                ->get();
-
-            // Only send data if there are new incidents
-            if ($init->isNotEmpty()) {
-                $data['data']['reportedIncidents'] = $init;
-                $data['response'] = 'Success';
-
-                // Send the data to the client in the correct SSE format
-                echo "data: " . json_encode($data) . "\n\n";
-
-                // Flush the output buffer to ensure the client receives the data
-                ob_flush();
-                flush();
-            }
-
-            // Sleep for 5 seconds before checking for new incidents again
-            sleep(5);
-        }
-    } */
     public function emergencyReports0(Request $request)
     {
         // Set the headers for SSE

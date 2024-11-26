@@ -94,7 +94,7 @@
               :key="opt.val"
               :value="opt.val"
             >
-              {{ opt.val }}
+              {{ opt.nm }}
             </option>
           </select>
 
@@ -496,6 +496,18 @@ export default {
               { type: "text", label: "MOBILE NUMBER", input: "" },
               { type: "text", label: "RANK", input: "" },
               { type: "file", label: "PROFILE", input: "" },
+              {
+                type: "select",
+                label: "OFFICER TYPE",
+                input: 2,
+                options: {
+                  selected: "SELECT OFFICER TYPE",
+                  option: [
+                    { nm: "PATROL GROUP", val: 4 },
+                    { nm: "OFFICE GROUP", val: 2 },
+                  ],
+                },
+              },
             ],
           },
           {

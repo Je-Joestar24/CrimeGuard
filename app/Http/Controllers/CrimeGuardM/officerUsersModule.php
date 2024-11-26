@@ -39,6 +39,7 @@ class OfficerUsersModule extends Controller
             'user name',
             'email address',
             'phone no.',
+            'group',
             'current address',
         ];
 
@@ -47,17 +48,23 @@ class OfficerUsersModule extends Controller
             /* table data */
             $query = User::leftJoin('addresses', 'users.current_address', '=', 'addresses.id')->select([
                 'users.id',
-                'users.profile',
+                'users.profile', 
                 'users.first_name',
                 'users.last_name',
                 'users.user_name',
                 'users.email',
                 'users.contact',
+                DB::raw('CASE 
+                    WHEN users.user_level = 4 THEN "PATROL GROUP"
+                    WHEN users.user_level = 2 THEN "OFFICE GROUP"
+                    END as group_type'),
                 DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
-            ])->where('users.user_level', '=', '2')
-                ->whereNull('users.archived_at')
-                ->whereNull('users.deleted_by')
-                ->orWhere('users.user_level', '=', '4');
+            ])->where(function($query) {
+                $query->where('users.user_level', '=', '2')
+                    ->whereNull('users.archived_at')
+                    ->whereNull('users.deleted_by')
+                    ->orWhere('users.user_level', '=', '4');
+            });
 
             if ($request->has('search') && !empty($request->input('search'))) {
                 $searchTerm = $request->input('search');
@@ -91,7 +98,6 @@ class OfficerUsersModule extends Controller
         $data = [];
 
         $user = $request['user'];
-        $user['user_level'] = 2;
         $user_credentials = $request['officer_credentials'];
         $current_address = $request['current_address'];
         $other_address = $request['other_address'];
