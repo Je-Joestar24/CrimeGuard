@@ -216,8 +216,8 @@ class IncidentModule extends Controller
 
         $data['data'] = [];
 
-        $station = $this->dynamic->getUserStation($request['id']);
-        $station = $station['response'] ? $station['station'] : null;
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->select(
@@ -505,6 +505,8 @@ class IncidentModule extends Controller
 
 
         try {
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->leftJoin('users as assign', 'incidents.assigned_to', '=', 'assign.id')
                 ->select(
@@ -520,7 +522,8 @@ class IncidentModule extends Controller
                     DB::raw("CONCAT(assign.first_name, ' ', assign.last_name) AS assigned_to"),
                     'incidents.rej_message'
                 )->where('incidents.reported_by_user', '!=', NULL);
-            if ($request->has('id')) $reports = $reports->where('incidents.assigned_to', $request->input('id'));
+            if ($station != 100) $reports = $reports->where('incidents.station', $station);
+            if ($request->has('id') && $this->dynamic->getUserLevel($request->input('id')) != 1) $reports = $reports->where('incidents.assigned_to', $request->input('id'));
             if ($request->has('status')) $reports = $reports->where('incidents.status', 'respond');
             else {
                 /* $reports = $reports->where(function ($query) use ($currentDate) {
@@ -568,6 +571,8 @@ class IncidentModule extends Controller
                 ];
                 array_push($data['data'], $cleaned);
             }
+            
+            $data['station'] = $station;
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             $data['response'] = 'Error';
@@ -1109,7 +1114,7 @@ class IncidentModule extends Controller
         try {
             $param[0][$key];
             return true;
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -1140,7 +1145,7 @@ class IncidentModule extends Controller
             $id = $this->getId($model, $param);
 
             return $id;
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             return null;
         }
     }

@@ -281,7 +281,7 @@ export default {
       if (this.users.length > 0) this.removeAllMarkers();
       const dt = await this.$store.dispatch("sendData", {
         url: "api/track/location/map/req",
-        data: {},
+        data: { id: this.cred["id"] },
       });
       if (dt["response"] === "Success") {
         let data = dt["data"];

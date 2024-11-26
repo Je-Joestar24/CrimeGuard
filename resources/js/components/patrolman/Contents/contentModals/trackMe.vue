@@ -359,8 +359,8 @@ export default {
     },
     async generateData() {
       const dt = await this.$store.dispatch(
-        "generateTableData",
-        "api/incidents/report/marker/Display"
+        "sendData",
+        {url: "api/incidents/report/marker/Display", data: {}}
       );
       if (dt["response"] === "Success") {
         let data = dt["data"];

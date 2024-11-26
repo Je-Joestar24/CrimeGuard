@@ -322,7 +322,7 @@ export default {
     async checkIncidents() {
       const credentials = JSON.parse(localStorage.getItem("credentials"));
       try {
-        const data = credentials.user_level == 2 ? { id: credentials.id } : {};
+        const data = { id: credentials.id };
         const response = await this.$store.dispatch("sendData", {
           url: "api/dashboard/generate/emergency/reports",
           data: data,

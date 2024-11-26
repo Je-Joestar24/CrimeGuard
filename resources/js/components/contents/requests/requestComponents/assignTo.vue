@@ -70,6 +70,7 @@ export default {
       searchOfficer: "",
       officers: [],
       officer: -1,
+      id: (JSON.parse(localStorage.getItem("credentials"))) ? JSON.parse(localStorage.getItem("credentials")).id : -1,
     };
   },
   methods: {
@@ -82,7 +83,7 @@ export default {
     },
     async search(key, param) {
       const send = {
-        data: { search: param },
+        data: { search: param, id: this.id },
         url: "api/officer/search/request",
       };
 

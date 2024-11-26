@@ -333,6 +333,10 @@ class OfficerUsersModule extends Controller
 
         $data = [];
         try {
+
+            $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+
             $query = User::leftJoin('addresses', 'users.current_address', '=', 'addresses.id')->select([
                 'users.id',
                 'users.first_name',
@@ -340,7 +344,10 @@ class OfficerUsersModule extends Controller
                 'users.user_name',
                 'users.email',
                 'users.contact',
-            ])->where('users.user_level', '=', '2')
+            ])->join('officer-credentials', 'users.id', '=', 'officer-credentials.user_id');
+
+            if ($station != 100) $query = $query->where('officer-credentials.station', $station);
+            $query = $query->where('users.user_level', '=', '2')
                 ->whereNull('users.archived_at')
                 ->whereNull('users.deleted_by');
 

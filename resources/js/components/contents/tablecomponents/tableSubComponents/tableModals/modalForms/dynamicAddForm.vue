@@ -476,8 +476,22 @@ export default {
                     { nm: "FEMALE", val: "Female" },
                   ],
                 },
+              },{
+                type: "select",
+                label: "STATION",
+                input: "",
+                options: {
+                  selected: "STATION",
+                  option: [
+                    { nm: "STATION 1", val: 1 },
+                    { nm: "STATION 2", val: 2 },
+                    { nm: "STATION 3", val: 3 },
+                    { nm: "STATION 4", val: 4 },
+                    { nm: "STATION 5", val: 5 },
+                    { nm: "STATION 6", val: 6 },
+                  ],
+                },
               },
-              { type: "text", label: "STATION", input: "" },
               { type: "text", label: "EMAIL ADDRESS", input: "" },
               { type: "text", label: "MOBILE NUMBER", input: "" },
               { type: "text", label: "RANK", input: "" },

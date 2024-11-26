@@ -4,7 +4,7 @@ namespace App\Http\Controllers\CrimeGuardM\Dynamic;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfficerCredential;
-use App\Models\PoliceStation;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,6 +44,12 @@ class DynamicFunctions extends Controller
         }
 
         return ['response' => true, 'station' => $station['station']];
+    }
+
+    public function getUserLevel($id)
+    {
+        $user =  User::select('user_level')->where('id', $id)->first();
+        return $user ? $user['user_level'] : null;
     }
 
     /* use for pure foreign key */

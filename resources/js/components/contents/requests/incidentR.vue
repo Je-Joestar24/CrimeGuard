@@ -359,15 +359,17 @@ export default {
     };
   },
   mounted() {
-    this.getData({ url: "api/incidents/report/list/Display", data: {} });
     // Set the user's credentials
     const credentials = JSON.parse(localStorage.getItem("credentials"));
     this.cred.id = credentials.id;
     this.cred.user_level = credentials.user_level;
+    this.getData({ url: "api/incidents/report/list/Display", data: {} });
   },
   methods: {
     async getData(param) {
-      const data = await this.$store.dispatch("sendData", param);
+      const send = param;
+      send.data["id"] = this.cred.id;
+      const data = await this.$store.dispatch("sendData", send);
       if (data["response"] == "Success") {
         this.arr = await data["data"];
         this.createPaginatedData();

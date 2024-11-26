@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\CrimeGuardM;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrimeGuardM\Dynamic\DynamicFunctions;
+use App\Models\Incidents;
 use App\Models\UserTrack;
 use DateTime;
 use Illuminate\Http\Request;
 
 class TrackUser extends Controller
 {
+    protected $dynamic;
+
+    public function __construct(DynamicFunctions $dynamic)
+    {
+        $this->dynamic = $dynamic;
+    }
+
     //
     public function add(Request $request)
     {
@@ -84,7 +93,24 @@ class TrackUser extends Controller
                         'profile' => $report['profile'],
                         'user_level' => $report['user_level']
                     ];
-                    array_push($data['data'], $cleaned);
+
+                    $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+                    $station = $station['response'] ? $station['station'] : 100;
+
+                    // Get today's first incident for this user and station if they are level 3
+                    $todayIncident = null;
+                    if ($report->user_level == 3) {
+                        $todayIncident = Incidents::where('reported_by_user', $report['id'])
+                            ->where('station', $station)
+                            ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                            ->orderBy('created_at', 'asc')
+                            ->first();
+                    }
+
+                    if ($station == 100 || $todayIncident) {
+                        array_push($data['data'], $cleaned);
+                    }
+
                     $userNames[] = $report->user_name;
                 }
             }

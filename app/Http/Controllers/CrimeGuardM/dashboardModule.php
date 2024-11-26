@@ -398,6 +398,7 @@ class DashboardModule extends Controller
 
         return response()->json($data);
     }
+
     public function displayCount(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
@@ -570,16 +571,26 @@ class DashboardModule extends Controller
 
 
         date_default_timezone_set('Asia/Manila');
+    
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
+
+        
 
         $currentDate = new DateTime();
         $data = [];
 
         $init = Incidents::where('status', '=', 'report');
-        if (!$request->has('id')) $init = $init->where('report_type', 1);
+
+        if ($station != 100) $init = $init->where('incidents.station', $station);
+
+        if ($request->has('ind')  || !$request->has('id')) $init = $init->where('report_type', 1);
         else $init = $init->where('assigned_to', $request->input('id'));
+
         $init = $init->whereDate('date_reported',  $currentDate->format('Y-m-d'))
             ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
             ->get();
+
         $data['data']['reportedIncidents'] = $init;
         $data['response'] = 'Success';
 
