@@ -85,7 +85,7 @@ export default {
           layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
 
           // Marker info
-          let bg =   mark.report_type == 1
+          let bg = mark.secured ? "border-green-600 bg-green-100" : mark.report_type == 1
               ? "border-red-600 bg-red-100" 
               : "border-yellow-600 bg-yellow-100";
           let infoWindow = new google.maps.InfoWindow({
@@ -145,7 +145,7 @@ export default {
           });
 
           layer.addEventListener("click", () => {
-            infoWindow.open(map, marker);
+            infoWindow.open(this.map, marker);
           });
 
           const panes = this.getPanes();
