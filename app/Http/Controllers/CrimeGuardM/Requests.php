@@ -19,6 +19,7 @@ class Requests extends Controller
     {
         $data = [];
         try {
+            date_default_timezone_set('Asia/Manila');
             // Create new incident secured record
             $incidentSecured = IncidentSecure::create([
                 'incident' => $request->incident,

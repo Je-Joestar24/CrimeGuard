@@ -7,7 +7,7 @@ use App\Http\Controllers\CrimeGuardM\IncidentModule;
 use App\Http\Controllers\CrimeGuardM\LogsModule;
 use App\Http\Controllers\CrimeGuardM\NotificationModule;
 use App\Http\Controllers\CrimeGuardM\OfficerUsersModule;
-use App\Http\Controllers\crimeguardm\Requests;
+use App\Http\Controllers\CrimeGuardM\Requests;
 use App\Http\Controllers\CrimeGuardM\TrackUser;
 use App\Http\Controllers\CrimeGuardM\TrailLogModule;
 use App\Http\Controllers\CrimeGuardM\UserAuths;

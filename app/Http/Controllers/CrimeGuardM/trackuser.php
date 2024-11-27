@@ -54,7 +54,7 @@ class TrackUser extends Controller
         try {
             $reports = UserTrack::leftJoin('users', 'user_track.user', '=', 'users.id')
                 ->select(
-                    'user_track.id',
+                    'users.id',
                     'user_track.created_at',
                     'users.profile',
                     'users.user_name',
@@ -94,29 +94,34 @@ class TrackUser extends Controller
                         'profile' => $report['profile'],
                         'user_level' => $report['user_level']
                     ];
-
                     $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
                     $station = $station['response'] ? $station['station'] : 100;
-                    $isSecured = false;
-                    // Get today's first incident for this user and station if they are level 3
-                    $todayIncident = null;
+
+                    // Check if user exists in incident-secured table
+                    $isSecured = DB::table('incident-secured')
+                        ->where('citizen', $cleaned['id'])
+                        ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                        ->exists();
+
+                    $stationC = null;
                     if ($cleaned['user_level'] == 3) {
-                        $todayIncident = Incidents::where('reported_by_user', $report['id'])
+                        $stationC = DB::table('incidents')
+                            ->where('reported_by_user', $cleaned['id'])
                             ->whereDate('created_at', $currentDate->format('Y-m-d'))
-                            ->orderBy('created_at', 'asc')
-                            ->first();
-                        $isSecured = DB::table('incident-secured')
-                            ->where('citizen', $cleaned['id'])
-                            ->exists();
+                            ->value('station');
+                    } else {
+                        $stationC = $this->dynamic->getUserStation($cleaned['id']);
+                        $stationC = $stationC['response'] ? $stationC['station'] : 100;
                     }
 
-                    // If station is 100 (all stations) OR
-                    // If user is not level 3 OR 
-                    // If user is level 3 and has an incident today with matching station
-                    if (($station == 100 && $cleaned['user_level'] != 3) || 
-                        ($cleaned['user_level'] == 3 && $todayIncident && $todayIncident->station == $station) && !$isSecured) {
-                        array_push($data['data'], $cleaned);
-                        array_push($userNames, $report->user_name);
+                    // Only add to data if incident is not secured
+                    if (!$isSecured) {
+                        // For station 100, add all unsecured incidents
+                        // For other stations, only add if it matches their station
+                        if ($station == 100 || ($stationC != null && $station == $stationC)) {
+                            array_push($data['data'], $cleaned);
+                            array_push($userNames, $report->user_name);
+                        }
                     }
                 }
             }

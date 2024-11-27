@@ -6,7 +6,7 @@
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
       <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-        <div class="bg-gradient-to-r from-yellow-500 to-amber-500 px-4 py-5 sm:px-6">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-500 px-4 py-5 sm:px-6">
           <div class="flex items-center justify-between">
             <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">
               Secure Incident
@@ -63,3 +63,8 @@ export default {
 }
 </script>
 
+<style scoped>
+.bg-gradient-to-r {
+    background: linear-gradient(to right, #f59e0b, #f59e0b);
+}
+</style>

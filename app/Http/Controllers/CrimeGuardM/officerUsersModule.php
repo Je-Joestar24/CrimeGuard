@@ -101,6 +101,7 @@ class OfficerUsersModule extends Controller
         $user_credentials = $request['officer_credentials'];
         $current_address = $request['current_address'];
         $other_address = $request['other_address'];
+        $data['user'] = $user;
         try {
             $user['accepted_at'] = $currentDate->format('Y-m-d H:i:s');
 

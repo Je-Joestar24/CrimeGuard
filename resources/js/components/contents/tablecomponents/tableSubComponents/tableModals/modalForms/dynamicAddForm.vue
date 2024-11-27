@@ -919,6 +919,7 @@ export default {
               ? passwrd
               : null,
           accepted_by: 3,
+          user_level: this.formModel.innerOfficerAccounts[0].infos[9].input,
         },
         current_address: {
           street: this.formModel.innerOfficerAccounts[1].infos[0].input,
