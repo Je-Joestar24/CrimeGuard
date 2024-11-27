@@ -143,12 +143,12 @@
                   ASSIGNED
                 </span>
                 <span
-                  v-if="el['secured'] == true"
+                  v-if="el['secured']"
                   class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
                   >SECURED</span
                 >
                 <button
-                  v-if="el['secured'] == false"
+                  v-if="!el['secured'] && ((cred.user_level == 1 && el['assigned_to'] != null) || (cred.user_level == 2 && (el['status'] != 'reject' && el['status'] != 'report'))) "
                   @click="toggleSecureModal({ incident: el['id'], officer: cred.id, citizen: el['user_id']})"
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
                 >
@@ -306,6 +306,7 @@
   <assignLoading v-if="assingLoading" />
   <rejectLoading v-if="rejectLoading" />
   <respondLoading v-if="respondLoading" />
+  <secureLoading v-if="secureLoading" />
 </template>
 
 <script>
@@ -319,6 +320,7 @@ import assignLoading from "./requestComponents/loading/assignLoading.vue";
 import rejectLoading from "./requestComponents/loading/rejectLoading.vue";
 import respondLoading from "./requestComponents/loading/respondLoading.vue";
 import secureIncident from "./requestComponents/secureIncident.vue";
+import secureLoading from "./requestComponents/loading/secureLoading.vue";
 
 export default {
   components: {
@@ -332,6 +334,7 @@ export default {
     rejectLoading,
     respondLoading,
     secureIncident,
+    secureLoading,
   },
   data() {
     return {
@@ -424,7 +427,6 @@ export default {
     toggleSecureModal(param) {
       this.secured.data = param;
       this.modals.secureIsOpen = !this.modals.secureIsOpen;
-      alert(this.secured.data['incident']);
     },
     sendId(param) {
       this.requestId = param;
