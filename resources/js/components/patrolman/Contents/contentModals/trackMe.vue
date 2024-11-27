@@ -42,6 +42,41 @@
     opacity: 0.8;
   }
 }
+.secured-dot {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  background-color: #10B981; /* Emerald green color */
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3), /* Inner glow */
+              0 0 0 15px rgba(16, 185, 129, 0.15); /* Outer larger glow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'%3E%3C/path%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 15px;
+}
+
+.pulse {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+}
+
+.pulse2 {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: rgb(255, 132, 0);
+  border-radius: 50%;
+  cursor: pointer;
+  animation: blink 1s infinite;
+}
+
 
 .crimeHeatMap {
   display: none;
@@ -362,8 +397,12 @@ export default {
 
       if (res == "Success") {
         this.secureLoading = false;
+        this.removeAllMarkers();
         this.toggleSecureModal("");
         await this.generateData();
+        await this.generateData2();
+        // Reinitialize the map
+        await this.initializeMap();
       } else {
         this.secureLoading = false;
         await alert("An error occured, please try again.");
@@ -421,6 +460,7 @@ export default {
       });
 
       this.loadMarkers();
+      this.loadMarkers2();
     },
     async generateData() {
       const dt = await this.$store.dispatch(
@@ -430,6 +470,7 @@ export default {
       if (dt["response"] === "Success") {
         let data = dt["data"];
         this.data.markers = [];
+        this.removeAllMarkers();
         for (let i = 0; i < data.length; i++) {
           this.data.markers.push({
             id: data[i]["id"],
@@ -545,12 +586,17 @@ export default {
       }
     },
     loadMarkers() {
-      this.loadMarkers2();
       this.data.markers.forEach((mark) => {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "pulse" : "pulse2");
+          
+          // If secured, use stable green dot, otherwise use pulse animation based on report type
+          if (mark.secured) {
+            layer.classList.add("secured-dot");
+          } else {
+            layer.classList.add(mark.report_type == 1 ? "pulse" : "pulse2");
+          }
 
           layer.addEventListener("click", () => {
             infoWindow.open(this.map, marker);

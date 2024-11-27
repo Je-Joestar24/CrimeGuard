@@ -8,6 +8,7 @@ use App\Models\Incidents;
 use App\Models\UserTrack;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TrackUser extends Controller
 {
@@ -96,7 +97,7 @@ class TrackUser extends Controller
 
                     $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
                     $station = $station['response'] ? $station['station'] : 100;
-
+                    $isSecured = false;
                     // Get today's first incident for this user and station if they are level 3
                     $todayIncident = null;
                     if ($cleaned['user_level'] == 3) {
@@ -104,14 +105,16 @@ class TrackUser extends Controller
                             ->whereDate('created_at', $currentDate->format('Y-m-d'))
                             ->orderBy('created_at', 'asc')
                             ->first();
+                        $isSecured = DB::table('incident-secured')
+                            ->where('citizen', $cleaned['id'])
+                            ->exists();
                     }
 
                     // If station is 100 (all stations) OR
                     // If user is not level 3 OR 
                     // If user is level 3 and has an incident today with matching station
-                    if ($station == 100 || 
-                        $cleaned['user_level'] == 3 || 
-                        ($cleaned['user_level'] == 3 && $todayIncident && $todayIncident->station == $station)) {
+                    if (($station == 100 && $cleaned['user_level'] != 3) || 
+                        ($cleaned['user_level'] == 3 && $todayIncident && $todayIncident->station == $station) && !$isSecured) {
                         array_push($data['data'], $cleaned);
                         array_push($userNames, $report->user_name);
                     }
