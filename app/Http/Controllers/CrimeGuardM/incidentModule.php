@@ -553,6 +553,11 @@ class IncidentModule extends Controller
             $reports = $reports->whereDate('incidents.date_reported',  $currentDate->format('Y-m-d'))
                 ->get();
             foreach ($reports as $report) {
+                // Check if incident exists in IncidentSecured
+                $isSecured = DB::table('incident-secured')
+                    ->where('incident', $report['id'])
+                    ->exists();
+
                 $cleaned = [
                     'id' => $report['id'],
                     'user_name' => $report['user_name'],
@@ -567,11 +572,12 @@ class IncidentModule extends Controller
                     'status' => $report['status'],
                     'assigned_to' => $report['assigned_to'],
                     'rej_message' => $report['rej_message'],
-                    'profile' => $report['profile']
+                    'profile' => $report['profile'],
+                    'secured' => $isSecured
                 ];
                 array_push($data['data'], $cleaned);
             }
-            
+
             $data['station'] = $station;
             $data['response'] = 'Success';
         } catch (\Exception $e) {
@@ -888,7 +894,7 @@ class IncidentModule extends Controller
 
         try {
 
-            
+
             $incident = $request['incident'];
             $incident['time_reported'] = $incident['date_reported'] . ' ' . $incident['time_reported'] . ':00';
             $incident['time_of_incident'] = $incident['date_of_incident'] . ' ' . $incident['time_of_incident'] . ':00';
@@ -896,7 +902,7 @@ class IncidentModule extends Controller
             $station = $incident['added_by'] ? $this->dynamic->getUserStation($incident['added_by']) : ['response' => false];
             $station = $station['response'] ? $station['station'] : 100;
 
-             $incident['station'] = $station;
+            $incident['station'] = $station;
 
             $victims = $this->doesItExists($request['victims'], 'victim') ? $this->addByKey($request['victims'], 'victim') : [];
             $suspects = $this->doesItExists($request['suspects'], 'suspect') ? $this->addByKey($request['suspects'], 'suspect') : [];

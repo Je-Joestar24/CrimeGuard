@@ -7,6 +7,7 @@ use App\Http\Controllers\CrimeGuardM\IncidentModule;
 use App\Http\Controllers\CrimeGuardM\LogsModule;
 use App\Http\Controllers\CrimeGuardM\NotificationModule;
 use App\Http\Controllers\CrimeGuardM\OfficerUsersModule;
+use App\Http\Controllers\crimeguardm\Requests;
 use App\Http\Controllers\CrimeGuardM\TrackUser;
 use App\Http\Controllers\CrimeGuardM\TrailLogModule;
 use App\Http\Controllers\CrimeGuardM\UserAuths;
@@ -135,5 +136,8 @@ Route::post('api/temporary/login/user/request', [UserAuths::class, 'temporaryLog
 /* requests */
 Route::get('api/request/log/addLog', [LogsModule::class, 'addLog']);
 Route::get('api/request/activity/addLog', [TrailLogModule::class, 'addLog']);
+
+/* Incident Secure */
+Route::post('api/incident/secure/add/item/request', [Requests::class, 'addIncidentSecured']);
 
 require __DIR__ . '/auth.php';

@@ -142,7 +142,9 @@
                 >
                   ASSIGNED
                 </span>
+                <span v-if="el['secured'] == true" class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">SECURED</span>
                 <button
+                  v-if="el['secured'] == false"
                   @click="sendId(el['id'])"
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
                 >
@@ -347,6 +349,9 @@ export default {
       assign: {
         data: {},
         url: "api/incidents/assign/item/request",
+      },secured:{
+        data:{},
+        url:"api/incident/secure/add/item/request"
       },
       modals: {
         respondIsOpen: false,
