@@ -234,7 +234,8 @@ class IncidentModule extends Controller
                     'users.contact',
                     'incidents.longitude',
                     'incidents.latitude',
-                    'incidents.report_type'
+                    'incidents.report_type',
+                    'incidents.reported_by_user'
                 );
 
             if ($station != 100) $reports = $reports->where('incidents.station', $station);
@@ -246,9 +247,14 @@ class IncidentModule extends Controller
                 ->get();
 
             foreach ($reports as $report) {
+                // Check if incident is secured
+                $isSecured = DB::table('incident-secured')
+                    ->where('incident', $report['id'])
+                    ->exists();
+
                 $cleaned = [
                     'id' => $report['id'],
-                    'user_name' => $report['user_name'],
+                    'user_name' => $report['user_name'], 
                     'name' => $report['first_name'] . " " . $report["last_name"],
                     'email' => $report['email'],
                     'message' => $report['message'],
@@ -262,7 +268,9 @@ class IncidentModule extends Controller
                     'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
                     'report_type' => $report['report_type'],
-                    'profile' => $report['profile']
+                    'profile' => $report['profile'],
+                    'secured' => $isSecured,
+                    'user_id' => $report['reported_by_user']
                 ];
                 array_push($data['data'], $cleaned);
             }

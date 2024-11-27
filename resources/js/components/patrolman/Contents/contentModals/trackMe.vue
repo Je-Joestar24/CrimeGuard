@@ -231,6 +231,31 @@
                   {{ incident["email"] }}
                 </p>
               </div>
+              <button
+                v-if="!incident['secured']"
+                @click="toggleSecureModal({ incident: incident['id'], officer: cred.id, citizen: incident['user_id']})"
+                class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+                Secure
+              </button>
+              <span
+                v-if="incident['secured']"
+                class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
+              >SECURED</span>
             </div>
           </li>
 
@@ -239,16 +264,26 @@
       </div>
     </div>
   </div>
+
+  <secureModal v-if="secureModal" :toggle="toggleSecureModal" :sendData="secureData" />
+  <secureLoading v-if="secureLoading" />
 </template>
 <script>
 import axios from "axios";
 import { map } from "highcharts";
+import secureLoading from "../../../contents/requests/requestComponents/loading/secureLoading.vue";
+import secureModal from "../../../contents/requests/requestComponents/secureIncident.vue";
+
 export default {
   components: {
+    secureLoading,
+    secureModal,
   },
   data() {
     return {
       data: { markers: [] },
+      secureLoading: false,
+      secureModal: false,
       months: [
         "JAN",
         "FEB",
@@ -268,6 +303,10 @@ export default {
         latitude: 0.0,
         longitude: 0.0,
       },
+      secured: {
+        data: {},
+        url: "api/incident/secure/add/item/request",
+      },
       intervalId: null,
       map: null,
       data2: { markers: [] },
@@ -279,12 +318,18 @@ export default {
       },
       active: -1,
       open: "incident",
+      cred: {
+        user_level: 4, // This should be set dynamically based on the user's actual level
+        id: null,
+      },
     };
   },
   created() {
     (async () => {
       const credentials = JSON.parse(localStorage.getItem("credentials"));
       this.user_track.user = credentials.id;
+      this.cred.id = credentials.id;
+      this.cred.user_level = credentials.user_level;
       await this.startLogging();
       await this.generateData();
       await this.generateData2();
@@ -304,6 +349,26 @@ export default {
     this.userTrack();
   },
   methods: {
+    toggleSecureModal(param) {
+      this.secured.data = param;
+      this.secureModal = !this.secureModal;
+    },
+    async secureData() {
+      this.secureLoading = true;
+      const send = this.secured;
+
+      const data = await this.$store.dispatch("sendData", send);
+      const res = await data["response"];
+
+      if (res == "Success") {
+        this.secureLoading = false;
+        this.toggleSecureModal("");
+        await this.generateData();
+      } else {
+        this.secureLoading = false;
+        await alert("An error occured, please try again.");
+      }
+    },
     async track_me() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -364,8 +429,10 @@ export default {
       );
       if (dt["response"] === "Success") {
         let data = dt["data"];
+        this.data.markers = [];
         for (let i = 0; i < data.length; i++) {
           this.data.markers.push({
+            id: data[i]["id"],
             pos: {
               lat: parseFloat(data[i]["pos"]["lat"]),
               lng: parseFloat(data[i]["pos"]["lng"]),
@@ -379,6 +446,8 @@ export default {
             month: data[i]["month"],
             date: data[i]["date"],
             profile: data[i]["profile"],
+            secured: data[i]["secured"],
+            user_id: data[i]["user_id"],
             ctr: this.ctr,
           });
           this.ctr++;
