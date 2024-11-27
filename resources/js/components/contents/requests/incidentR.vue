@@ -142,14 +142,29 @@
                 >
                   ASSIGNED
                 </span>
-                <span v-if="el['secured'] == true" class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">SECURED</span>
+                <span
+                  v-if="el['secured'] == true"
+                  class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
+                  >SECURED</span
+                >
                 <button
                   v-if="el['secured'] == false"
                   @click="sendId(el['id'])"
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                   Secure
                 </button>
@@ -267,26 +282,25 @@
     v-show="!respondLoading"
     :toggle="toggleRespondModal"
     :sendData="respondData"
-    v-if="modals.respondIsOpen"
-  ></respondIncident>
+    v-if="modals.respondIsOpen"/>
   <rejectIncident
     v-show="!rejectLoading"
     :toggle="toggleRejectModal"
     :sendData="rejectData"
-    v-if="modals.rejectIsOpen"
-  ></rejectIncident>
+    v-if="modals.rejectIsOpen"/>
   <assignTo
     v-show="!assingLoading"
     :toggle="toggleAssignModal"
     :sendData="assignData"
     v-if="modals.assignIsOpen"
-  ></assignTo>
+  />
   <incidentEditForm
     :reloadTab="getTData"
     :rId="requestId"
     :toggle="sendId"
     v-if="incidentAdd"
-  ></incidentEditForm>
+  />
+  <secureIncident :sendData="secureData" :toggle="toggleSecureModal" v-if="modals.secureIsOpen"/>
 
   <!-- Loading -->
   <assignLoading v-if="assingLoading" />
@@ -304,6 +318,8 @@ import respondedComponent from "./incidentRequests/responded.vue";
 import assignLoading from "./requestComponents/loading/assignLoading.vue";
 import rejectLoading from "./requestComponents/loading/rejectLoading.vue";
 import respondLoading from "./requestComponents/loading/respondLoading.vue";
+import secureIncident from "./requestComponents/secureIncident.vue";
+
 export default {
   components: {
     respondIncident,
@@ -315,6 +331,7 @@ export default {
     assignLoading,
     rejectLoading,
     respondLoading,
+    secureIncident,
   },
   data() {
     return {
@@ -323,6 +340,7 @@ export default {
       assingLoading: false,
       rejectLoading: false,
       respondLoading: false,
+      secureLoading: false,
       month: [
         "january",
         "february",
@@ -349,14 +367,16 @@ export default {
       assign: {
         data: {},
         url: "api/incidents/assign/item/request",
-      },secured:{
-        data:{},
-        url:"api/incident/secure/add/item/request"
+      },
+      secured: {
+        data: {},
+        url: "api/incident/secure/add/item/request",
       },
       modals: {
         respondIsOpen: false,
         rejectIsOpen: false,
         assignIsOpen: false,
+        secureIsOpen: false,
       },
       cred: {
         user_level: 2, // This should be set dynamically based on the user's actual level
@@ -401,6 +421,10 @@ export default {
       this.modals.rejectIsOpen = !this.modals.rejectIsOpen;
       this.reject.data = param;
       console.log(this.reject);
+    },
+    toggleSecureModal(param) {
+      this.modals.secureIsOpen = !this.modals.secureIsOpen;
+      this.secured.data = param;
     },
     sendId(param) {
       this.requestId = param;
@@ -462,6 +486,27 @@ export default {
         });
       } else {
         this.assingLoading = false;
+        await alert("An error occured, please try again.");
+      }
+    },
+    async secureData(param) {
+      this.secured.data["incident"] = param;
+      this.secureLoading = true;
+      const send = this.secured;
+      console.log(send);
+
+      const data = await this.$store.dispatch("sendData", send);
+      const res = await data["response"];
+
+      if (res == "Success") {
+        this.secureLoading = false;
+        this.toggleSecureModal("");
+        await this.getData({
+          url: "api/incidents/report/list/Display",
+          data: {},
+        });
+      } else {
+        this.secureLoading = false;
         await alert("An error occured, please try again.");
       }
     },
