@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IncidentSecure extends Model
 {
     use HasFactory;
+    protected $table = 'incident-secured';
 
     protected $fillable = [
         'incident',
