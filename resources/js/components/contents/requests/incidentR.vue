@@ -149,7 +149,7 @@
                 >
                 <button
                   v-if="el['secured'] == false"
-                  @click="sendId(el['id'])"
+                  @click="toggleSecureModal({ incident: el['id'], officer: cred.id, citizen: el['user_id']})"
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
                 >
                   <svg
@@ -420,11 +420,11 @@ export default {
     toggleRejectModal(param) {
       this.modals.rejectIsOpen = !this.modals.rejectIsOpen;
       this.reject.data = param;
-      console.log(this.reject);
     },
     toggleSecureModal(param) {
-      this.modals.secureIsOpen = !this.modals.secureIsOpen;
       this.secured.data = param;
+      this.modals.secureIsOpen = !this.modals.secureIsOpen;
+      alert(this.secured.data['incident']);
     },
     sendId(param) {
       this.requestId = param;
@@ -472,7 +472,6 @@ export default {
       this.assign.data["assigned_to"] = param;
       this.assingLoading = true;
       const send = this.assign;
-      console.log(send);
 
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];
@@ -489,11 +488,9 @@ export default {
         await alert("An error occured, please try again.");
       }
     },
-    async secureData(param) {
-      this.secured.data["incident"] = param;
+    async secureData() {
       this.secureLoading = true;
       const send = this.secured;
-      console.log(send);
 
       const data = await this.$store.dispatch("sendData", send);
       const res = await data["response"];

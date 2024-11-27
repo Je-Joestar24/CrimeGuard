@@ -514,6 +514,7 @@ class IncidentModule extends Controller
                     'incidents.message',
                     'incidents.landmark',
                     'incidents.location',
+                    'incidents.reported_by_user',
                     'incidents.time_reported',
                     'users.user_name',
                     'incidents.status',
@@ -573,6 +574,7 @@ class IncidentModule extends Controller
                     'assigned_to' => $report['assigned_to'],
                     'rej_message' => $report['rej_message'],
                     'profile' => $report['profile'],
+                    'user_id' => $report['reported_by_user'],
                     'secured' => $isSecured
                 ];
                 array_push($data['data'], $cleaned);
