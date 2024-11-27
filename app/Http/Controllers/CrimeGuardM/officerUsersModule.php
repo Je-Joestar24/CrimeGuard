@@ -49,8 +49,8 @@ class OfficerUsersModule extends Controller
             $query = User::leftJoin('addresses', 'users.current_address', '=', 'addresses.id')->select([
                 'users.id',
                 'users.profile', 
-                'users.first_name',
                 'users.last_name',
+                'users.first_name',
                 'users.user_name',
                 'users.email',
                 'users.contact',

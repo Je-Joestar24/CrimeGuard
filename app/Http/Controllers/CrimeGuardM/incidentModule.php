@@ -565,6 +565,7 @@ class IncidentModule extends Controller
                 // Check if incident exists in IncidentSecured
                 $isSecured = DB::table('incident-secured')
                     ->where('incident', $report['id'])
+                    ->whereDate('created_at', $currentDate->format('Y-m-d'))
                     ->exists();
 
                 $cleaned = [
