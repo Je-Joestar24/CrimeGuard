@@ -62,24 +62,11 @@ export default {
     this.cred = credentials;
     (async () => {
       await this.generateData();
-      await this.loadGoogleMapsScript();
       await this.initializeMap();
     })();
     //console.log(document.head)
   },
   methods: {
-    async loadGoogleMapsScript() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM";
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
     initializeMap() {
       const location = { lat: 11.005, lng: 124.6077 };
       this.map = new google.maps.Map(
@@ -95,12 +82,11 @@ export default {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "pulse" : "pulse2");
+          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
 
           // Marker info
-          let bg =
-            mark.report_type == 1
-              ? "border-red-600 bg-red-100"
+          let bg =   mark.report_type == 1
+              ? "border-red-600 bg-red-100" 
               : "border-yellow-600 bg-yellow-100";
           let infoWindow = new google.maps.InfoWindow({
             content: `
@@ -192,27 +178,7 @@ export default {
 
       if (this.data.markers.length > 0)
         this.focusOnMarker(this.data.markers[this.data.markers.length - 1]);
-      /*       var marker = new google.maps.Marker({
-        position: location,
-        map: map,
-      });
-
-
-      var infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div class="p-4 bg-white rounded-lg shadow-lg max-w-xs">
-            <h1 class="font-bold text-lg mb-2">Incident Information:</h1>
-            <p><span class="font-semibold">Message:</span> Nag away</p>
-            <p><span class="font-semibold">Location:</span> Bonifacio Street, Ormoc City</p>
-            <p><span class="font-semibold">Reported by:</span> Jejomar Parrilla</p>
-            <p><span class="font-semibold">Contact no:</span>09073010472</p>
-          </div>
-          `,
-      });
-
-      marker.addListener("click", function () {
-        infoWindow.open(map, marker);
-      }); */
+      
     },
     focusOnMarker(marker) {
       const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
@@ -239,6 +205,7 @@ export default {
             name: data[i]["name"],
             con_no: data[i]["contact"],
             report_type: data[i]["report_type"],
+            secured: data[i]["secured"],
           });
           //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
         }
@@ -250,34 +217,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.blinking-dot-red {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  border-radius: 50%;
-  display: inline-block;
-  animation: blink 1s infinite;
-}
-
-.blinking-dot-yellow {
-  height: 20px;
-  width: 20px;
-  background-color: yellow;
-  border-radius: 50%;
-  display: inline-block;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-</style>

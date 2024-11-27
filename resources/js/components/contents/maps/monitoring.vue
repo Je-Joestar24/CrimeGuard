@@ -171,6 +171,7 @@ export default {
             month: data[i]["month"],
             date: data[i]["date"],
             profile: data[i]["profile"],
+            secured: data[i]["secured"],
             ctr: this.ctr,
           });
           this.ctr++;
@@ -313,7 +314,7 @@ export default {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "pulse" : "pulse2");
+          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
 
           layer.addEventListener("click", () => {
             infoWindow.open(this.map, marker);
