@@ -414,7 +414,7 @@ export default {
           async (position) => {
             const lati = position.coords.latitude;
             const longi = position.coords.longitude;
-
+            this.focusOnMarker({pos: {lat: lati, lng: longi}});
             if (
               this.user_track.latitude != lati ||
               this.user_track.longitude != longi
@@ -444,6 +444,7 @@ export default {
       this.res = await data["response"];
 
       if (this.res == "Success") {
+
       } else {
         await alert("An error occured, please try again.");
         console.log(data);
@@ -786,6 +787,7 @@ export default {
       this.track_me();
       this.intervalId = setInterval(async () => {
         await this.track_me();
+        
         await this.generateData2();
         await this.loadMarkers2();
       }, 10000);

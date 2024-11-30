@@ -66,6 +66,7 @@
                 <li><strong>Date Reported:</strong> {{ $incident->date_reported }}</li>
                 <li><strong>Time Reported:</strong> {{ $incident->time_reported }}</li>
             </ul>
+            <p>Track the incident: <a href="https://csitcicte.com/crimeguard.com">crimeguard</a></p>
             <p>Please log in to the system to view full details and take necessary actions.</p>
             <p>If you have any questions or concerns, please contact your supervisor.</p>
         </div>

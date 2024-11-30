@@ -409,33 +409,51 @@ class IncidentModule extends Controller
     public function respond(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
-
+ 
         $data = [];
 
         try {
+            // Archive the incident with updated details
             $archive = [
                 'status' => 'respond',
-                'edited_by' => $request['edited_by'],
-                'rej_message' => null
+                'edited_by' => $request->input('edited_by'),
+                'rej_message' => null,
             ];
-
-            $incident = Incidents::findOrFail($request['id']);
+    
+            $incident = Incidents::findOrFail($request->input('id'));
             $incident->update($archive);
-
+    
+            // Notify the reporter
             $user = User::findOrFail($incident->reported_by_user);
-
-            // Fixed message
             $message = "Wait for the police. Your report has already been noticed and police are now on the way to your location.";
-
-            // Send email
             Mail::to($user->email)->send(new IncidentResponseMail($message));
-
+    
+            // Determine station for officers
+            $station = $request->has('edited_by') 
+                ? $this->dynamic->getUserStation($request->input('edited_by')) 
+                : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
+    
+            // Fetch officers for the station
+            $officers = User::join("officer-credentials as oc", "oc.user_id", "=", "users.id")
+                ->where("oc.station", $station)
+                ->get(); // Add get() to execute the query
+    
+            // Notify officers
+            foreach ($officers as $officer) {
+                Mail::to($officer->email)->send(new IncidentAssignedMail($officer, $incident));
+            }
+    
+            // Log the trail
             TrailLog::create(['user_id' => $user->id, 'item' => 'notify']);
+    
             $data['response'] = 'Success';
         } catch (\Exception $e) {
+            // Log errors with proper debugging information
             $data['response'] = 'Error';
             $data['err'] = $e->getMessage();
         }
+    
         return response()->json($data);
     }
 
