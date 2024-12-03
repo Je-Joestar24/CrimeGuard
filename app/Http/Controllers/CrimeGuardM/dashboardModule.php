@@ -588,7 +588,7 @@ class DashboardModule extends Controller
         else $init = $init->where('assigned_to', $request->input('id'));
 
         $init = $init->whereDate('date_reported',  $currentDate->format('Y-m-d'))
-            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
+            ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'station')
             ->get();
 
         $data['data']['reportedIncidents'] = $init;

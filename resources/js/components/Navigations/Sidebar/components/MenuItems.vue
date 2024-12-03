@@ -76,7 +76,6 @@ export default {
       if (data.response == "Success") {
         this.info = data.data;
         this.cred.rank = data.data.rank;
-        console.log(this.cred);
         this.cred.station = data.data.station ? data.data.station : "";
       }
     },
