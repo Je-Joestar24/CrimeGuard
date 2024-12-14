@@ -387,6 +387,7 @@ export default {
         user_level: 4, // This should be set dynamically based on the user's actual level
         id: null,
       },
+      myinterVal: null
     };
   },
   created() {
@@ -444,8 +445,6 @@ export default {
           async (position) => {
             const lati = position.coords.latitude;
             const longi = position.coords.longitude;
-            if (lati && longi)
-              this.focusOnMarker({ pos: { lat: lati, lng: longi } });
             if (
               this.user_track.latitude != lati ||
               this.user_track.longitude != longi
@@ -741,12 +740,21 @@ export default {
         await this.track_me();
 
         await this.generateData2();
-      }, 10000);
+      }, 1000);
+      this.myinterVal = setInterval(() => {
+        
+        if (this.user_track.latitude && this.user_track.longitude)
+              this.focusOnMarker({ pos: { lat: this.user_track.latitude, lng: this.user_track.longitude } });
+      }, 10000)
     },
     stopLogging() {
       if (this.intervalId) {
         clearInterval(this.intervalId);
         this.intervalId = null;
+      }
+      if(this.myinterVal){
+        clearInterval(this.myinterVal);
+        this.myinterVal = null;
       }
     },
     checkIfLogged() {
