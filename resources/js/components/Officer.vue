@@ -317,7 +317,7 @@ export default {
     startPolling() {
       this.interval = setInterval(() => {
         this.checkIncidents();
-      }, 300000); // Poll every 2 seconds
+      }, 150000); // Poll every 2 seconds
     },
     async checkIncidents() {
       const credentials = JSON.parse(localStorage.getItem("credentials"));

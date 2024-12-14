@@ -571,11 +571,11 @@ class DashboardModule extends Controller
 
 
         date_default_timezone_set('Asia/Manila');
-    
+
         $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
         $station = $station['response'] ? $station['station'] : 100;
 
-        
+
 
         $currentDate = new DateTime();
         $data = [];
@@ -614,11 +614,7 @@ class DashboardModule extends Controller
             // Fetch the incidents based on query parameters
             $init = Incidents::where('status', '=', 'report');
 
-            if (!$request->has('id')) {
-                $init = $init->where('report_type', 1);
-            } else {
-                $init = $init->where('assigned_to', $request->input('id'));
-            }
+            $init = $init->where('report_type', 1);
 
             $init = $init->whereDate('date_reported', $currentDate->format('Y-m-d'))
                 ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark')
@@ -649,9 +645,9 @@ class DashboardModule extends Controller
         $currentDate = new DateTime();
 
         $data['data'] = [];
-// Get user station
-$station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
-$station = $station['response'] ? $station['station'] : 100;
+        // Get user station
+        $station = $request->has('id') ? $this->dynamic->getUserStation($request->input('id')) : ['response' => false];
+        $station = $station['response'] ? $station['station'] : 100;
 
 
         try {

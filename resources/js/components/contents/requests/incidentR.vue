@@ -96,7 +96,7 @@
                   </svg>
                 </button>
                 <button
-                  v-if="el['status'] == 'report' && cred.user_level == 2"
+                  v-if="el['status'] == 'report'"
                   @click="
                     toggleRespondModal({ id: el['id'], edited_by: cred.id })
                   "
@@ -148,7 +148,7 @@
                   >SECURED</span
                 >
                 <button
-                  v-if="!el['secured'] && ((cred.user_level == 1 && el['assigned_to'] != null) || (cred.user_level == 2 && (el['status'] != 'reject' && el['status'] != 'report'))) "
+                  v-if="!el['secured'] "
                   @click="toggleSecureModal({ incident: el['id'], officer: cred.id, citizen: el['user_id']})"
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
                 >

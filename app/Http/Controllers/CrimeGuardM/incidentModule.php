@@ -550,7 +550,6 @@ class IncidentModule extends Controller
                     'incidents.rej_message'
                 )->where('incidents.reported_by_user', '!=', NULL);
             if ($station != 100) $reports = $reports->where('incidents.station', $station);
-            if ($request->has('id') && $this->dynamic->getUserLevel($request->input('id')) != 1) $reports = $reports->where('incidents.assigned_to', $request->input('id'));
             if ($request->has('status')) $reports = $reports->where('incidents.status', 'respond');
             else {
                 /* $reports = $reports->where(function ($query) use ($currentDate) {

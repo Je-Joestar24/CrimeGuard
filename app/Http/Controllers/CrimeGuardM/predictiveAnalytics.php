@@ -230,7 +230,6 @@ class PredictiveAnalytics extends Controller
             ],
             'response' => 'Success'
         ];
-
         return response()->json($responseData);
     }
 
@@ -260,6 +259,7 @@ class PredictiveAnalytics extends Controller
 
         return round(array_sum($historicalCounts) / $totalHistoricalDays);
     }
+    
     public function predictTopIncidentTypes(Request $request)
     {
 

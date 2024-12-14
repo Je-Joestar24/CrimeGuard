@@ -385,7 +385,7 @@ export default {
     startPolling() {
       this.interval = setInterval(() => {
         this.checkIncidents();
-      }, 300000); // Poll every 2 seconds
+      }, 150000); // Poll every 2 seconds
     },
     toggleProfile() {
       this.closeProfile = !this.closeProfile;

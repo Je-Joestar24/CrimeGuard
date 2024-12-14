@@ -14,16 +14,16 @@
         </section>
         <div class="w-2/5 flex flex-col rounded-lg shadow-md overflow-hidden">
           <!-- Reporting Persons Section -->
-          <div class="flex-1 flex flex-col">
+          <div class="flex-1 flex flex-col overflow-auto">
             <h2
-              class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b"
+              class="text-xl font-bold text-white px-6 py-4 bg-gradient-to-r from-green-400 to-green-600 border-b"
             >
               Reporting Persons
             </h2>
             <div class="overflow-auto flex-1 bg-white">
-              <template v-if="users.length">
+              <template v-if="users.filter(user => user.user_level === 3).length">
                 <div
-                  v-for="(marker, index) in users"
+                  v-for="(marker, index) in users.filter(user => user.user_level === 3)"
                   :key="index"
                   @click="focusOnMarker(marker)"
                   class="flex items-center px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
@@ -73,11 +73,77 @@
               </div>
             </div>
           </div>
-
-          <!-- Reported Incidents Section -->
-          <div class="flex-1 flex flex-col">
+          <!-- Allied Forces -->
+          <div class="flex-1 flex flex-col overflow-auto">
             <h2
-              class="text-xl font-bold text-gray-800 px-6 py-4 bg-gray-50 border-b"
+              class="text-xl font-bold text-white px-6 py-4 bg-gradient-to-r from-blue-400 to-blue-600 border-b"
+              role="heading"
+              aria-label="Allied Forces Section"
+            >
+              ALLIED FORCES
+            </h2>
+            <div class="overflow-auto flex-1 bg-white">
+              <template v-if="users.filter(user => user.user_level != 3).length">
+                <div
+                  v-for="(marker, index) in users.filter(user => user.user_level != 3)"
+                  :key="index"
+                  @click="focusOnMarker(marker)"
+                  class="flex items-center px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
+                  :class="{ 'bg-blue-50': active == marker.ctr }"
+                  role="button"
+                  aria-label="Select marker"
+                >
+                  <div class="flex-shrink-0">
+                    <img
+                      v-if="marker.profile"
+                      :src="marker.profile"
+                      :alt="marker.name"
+                      class="h-12 w-12 rounded-full object-cover shadow-sm"
+                      :class="{ 'ring-2 ring-blue-500': active == marker.ctr }"
+                    />
+                    <div
+                      v-else
+                      class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center shadow-sm"
+                      role="img"
+                      aria-label="Default profile picture"
+                    >
+                      <svg
+                        class="h-6 w-6 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <p class="text-sm font-semibold text-gray-900">
+                      {{ marker.name }}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      {{ marker.con_no }}
+                    </p>
+                  </div>
+                </div>
+              </template>
+              <div v-else class="flex items-center justify-center h-full">
+                <p class="text-gray-500 text-sm">
+                  No Active Ally on the Map
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Reported Incidents Section -->
+          <div class="overflow-auto flex-1 flex flex-col">
+            <h2
+              class="text-xl font-bold text-white px-6 py-4 bg-gradient-to-r from-red-500 to-red-300 border-b"
             >
               Reported Incidents
             </h2>

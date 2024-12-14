@@ -1079,22 +1079,9 @@ export default {
           }
         });
       });
-    },
-    async loadAPI() {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyAfuU61GhND_tK2_KxcvLtT3tLbJiqlmTM&libraries=places";
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
+    }
   },
   created() {
-    this.loadAPI();
     const credential = JSON.parse(localStorage.getItem("credentials"));
     this.id = credential.id;
   },

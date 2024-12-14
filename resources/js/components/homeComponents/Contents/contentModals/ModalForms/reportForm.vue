@@ -409,7 +409,7 @@ export default {
     async getAddress(lat, long) {
       try {
         let req = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCKwTfAEpVXgkBBrCcLkHGNzwy9sf4WkWM`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.state.api__KEY}`
         );
         let results = req.data.results[0];
 

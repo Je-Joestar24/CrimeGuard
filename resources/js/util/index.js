@@ -351,7 +351,8 @@ export default createStore({
         userId: 1,
         userLevel: -1,
         api: '',
-        delete_api: ''
+        delete_api: '',
+        api__KEY: "AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k"
     },
     mutations: {
         // Define your mutations to modify state variables

@@ -1,7 +1,7 @@
 <template>
     <div class="fixed z-50 bg-white top-0  animate-popup w-full overflow-auto  pb-20" style="height: 100vh;">
       <div class="w-full flex justify-between p-2">
-        <img :src="'/storage/system/bg.png'" alt="" class="w-12 h-12 m-2">
+        <img :src="'/images/system/bg.png'" alt="" class="w-12 h-12 m-2">
         <svg
           class="w-10 h-10 p-2 text-blue-300 rounded-xl cursor-pointer hover:bg-opacity-50 hover:bg-blue-500 hover:text-white"
           aria-hidden="true"

@@ -150,7 +150,7 @@
         <div class="text-center mb-8">
           <img
             class="w-24 h-24 mx-auto mb-4"
-            :src="'/storage/system/bg.png'"
+            :src="'/images/system/bg.png'"
             alt="Crime Guard Logo"
           />
           <h1 class="text-2xl font-bold text-gray-800">Login to Crime Guard</h1>
