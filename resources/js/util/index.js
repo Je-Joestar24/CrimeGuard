@@ -38,7 +38,6 @@ export default createStore({
                 contId: "IncidentsCollapse",
                 collapseId: "IncidentCollapseContainerId",
                 collapse: [
-
                     {
                         itemId: "reportedIncidents",
                         itemDisplay: "Incident Reports",
@@ -352,7 +351,8 @@ export default createStore({
         userLevel: -1,
         api: '',
         delete_api: '',
-        api__KEY: "AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k"
+        api__KEY: "AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k",
+        incidentmarker: false,
     },
     mutations: {
         // Define your mutations to modify state variables

@@ -87,7 +87,7 @@
         </svg>
       </div>
       <div class="px-4 py-2 font-semibold">
-        {{ cred.user_level == 1 ? "Emergency Report" : "New Assignment" }}
+        {{ "Emergency Report" }}
       </div>
     </div>
   </transition>
@@ -278,6 +278,10 @@
   height: 100%;
 }
 
+#requests .incident-marker {
+  opacity: 1;
+}
+
 .modal {
   background-color: white;
   border-radius: 0.375rem; /* Equivalent to rounded-lg */
@@ -312,7 +316,7 @@ export default {
         // Handle the newly updated incidents list
         this.handleNewIncidents();
       } catch (error) {
-        alert("Error fetching incidents:", error);
+        //alert("Error fetching incidents:", error);
       }
     },
     pushIfDoesnotExists(arr) {
@@ -334,6 +338,7 @@ export default {
 
     handleNewIncidents() {
       this.emergency = this.incidents.length > 0;
+      this.$store.state.incidentmarker = this.emergency;
 
       // Find the first unseen incident
       const unseenIncident = this.incidents.find((incident) => !incident.seen);
@@ -350,21 +355,12 @@ export default {
         this.stopAudio();
       }
     },
-
     // Example dialog box trigger (not given, assuming a placeholder)
     triggerDialogBox() {
       if (this.incidents.length > 0) {
         // Mark the latest incident as seen
         this.incidents[this.incidents.length - 1].seen = true;
-
-        // Open the dialog box or perform relevant UI action
-        this.openDialogBox();
       }
-    },
-
-    openDialogBox() {
-      // Handle the dialog box UI logic here
-      console.log("Dialog box opened for the latest incident.");
     },
     addSeen() {
       if (this.currentIncident) {
@@ -413,7 +409,6 @@ export default {
         this.info = data.data;
         this.cred.rank = data.data.rank;
         this.cred.station = data.data.station ? data.data.station : "";
-        console.log(this.cred);
       }
     },
   },
@@ -468,6 +463,7 @@ export default {
         station: "",
         rank: "",
       },
+      markers: [],
       currentIncident: null,
       emergency: false,
     };
@@ -479,7 +475,6 @@ export default {
     emergency: {
       handler(newVal, oldVal) {
         if (newVal === true && newVal !== oldVal) {
-          console.log(newVal);
           this.playAudio();
         }
       },
@@ -488,6 +483,13 @@ export default {
       handler(newVal, oldVal) {
         if (newVal.length < oldVal.length) {
           this.seenIncidents = newVal;
+        }
+        if(newVal.length != 0){
+          if(this.markers.length > 0){
+            this.markers.forEach(mark =>{
+                mark.style.opacity = 1;
+            });
+          }
         }
       },
     },

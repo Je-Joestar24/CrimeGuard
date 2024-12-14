@@ -1,11 +1,14 @@
 <template>
   <router-link
-    @click.prevent="changes(subElems.api, [subElems.id, subElems.titlePage, subElems.id])"
-    class="flex items-center p-3 text-gray-700 rounded-lg transition-colors duration-150 ease-in-out"
+    @click.prevent="
+      changes(subElems.api, [subElems.id, subElems.titlePage, subElems.id])
+    "
+    class="flex items-center p-3 text-gray-700 rounded-lg transition-colors duration-150 ease-in-out relative"
     :to="subElems.nm"
     :class="{
-      'bg-blue-50 text-blue-600': subElems.id == $store.state.CurrentActiveSideBar,
-      'hover:bg-gray-100': subElems.id != $store.state.CurrentActiveSideBar
+      'bg-blue-50 text-blue-600':
+        subElems.id == $store.state.CurrentActiveSideBar,
+      'hover:bg-gray-100': subElems.id != $store.state.CurrentActiveSideBar,
     }"
   >
     <svg
@@ -33,9 +36,9 @@ export default {
   props: ["subElems"],
   methods: {
     changes(param1, param2) {
-      this.$store.dispatch('changeAPI', param1);
-      this.$store.commit('changeActivePage', param2);
-    }
-  }
+      this.$store.dispatch("changeAPI", param1);
+      this.$store.commit("changeActivePage", param2);
+    },
+  },
 };
 </script>
