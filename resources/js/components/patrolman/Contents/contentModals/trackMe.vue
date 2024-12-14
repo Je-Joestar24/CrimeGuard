@@ -162,7 +162,7 @@
         <ul class="max-w-md divide-y divide-gray-300">
           <li
             v-if="open == 'citizen'"
-            v-for="user of accounts.citizen"
+            v-for="user of users.filter(user => user.user_level == 3)"
             @click="focusOnMarker(user)"
             class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
           >
@@ -190,7 +190,7 @@
             </div>
           </li>
           <li
-            v-if="open == 'citizen' && accounts.citizen.length === 0"
+            v-if="open == 'citizen' && users.filter(user => user.user_level == 3).length === 0"
             class="py-4 text-center text-gray-500"
           >
             <p class="text-sm">No citizens available at the moment.</p>
@@ -198,7 +198,7 @@
 
           <template v-if="open == 'patrolman'">
             <li
-              v-for="user of accounts.patrolman"
+              v-for="user of users.filter(user => user.user_level != 3)"
               @click="focusOnMarker(user)"
               class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
             >
@@ -226,93 +226,98 @@
               </div>
             </li>
             <li
-              v-if="accounts.patrolman.length === 0"
+              v-if="users.filter(user => user.user_level != 3).length === 0"
               class="py-4 text-center text-gray-500"
             >
               <p class="text-sm">No allies available at the moment.</p>
             </li>
           </template>
-          <li
-            v-if="open == 'incident'"
-            v-for="incident of data.markers"
-            class="p-4 bg-white shadow-md rounded-lg mb-4 transition-all duration-200 hover:shadow-lg"
-            @click="focusOnMarker(incident)"
-          >
-            <div class="flex justify-between items-center">
-              <div class="text-sm font-semibold text-gray-800">
-                {{ incident["message"] }}
-              </div>
-              <span
-                class="px-2 py-1 text-xs font-medium rounded-full"
-                :class="
-                  incident['report_type'] == 1
-                    ? 'bg-red-100 text-red-600'
-                    : 'bg-orange-100 text-orange-600'
-                "
-              >
-                {{
-                  incident["report_type"] == 1 ? "Emergency" : "Non-Emergency"
-                }}
-              </span>
-            </div>
-            <p class="text-gray-600 text-xs mt-1">{{ incident["location"] }}</p>
-            <p class="text-gray-500 text-xs mt-1">
-              {{ `${incident["month"]}, ${incident["date"]}` }}
-            </p>
-
-            <div class="mt-3 flex items-center space-x-4">
-              <div class="flex-shrink-0">
-                <img
-                  class="w-8 h-8 rounded-full border-2 border-blue-500"
-                  :src="incident['profile']"
-                  alt="Reporter profile image"
-                />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate">
-                  {{ incident["name"] }}
-                </p>
-                <p class="text-xs text-gray-500 truncate">
-                  {{ incident["contact"] }}
-                </p>
-                <p class="text-xs text-gray-500 truncate">
-                  {{ incident["email"] }}
-                </p>
-              </div>
-              <button
-                v-if="!incident['secured']"
-                @click="
-                  toggleSecureModal({
-                    incident: incident['id'],
-                    officer: cred.id,
-                    citizen: incident['user_id'],
-                  })
-                "
-                class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          <template v-if="open == 'incident'">
+            <li
+              v-if="data.markers.length > 0"
+              v-for="incident of data.markers"
+              class="p-4 bg-white shadow-md rounded-lg mb-4 transition-all duration-200 hover:shadow-lg"
+              @click="focusOnMarker(incident)"
+            >
+              <div class="flex justify-between items-center">
+                <div class="text-sm font-semibold text-gray-800">
+                  {{ incident["message"] }}
+                </div>
+                <span
+                  class="px-2 py-1 text-xs font-medium rounded-full"
+                  :class="
+                    incident['report_type'] == 1
+                      ? 'bg-red-100 text-red-600'
+                      : 'bg-orange-100 text-orange-600'
+                  "
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  {{
+                    incident["report_type"] == 1 ? "Emergency" : "Non-Emergency"
+                  }}
+                </span>
+              </div>
+              <p class="text-gray-600 text-xs mt-1">{{ incident["location"] }}</p>
+              <p class="text-gray-500 text-xs mt-1">
+                {{ `${incident["month"]}, ${incident["date"]}` }}
+              </p>
+
+              <div class="mt-3 flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <img
+                    class="w-8 h-8 rounded-full border-2 border-blue-500"
+                    :src="incident['profile']"
+                    alt="Reporter profile image"
                   />
-                </svg>
-                Secure
-              </button>
-              <span
-                v-if="incident['secured']"
-                class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
-                >SECURED</span
-              >
-            </div>
-          </li>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 truncate">
+                    {{ incident["name"] }}
+                  </p>
+                  <p class="text-xs text-gray-500 truncate">
+                    {{ incident["contact"] }}
+                  </p>
+                  <p class="text-xs text-gray-500 truncate">
+                    {{ incident["email"] }}
+                  </p>
+                </div>
+                <button
+                  v-if="!incident['secured']"
+                  @click="
+                    toggleSecureModal({
+                      incident: incident['id'],
+                      officer: cred.id,
+                      citizen: incident['user_id'],
+                    })
+                  "
+                  class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                  Secure
+                </button>
+                <span
+                  v-if="incident['secured']"
+                  class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
+                  >SECURED</span
+                >
+              </div>
+            </li>
+            <li v-else class="py-4 text-center text-gray-500">
+              <p class="text-sm">No incidents available at the moment.</p>
+            </li>
+          </template>
 
           <!-- Repeat for other items with similar structure -->
         </ul>
@@ -611,8 +616,20 @@ export default {
       }
     },
     async loadMarkers2(newData) {
+      console.log(newData);
       // Iterate over the new data
       newData.forEach(async (user) => {
+        // Check if the user already exists in the users array
+        const userIndex = this.users.findIndex((u) => u.id === user.id);
+
+        if (userIndex !== -1) {
+          // User exists, update their position
+          this.users[userIndex].pos = user.pos;
+        } else {
+          // User doesn't exist, add them to the users array
+          this.users.push(user);
+        }
+
         if (this.markersMap.has(user.id)) {
           // Update existing marker position
           const existingMarker = this.markersMap.get(user.id);
@@ -669,7 +686,7 @@ export default {
                   <div class="flex justify-between items-center border-b border-gray-200 pb-2">
                     <span class="text-sm font-medium text-gray-500">Contact</span>
                     <span class="text-sm font-semibold text-gray-800">${
-                      user.contact
+                      user.con_no
                     }</span>
                   </div>
                   ${
@@ -680,8 +697,8 @@ export default {
                       <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
                     </div>
                       `
-                                : ""
-                            }
+                      : ""
+                  }
                     </div>
                   </div>
             `,
@@ -695,6 +712,8 @@ export default {
           this.markersMap.set(user.id, newMarker);
         }
       });
+
+      console.log(this.users);
     },
     removeAllMarkers() {
       if (this.markers.length > 0) {
@@ -712,7 +731,7 @@ export default {
       this.users = [];
     },
     focusOnMarker(marker) {
-      const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
+      const position = new google.maps.LatLng(parseFloat(marker.pos.lat), parseFloat(marker.pos.lng));
       //this.active = marker.ctr;
       this.map.setCenter(position);
     },
