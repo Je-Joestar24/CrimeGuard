@@ -202,6 +202,7 @@ export default {
       ctr: 1,
       intervalId: null,
       cred: {},
+      markersMap: new Map(),
     };
   },
   mounted() {
@@ -345,37 +346,140 @@ export default {
       });
     },
     async generateData2() {
-      if (this.users.length > 0) this.removeAllMarkers();
-      const dt = await this.$store.dispatch("sendData", {
-        url: "api/track/location/map/req",
-        data: { id: this.cred["id"] },
-      });
-      if (dt["response"] === "Success") {
-        let data = dt["data"];
-        console.log(data);
-        for (let i = 0; i < data.length; i++) {
-          let tmp = {
+      try {
+        const dt = await this.$store.dispatch("sendData", {
+          url: "api/track/location/map/req",
+          data: {},
+        });
+
+        if (dt["response"] === "Success") {
+          const data = dt["data"];
+
+          // Map data into usable structure
+          const newData = data.map((item) => ({
+            id: item.id, // Ensure ID is unique for each user
             pos: {
-              lat: parseFloat(data[i]["pos"]["lat"]),
-              lng: parseFloat(data[i]["pos"]["lng"]),
+              lat: parseFloat(item["pos"]["lat"]),
+              lng: parseFloat(item["pos"]["lng"]),
             },
-            name: data[i]["name"],
-            con_no: data[i]["contact"],
-            time: data[i]["time"],
-            month: data[i]["month"],
-            date: data[i]["date"],
-            profile: data[i]["profile"],
-            user_level: data[i]["user_level"],
-          };
-          this.data2.markers.push(tmp);
-          this.users.push(tmp);
+            name: item["name"],
+            con_no: item["contact"],
+            time: item["time"],
+            month: item["month"],
+            date: item["date"],
+            profile: item["profile"],
+            user_level: item["user_level"],
+          }));
+
+          // Update markers dynamically
+          this.loadMarkers2(newData);
+        } else {
+          alert("Error loading data!");
         }
-      } else {
-        alert("Error loading data!");
+      } catch (error) {
+        console.error("Error in generateData2:", error);
       }
     },
+    async loadMarkers2(newData) {
+      // Iterate over the new data
+      newData.forEach(async (user) => {
+        // Check if the user already exists in the users array
+        const userIndex = this.users.findIndex((u) => u.id === user.id);
+
+        if (userIndex !== -1) {
+          // User exists, update their position
+          this.users[userIndex].pos = user.pos;
+        } else {
+          // User doesn't exist, add them to the users array
+          this.users.push(user);
+        }
+
+        if (this.markersMap.has(user.id)) {
+          // Update existing marker position
+          const existingMarker = this.markersMap.get(user.id);
+          const newPosition = new google.maps.LatLng(
+            user.pos.lat,
+            user.pos.lng
+          );
+          const currentPosition = existingMarker.getPosition();
+
+          if (
+            currentPosition.lat() !== user.pos.lat ||
+            currentPosition.lng() !== user.pos.lng
+          ) {
+            existingMarker.setPosition(newPosition);
+          }
+        } else {
+          // Create a new marker for new users
+          const roundedIconUrl = await this.createRoundedIcon(
+            user.profile,
+            user.user_level
+          );
+
+          const newMarker = new google.maps.Marker({
+            position: user.pos,
+            map: this.map,
+            icon: {
+              url: roundedIconUrl,
+              scaledSize: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(20, 20),
+            },
+          });
+
+          // Add InfoWindow
+          const infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+                user.user_level == 3 ? "border-green-600" : "border-blue-600"
+              }">
+                <div class="bg-gradient-to-r ${
+                  user.user_level == 3
+                    ? "from-green-500 to-green-600"
+                    : "from-blue-500 to-blue-600"
+                } px-4 py-3">
+                  <h2 class="text-xl font-bold text-white">Citizen Information</h2>
+                </div>
+                <div class="p-4 space-y-3">
+                  <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                    <span class="text-sm font-medium text-gray-500">Name</span>
+                    <span class="text-sm font-semibold text-gray-800">${
+                      user.name
+                    }</span>
+                  </div>
+                  <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                    <span class="text-sm font-medium text-gray-500">Contact</span>
+                    <span class="text-sm font-semibold text-gray-800">${
+                      user.con_no
+                    }</span>
+                  </div>
+                  ${
+                    user.message
+                      ? `
+                    <div>
+                      <span class="text-sm font-medium text-gray-500">Message</span>
+                      <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
+                    </div>
+                      `
+                      : ""
+                  }
+                    </div>
+                  </div>
+            `,
+          });
+
+          newMarker.addListener("click", () => {
+            infoWindow.open(this.map, newMarker);
+          });
+
+          // Store the marker in the markersMap
+          this.markersMap.set(user.id, newMarker);
+        }
+      });
+
+      console.log(this.users);
+    },
     loadMarkers() {
-      this.loadMarkers2();
       this.data.markers.forEach((mark) => {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
@@ -473,79 +577,6 @@ export default {
         });
       });
     },
-    loadMarkers2() {
-      console.log(this.users);
-      this.users.forEach(async (mark) => {
-        const roundedIconUrl = await this.createRoundedIcon(
-          mark.profile,
-          mark.user_level
-        );
-
-        // Add the marker with the rounded icon
-        const markerIcon = new google.maps.Marker({
-          position: mark.pos,
-          map: this.map,
-          icon: {
-            url: roundedIconUrl, // Use the generated rounded icon URL
-            scaledSize: new google.maps.Size(40, 40), // Adjust marker size to include border
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(20, 20), // Set anchor point to center
-          },
-        });
-
-        this.markers.push(markerIcon);
-        const bg =
-          mark.report_type == 1
-            ? "border-red-600 bg-red-100"
-            : "border-yellow-600 bg-yellow-100";
-
-        const infoWindow = new google.maps.InfoWindow({
-          content: `
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
-          bg === "border-red-600 bg-red-100"
-            ? "border-red-600"
-            : "border-yellow-600"
-        }">
-          <div class="bg-gradient-to-r ${
-            bg === "border-red-600 bg-red-100"
-              ? "from-red-500 to-red-600"
-              : "from-yellow-500 to-yellow-600"
-          } px-4 py-3">
-            <h2 class="text-xl font-bold text-white">Citizen Information</h2>
-          </div>
-          <div class="p-4 space-y-3">
-            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-              <span class="text-sm font-medium text-gray-500">Name</span>
-              <span class="text-sm font-semibold text-gray-800">${
-                mark.name
-              }</span>
-            </div>
-            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-              <span class="text-sm font-medium text-gray-500">Contact</span>
-              <span class="text-sm font-semibold text-gray-800">${
-                mark.con_no
-              }</span>
-            </div>
-            ${
-              mark.message
-                ? `
-              <div>
-                <span class="text-sm font-medium text-gray-500">Message</span>
-                <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
-              </div>
-            `
-                : ""
-            }
-          </div>
-        </div>
-      `,
-        });
-
-        markerIcon.addListener("click", () => {
-          infoWindow.open(this.map, markerIcon);
-        });
-      });
-    },
 
     focusOnMarker(marker) {
       const position = new google.maps.LatLng(marker.pos.lat, marker.pos.lng);
@@ -573,7 +604,6 @@ export default {
           this.toggle();
         } */
         await this.generateData2();
-        await this.loadMarkers2();
         // this.counter++;
       }, 60000);
     },

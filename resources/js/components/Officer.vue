@@ -338,6 +338,8 @@ export default {
       //console.log("New incidents:", this.incidents);
 
       this.emergency = this.incidents.length > 0 ? true : false;
+      this.$store.state.incidentmarker = this.emergency;
+      
       if (this.incidents.length <= 0) this.stopAudio();
       if (this.incidents.length != this.seenIncidents.length)
         this.seenIncidents = [];
