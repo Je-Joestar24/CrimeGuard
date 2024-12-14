@@ -92,7 +92,7 @@ const router = createRouter({
                 component: Analytics
             }
         ] },
-        { path: '/Patrolman', component: Patrolman},
+        { path: '/Officer2', component: Patrolman},
         { path: '/forgotPass', component: ForgetPass},
     ]
 })

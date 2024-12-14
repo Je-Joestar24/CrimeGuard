@@ -88,15 +88,14 @@
 }
 </style>
 <template>
-  <div class="relative w-full h-[55vh] rounded-lg shadow-xl overflow-hidden">
+  <div class="flex p-3 bg-gradient-to-tr from-blue-700 to-blue-600">
+    <img :src="'/images/system/bg.png'" alt="" class="w-6 h-6 inline" />
+    <h2 class="text-xl font-semibold text-center m-auto text-white">Incident Tracker</h2>
+  </div>
+  <div class="relative w-full h-[40vh] rounded-lg shadow-xl overflow-hidden">
     <section class="absolute inset-0">
       <div id="patrolmanMap" class="w-full h-full bg-gray-100"></div>
     </section>
-    <div
-      class="pointer-events-none absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/50 to-transparent"
-    >
-      <h2 class="text-2xl font-bold text-white text-center">Tracker</h2>
-    </div>
     <div class="absolute bottom-4 right-4 z-10">
       <div class="bg-white rounded-lg shadow-md p-3">
         <h3 class="text-sm font-semibold text-gray-700 mb-2">Legend</h3>
@@ -111,41 +110,40 @@
       </div>
     </div>
   </div>
-  <div class="m-2 rounded-sm bg-white shadow-lg">
-    <div class="flex p-t-2 gap-2">
+  <div class="m-2 bg-white shadow-lg rounded-lg">
+    <div class="flex p-2 gap-2">
       <button
         type="button"
-        class="w-full focus:ring-4font-mediumtext-sm px-5 py-2.5 transition-all duration-200"
+        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300"
         @click="open = 'incident'"
         :class="{
-          'text-gray-50 bg-gray-500 rounded-t-full': open == 'incident',
-          ' focus:ring-red-300 hover:bg-red-600 text-white bg-red-500 rounded-full ':
-            open != 'incident',
+          'bg-red-700 shadow-lg': open == 'incident',
         }"
+        aria-label="Open Incident Section"
       >
         Incident
       </button>
       <button
         type="button"
-        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200"
+        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300"
         @click="open = 'patrolman'"
         :class="{
-          'text-gray-50 bg-gray-500 rounded-t-full': open == 'patrolman',
-          ' text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 rounded-full ':
-            open != 'patrolman',
+          'bg-blue-700 shadow-lg': open == 'patrolman',
+          'bg-gray-500': open !== 'patrolman',
         }"
+        aria-label="Open Ally Section"
       >
         Ally
       </button>
       <button
         type="button"
-        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200"
+        class="w-full font-medium text-sm px-5 py-2.5 transition-all duration-200 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 focus:ring-4 focus:ring-green-300"
         @click="open = 'citizen'"
         :class="{
-          'text-gray-50 bg-gray-500 rounded-t-full': open == 'citizen',
-          ' text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  rounded-full ':
-            open != 'citizen',
+          'bg-green-700 shadow-lg': open == 'citizen',
+          'bg-gray-500': open !== 'citizen',
         }"
+        aria-label="Open Citizen Section"
       >
         Citizen
       </button>
@@ -153,18 +151,19 @@
     <div
       class="p-3 bg-gray-500 shadow-sm"
       :class="{
-        ' rounded-r-lg': open == 'incident',
-        ' rounded-lg': open == 'patrolman',
-        'rounded-none rounded-s-lg': open == 'citizen',
+        'bg-gradient-to-tr from-red-600 to-red-400': open == 'incident',
+        'bg-gradient-to-tr from-blue-600 to-blue-400': open == 'patrolman',
+        'bg-gradient-to-tr from-green-600 to-green-400': open == 'citizen',
       }"
     >
       <div class="h-[28vh] p-2 bg-white rounded-lg overflow-auto shadow-inner">
         <ul class="max-w-md divide-y divide-gray-300">
           <li
             v-if="open == 'citizen'"
-            v-for="user of users.filter(user => user.user_level == 3)"
+            v-for="user of users.filter((user) => user.user_level == 3)"
             @click="focusOnMarker(user)"
             class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
+            role="listitem"
           >
             <div class="flex items-center space-x-4">
               <div class="flex-shrink-0">
@@ -172,6 +171,8 @@
                   class="w-10 h-10 rounded-full border-2 border-blue-500"
                   :src="user['profile']"
                   alt="Profile image of {{ user['name'] }}"
+                  role="img"
+                  aria-label="Profile image of {{ user['name'] }}"
                 />
               </div>
               <div class="flex-1 min-w-0">
@@ -190,7 +191,10 @@
             </div>
           </li>
           <li
-            v-if="open == 'citizen' && users.filter(user => user.user_level == 3).length === 0"
+            v-if="
+              open == 'citizen' &&
+              users.filter((user) => user.user_level == 3).length === 0
+            "
             class="py-4 text-center text-gray-500"
           >
             <p class="text-sm">No citizens available at the moment.</p>
@@ -198,9 +202,10 @@
 
           <template v-if="open == 'patrolman'">
             <li
-              v-for="user of users.filter(user => user.user_level != 3)"
+              v-for="user of users.filter((user) => user.user_level != 3)"
               @click="focusOnMarker(user)"
               class="py-4 hover:bg-gray-50 rounded-lg transition-all duration-200"
+              role="listitem"
             >
               <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
@@ -208,6 +213,8 @@
                     class="w-10 h-10 rounded-full border-2 border-blue-500"
                     :src="user['profile']"
                     alt="Profile image of {{ user['name'] }}"
+                    role="img"
+                    aria-label="Profile image of {{ user['name'] }}"
                   />
                 </div>
                 <div class="flex-1 min-w-0">
@@ -226,7 +233,7 @@
               </div>
             </li>
             <li
-              v-if="users.filter(user => user.user_level != 3).length === 0"
+              v-if="users.filter((user) => user.user_level != 3).length === 0"
               class="py-4 text-center text-gray-500"
             >
               <p class="text-sm">No allies available at the moment.</p>
@@ -238,6 +245,7 @@
               v-for="incident of data.markers"
               class="p-4 bg-white shadow-md rounded-lg mb-4 transition-all duration-200 hover:shadow-lg"
               @click="focusOnMarker(incident)"
+              role="listitem"
             >
               <div class="flex justify-between items-center">
                 <div class="text-sm font-semibold text-gray-800">
@@ -256,7 +264,9 @@
                   }}
                 </span>
               </div>
-              <p class="text-gray-600 text-xs mt-1">{{ incident["location"] }}</p>
+              <p class="text-gray-600 text-xs mt-1">
+                {{ incident["location"] }}
+              </p>
               <p class="text-gray-500 text-xs mt-1">
                 {{ `${incident["month"]}, ${incident["date"]}` }}
               </p>
@@ -267,6 +277,8 @@
                     class="w-8 h-8 rounded-full border-2 border-blue-500"
                     :src="incident['profile']"
                     alt="Reporter profile image"
+                    role="img"
+                    aria-label="Reporter profile image"
                   />
                 </div>
                 <div class="flex-1 min-w-0">
@@ -290,6 +302,7 @@
                     })
                   "
                   class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm flex items-center gap-1"
+                  aria-label="Secure Incident"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -318,8 +331,6 @@
               <p class="text-sm">No incidents available at the moment.</p>
             </li>
           </template>
-
-          <!-- Repeat for other items with similar structure -->
         </ul>
       </div>
     </div>
@@ -387,7 +398,7 @@ export default {
         user_level: 4, // This should be set dynamically based on the user's actual level
         id: null,
       },
-      myinterVal: null
+      myinterVal: null,
     };
   },
   created() {
@@ -673,7 +684,11 @@ export default {
                     ? "from-green-500 to-green-600"
                     : "from-blue-500 to-blue-600"
                 } px-4 py-3">
-                  <h2 class="text-xl font-bold text-white">Citizen Information</h2>
+                  <h2 class="text-xl font-bold text-white">${
+                  user.user_level == 3
+                    ? "Citizen Information"
+                    : "Officer Information"
+                }</h2>
                 </div>
                 <div class="p-4 space-y-3">
                   <div class="flex justify-between items-center border-b border-gray-200 pb-2">
@@ -730,7 +745,10 @@ export default {
       this.users = [];
     },
     focusOnMarker(marker) {
-      const position = new google.maps.LatLng(parseFloat(marker.pos.lat), parseFloat(marker.pos.lng));
+      const position = new google.maps.LatLng(
+        parseFloat(marker.pos.lat),
+        parseFloat(marker.pos.lng)
+      );
       //this.active = marker.ctr;
       this.map.setCenter(position);
     },
@@ -740,19 +758,23 @@ export default {
         await this.track_me();
 
         await this.generateData2();
-      }, 1000);
+      }, 10000);
       this.myinterVal = setInterval(() => {
-        
         if (this.user_track.latitude && this.user_track.longitude)
-              this.focusOnMarker({ pos: { lat: this.user_track.latitude, lng: this.user_track.longitude } });
-      }, 10000)
+          this.focusOnMarker({
+            pos: {
+              lat: this.user_track.latitude,
+              lng: this.user_track.longitude,
+            },
+          });
+      }, 10000);
     },
     stopLogging() {
       if (this.intervalId) {
         clearInterval(this.intervalId);
         this.intervalId = null;
       }
-      if(this.myinterVal){
+      if (this.myinterVal) {
         clearInterval(this.myinterVal);
         this.myinterVal = null;
       }

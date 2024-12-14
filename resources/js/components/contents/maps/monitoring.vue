@@ -438,7 +438,11 @@ export default {
                     ? "from-green-500 to-green-600"
                     : "from-blue-500 to-blue-600"
                 } px-4 py-3">
-                  <h2 class="text-xl font-bold text-white">Citizen Information</h2>
+                  <h2 class="text-xl font-bold text-white">${
+                  user.user_level == 3
+                    ? "Citizen Information"
+                    : "Officer Information"
+                }</h2>
                 </div>
                 <div class="p-4 space-y-3">
                   <div class="flex justify-between items-center border-b border-gray-200 pb-2">

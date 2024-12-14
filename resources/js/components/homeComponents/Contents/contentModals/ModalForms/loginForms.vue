@@ -305,7 +305,7 @@ export default {
           } else if (dt.data.user_level === 3) {
             window.location.reload();
           } else if (dt.data.user_level === 4) {
-            this.$router.push("/PATROLMAN");
+            this.$router.push("/OFFICER2");
           }
         } 
         else if (dt.response === "Too many login attempts") {
