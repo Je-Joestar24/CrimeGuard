@@ -90,7 +90,9 @@
 <template>
   <div class="flex p-3 bg-gradient-to-tr from-blue-700 to-blue-600">
     <img :src="'/images/system/bg.png'" alt="" class="w-6 h-6 inline" />
-    <h2 class="text-xl font-semibold text-center m-auto text-white">Incident Tracker</h2>
+    <h2 class="text-xl font-semibold text-center m-auto text-white">
+      Incident Tracker
+    </h2>
   </div>
   <div class="relative w-full h-[40vh] rounded-lg shadow-xl overflow-hidden">
     <section class="absolute inset-0">
@@ -685,10 +687,10 @@ export default {
                     : "from-blue-500 to-blue-600"
                 } px-4 py-3">
                   <h2 class="text-xl font-bold text-white">${
-                  user.user_level == 3
-                    ? "Citizen Information"
-                    : "Officer Information"
-                }</h2>
+                    user.user_level == 3
+                      ? "Citizen Information"
+                      : "Officer Information"
+                  }</h2>
                 </div>
                 <div class="p-4 space-y-3">
                   <div class="flex justify-between items-center border-b border-gray-200 pb-2">
@@ -729,6 +731,104 @@ export default {
 
       console.log(this.users);
     },
+    loadMarkers() {
+      this.data.markers.forEach((mark) => {
+        const markerIcon = new google.maps.OverlayView();
+        markerIcon.onAdd = function () {
+          const layer = document.createElement("div");
+          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
+
+          layer.addEventListener("click", () => {
+            infoWindow.open(this.map, marker);
+          });
+
+          const panes = this.getPanes();
+          panes.overlayMouseTarget.appendChild(layer);
+
+          this.div = layer;
+        };
+
+        markerIcon.draw = function () {
+          const projection = this.getProjection();
+          const position = projection.fromLatLngToDivPixel(
+            new google.maps.LatLng(mark.pos.lat, mark.pos.lng)
+          );
+          const div = this.div;
+          div.style.left = position.x + "px";
+          div.style.top = position.y + "px";
+        };
+
+        markerIcon.setMap(this.map);
+
+        const marker = new google.maps.Marker({
+          position: mark.pos,
+          map: this.map,
+          visible: false,
+        });
+
+        const bg =
+          mark.report_type == 1
+            ? "border-red-600 bg-red-100"
+            : "border-yellow-600 bg-yellow-100";
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${
+          bg === "border-red-600 bg-red-100"
+            ? "border-red-600"
+            : "border-yellow-600"
+        }">
+          <div class="bg-gradient-to-r ${
+            bg === "border-red-600 bg-red-100"
+              ? "from-red-500 to-red-600"
+              : "from-yellow-500 to-yellow-600"
+          } px-4 py-3">
+            <h2 class="text-xl font-bold text-white">Reported Incident Information</h2>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Reported by</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.name
+              }</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Contact</span>
+              <span class="text-sm font-semibold text-gray-800">${
+                mark.con_no
+              }</span>
+            </div>
+              <div class="border-b border-gray-200 pb-2">
+                <span class="text-sm font-medium text-gray-500">Location</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.location}</p>
+              </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-sm font-medium text-gray-500">Report Type</span>
+              <span class="text-sm font-semibold ${
+                mark.report_type == 1 ? "text-red-600" : "text-yellow-600"
+              }">
+                ${mark.report_type == 1 ? "Emergency" : "Non-Emergency"}
+              </span>
+            </div>
+            ${
+              mark.message
+                ? `
+              <div>
+                <span class="text-sm font-medium text-gray-500">Message</span>
+                <p class="text-sm text-gray-800 mt-1">${mark.message}</p>
+              </div>
+            `
+                : ""
+            }
+          </div>
+        </div>
+      `,
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(this.map, marker);
+        });
+      });
+    },
     removeAllMarkers() {
       if (this.markers.length > 0) {
         console.log(this.markers);
@@ -758,7 +858,7 @@ export default {
         await this.track_me();
 
         await this.generateData2();
-      }, 10000);
+      }, 100000);
       this.myinterVal = setInterval(() => {
         if (this.user_track.latitude && this.user_track.longitude)
           this.focusOnMarker({
