@@ -21,9 +21,13 @@
               Reporting Persons
             </h2>
             <div class="overflow-auto flex-1 bg-white">
-              <template v-if="users.filter(user => user.user_level === 3).length">
+              <template
+                v-if="users.filter((user) => user.user_level === 3).length"
+              >
                 <div
-                  v-for="(marker, index) in users.filter(user => user.user_level === 3)"
+                  v-for="(marker, index) in users.filter(
+                    (user) => user.user_level === 3
+                  )"
                   :key="index"
                   @click="focusOnMarker(marker)"
                   class="flex items-center px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
@@ -83,9 +87,13 @@
               ALLIED FORCES
             </h2>
             <div class="overflow-auto flex-1 bg-white">
-              <template v-if="users.filter(user => user.user_level != 3).length">
+              <template
+                v-if="users.filter((user) => user.user_level != 3).length"
+              >
                 <div
-                  v-for="(marker, index) in users.filter(user => user.user_level != 3)"
+                  v-for="(marker, index) in users.filter(
+                    (user) => user.user_level != 3
+                  )"
                   :key="index"
                   @click="focusOnMarker(marker)"
                   class="flex items-center px-6 py-4 border-b hover:bg-gray-50 transition duration-300 ease-in-out cursor-pointer"
@@ -134,9 +142,7 @@
                 </div>
               </template>
               <div v-else class="flex items-center justify-center h-full">
-                <p class="text-gray-500 text-sm">
-                  No Active Ally on the Map
-                </p>
+                <p class="text-gray-500 text-sm">No Active Ally on the Map</p>
               </div>
             </div>
           </div>
@@ -439,10 +445,10 @@ export default {
                     : "from-blue-500 to-blue-600"
                 } px-4 py-3">
                   <h2 class="text-xl font-bold text-white">${
-                  user.user_level == 3
-                    ? "Citizen Information"
-                    : "Officer Information"
-                }</h2>
+                    user.user_level == 3
+                      ? "Citizen Information"
+                      : "Officer Information"
+                  }</h2>
                 </div>
                 <div class="p-4 space-y-3">
                   <div class="flex justify-between items-center border-b border-gray-200 pb-2">
@@ -488,7 +494,13 @@ export default {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
+          layer.classList.add(
+            mark.secured
+              ? "secured-dot"
+              : mark.report_type == 1
+              ? "pulsing"
+              : "pulsing2"
+          );
 
           layer.addEventListener("click", () => {
             infoWindow.open(this.map, marker);
@@ -628,29 +640,42 @@ export default {
 };
 </script>
 
-<style >
-.pulse {
+<style>
+.pulsing {
   position: absolute;
   width: 30px;
   height: 30px;
-  background-color: red;
+  background-color: rgb(255, 47, 78); /* Pastel red color */
   border-radius: 50%;
-  animation: pulse 2s infinite, blink 1s infinite;
   cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cline x1='12' y1='8' x2='12' y2='12' /%3E%3Cline x1='12' y1='16' x2='12.01' y2='16' /%3E%3C/svg%3E"); /* Inline SVG for new icon */
+  background-repeat: no-repeat;
+  background-size: 2em; /* Ensure the SVG covers the entire area */
+  background-position: center; /* Center the SVG */
+  z-index: 1;
 }
 
-.pulse2 {
+.pulsing::before {
+  content: "";
   position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color: yellow;
+  top: -10px; /* Adjust as needed for the pulsing effect */
+  left: -10px; /* Adjust as needed for the pulsing effect */
+  width: 50px; /* Size of the pulsing effect */
+  height: 50px; /* Size of the pulsing effect */
   border-radius: 50%;
-  animation: pulse 2s infinite, blink 1s infinite;
-  cursor: pointer;
+  z-index: -1;
+  background-color: rgba(
+    255,
+    0,
+    38,
+    0.5
+  ); /* Lighter pastel red for the pulsing effect */
+  animation: pulse 2s infinite; /* Pulsing animation */
 }
+
 @keyframes pulse {
   0% {
-    transform: scale(0.5);
+    transform: scale(1);
     opacity: 0.8;
   }
   50% {
@@ -658,9 +683,39 @@ export default {
     opacity: 0;
   }
   100% {
-    transform: scale(0.5);
+    transform: scale(1);
     opacity: 0.8;
   }
+}
+
+.pulsing2 {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 10, 0.9);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10' /%3E%3Cline x1='12' y1='8' x2='12' y2='12' /%3E%3Cline x1='12' y1='16' x2='12.01' y2='16' /%3E%3C/svg%3E"); /* Inline SVG for new icon */
+  background-repeat: no-repeat;
+  background-size: 2em; /* Ensure the SVG covers the entire area */
+  background-position: center; /* Center the SVG */
+  cursor: pointer;
+}
+
+.pulsing2::before {
+  content: "";
+  position: absolute;
+  top: -10px; /* Adjust as needed for the pulsing effect */
+  left: -10px; /* Adjust as needed for the pulsing effect */
+  width: 50px; /* Size of the pulsing effect */
+  height: 50px; /* Size of the pulsing effect */
+  border-radius: 50%;
+  z-index: -1;
+  background-color: rgba(
+    228,
+    228,
+    0, 0.5
+  ); /* Lighter pastel red for the pulsing effect */
+  animation: pulse 2s infinite; /* Pulsing animation */
 }
 @keyframes blink {
   0% {

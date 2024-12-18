@@ -736,7 +736,7 @@ export default {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulse" : "pulse2");
+          layer.classList.add(mark.secured ? "secured-dot" : mark.report_type == 1 ? "pulsing" : "pulsing2");
 
           layer.addEventListener("click", () => {
             infoWindow.open(this.map, marker);

@@ -12,7 +12,7 @@
             'text-yellow-400': elem.status === 'report',
             'text-green-400': elem.status !== 'report'
           }" class="text-sm font-semibold">
-            {{ elem.status === 'report' ? 'Reported' : 'Resolved' }}
+            {{ elem.status === 'report' ? 'Not Responded' : 'Responded' }}
           </p>
         </div>
         <p class="text-white mt-2">{{ elem.message }}</p>

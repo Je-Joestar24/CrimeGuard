@@ -105,14 +105,14 @@
                   Respond
                 </button>
                 <button
-                  v-if="el['status'] == 'report' && cred.user_level == 2"
+                  v-if="el['status'] == 'report'"
                   @click="
                     toggleRejectModal({ id: el['id'], edited_by: cred.id })
                   "
                   class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm"
                 >
                   Reject
-                </button>
+                </button><!-- 
                 <button
                   v-if="
                     el['status'] == 'report' &&
@@ -123,7 +123,7 @@
                   class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-sm"
                 >
                   Assign
-                </button>
+                </button> -->
                 <span
                   v-if="el['status'] != 'reject' && el['status'] != 'report'"
                   class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
