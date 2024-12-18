@@ -654,6 +654,7 @@ class DashboardModule extends Controller
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->leftJoin('incident-types', 'incidents.incident_type', '=', 'incident-types.id')
                 ->leftJoin('incident-sub-types', 'incident-types.sub_type_id', '=', 'incident-sub-types.id')
+                ->leftJoin('incident-categories', 'incident-types.category_id', '=', 'incident-categories.id')
                 ->select(
                     'incidents.id',
                     'incidents.message',
@@ -670,7 +671,8 @@ class DashboardModule extends Controller
                     'incidents.report_type',
                     'incident-types.incident_name',
                     'incident-sub-types.sub_type',
-                    'incidents.status'
+                    'incidents.status',
+                    'incident-categories.category_name'
                 )->where('incidents.incident_type', '!=', NULL)
                 ->when($station != 100, fn($q) => $q->where('incidents.station', $station));
             if ($request->has('filter')) {
@@ -725,6 +727,7 @@ class DashboardModule extends Controller
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
                     'report_type' => $report['report_type'],
                     'incident_type' => $report['sub_type'] != NULL ? ($report['incident_name'] . "( " . $report['sub_type'] . " )") : $report['incident_name'],
+                    'category' => $report['category_name'],
                 ];
                 array_push($data['data'], $cleaned);
             }
