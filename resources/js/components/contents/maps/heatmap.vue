@@ -192,8 +192,32 @@
           <div id="heatMap" class="absolute inset-0 bg-gray-300"></div>
         </section>
       </div>
+      <div class="p-4">
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Legend</h2>
+        <div class="flex flex-col space-y-2">
+          <div class="flex items-center">
+            <span class="w-4 h-4 bg-red-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Against Person"></span>
+            <span class="text-sm text-gray-800">AGAINST PERSON</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-4 h-4 bg-orange-400 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Against Property"></span>
+            <span class="text-sm text-gray-800">AGAINST PROPERTY</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-4 h-4 bg-yellow-400 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Non-Index Crimes"></span>
+            <span class="text-sm text-gray-800">NON-INDEX CRIMES</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-4 h-4 bg-green-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Special Laws"></span>
+            <span class="text-sm text-gray-800">SPECIAL LAWS</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-4 h-4 bg-blue-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Traffic"></span>
+            <span class="text-sm text-gray-800">TRAFFIC</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <button @click="removeAllMarkers">test</button>
   </div>
 </template>
 
