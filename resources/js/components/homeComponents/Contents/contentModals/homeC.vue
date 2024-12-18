@@ -69,16 +69,27 @@
         Crime Heat Map
       </h2>
     </div>
-    <div class="absolute bottom-4 right-4 z-10">
+    <div class="absolute bottom-8 left-4 z-10">
       <div class="bg-white rounded-lg shadow-md p-3">
-        <h3 class="text-sm font-semibold text-gray-700 mb-2">Legend</h3>
-        <div class="flex items-center space-x-2">
-          <span class="w-4 h-4 rounded-full bg-red-500"></span>
-          <span class="text-xs text-gray-600">Emeregency Reports</span>
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Legend</h3><div class="flex items-center">
+          <span class="w-4 h-4 bg-red-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Against Person"></span>
+          <span class="text-sm text-gray-800">AGAINST PERSON</span>
         </div>
-        <div class="flex items-center space-x-2 mt-1">
-          <span class="w-4 h-4 rounded-full bg-yellow-500"></span>
-          <span class="text-xs text-gray-600">None Emergency Reports</span>
+        <div class="flex items-center">
+          <span class="w-4 h-4 bg-orange-400 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Against Property"></span>
+          <span class="text-sm text-gray-800">AGAINST PROPERTY</span>
+        </div>
+        <div class="flex items-center">
+          <span class="w-4 h-4 bg-yellow-400 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Non-Index Crimes"></span>
+          <span class="text-sm text-gray-800">NON-INDEX CRIMES</span>
+        </div>
+        <div class="flex items-center">
+          <span class="w-4 h-4 bg-green-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Special Laws"></span>
+          <span class="text-sm text-gray-800">SPECIAL LAWS</span>
+        </div>
+        <div class="flex items-center">
+          <span class="w-4 h-4 bg-blue-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Traffic"></span>
+          <span class="text-sm text-gray-800">TRAFFIC</span>
         </div>
       </div>
     </div>
@@ -330,6 +341,7 @@ export default {
               this.months[parseInt(data[i]["month"]) - 1] +
               ", " +
               data[i]["date"],
+            category: data[i]["category"]
           });
           //console.log(data[i]["message"],data[i]["location"],data[i]["name"],data[i]["contact"])
         }
@@ -349,17 +361,27 @@ export default {
         const markerIcon = new google.maps.OverlayView();
         markerIcon.onAdd = function () {
           const layer = document.createElement("div");
-          layer.classList.add(mark.report_type == 1 ? "redM" : "yellowM");
+          layer.classList.add( mark.category == "AGAINST PERSONS" ? "mark__against-person" : mark.category == "AGAINST PROPERTY" ? "mark__against-property" : mark.category == "NON-INDEX CRIMES" ? "mark__non-index-crimes" : mark.category == "TRAFFIC INCIDENTS" ? "mark__traffic-incidents" : mark.category == "SPECIAL LAWS" ? "mark__special-laws" : "pulsing2");
 
           // Marker info
-          let bg =
-            mark.report_type == 1
-              ? "border-red-600 bg-red-100"
-              : "border-yellow-600 bg-yellow-100";
           let infoWindow = new google.maps.InfoWindow({
             content: `
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 ${bg === 'border-red-600 bg-red-100' ? 'border-red-600' : 'border-yellow-600'}">
-              <div class="bg-gradient-to-r ${bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600'} px-4 py-3">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm border-l-4 
+              ${mark.category == "AGAINST PERSONS" ? "border-red-600"
+             : mark.category == "AGAINST PROPERTY" ? "border-orange-400" 
+             : mark.category == "NON-INDEX CRIMES" ? "border-yellow-400" 
+             : mark.category == "TRAFFIC INCIDENTS" ? "border-blue-600" 
+             : mark.category == "SPECIAL LAWS" ? "border-green-600" : "pulsing2"}">
+              <div class="bg-gradient-to-r ${
+              
+              ''/* bg === 'border-red-600 bg-red-100' ? 'from-red-500 to-red-600' : 'from-yellow-500 to-yellow-600' */}
+              ${mark.category == "AGAINST PERSONS" ? "from-red-500 to-red-600"
+             : mark.category == "AGAINST PROPERTY" ? "from-orange-400 to-orange-500" 
+             : mark.category == "NON-INDEX CRIMES" ? "from-yellow-400 to-yellow-500" 
+             : mark.category == "TRAFFIC INCIDENTS" ? "from-blue-500 to-blue-600" 
+             : mark.category == "SPECIAL LAWS" ? "from-green-500 to-green-600" : "pulsing2"}
+              
+              px-4 py-3">
                 <h2 class="text-xl font-bold text-white">Incident Details</h2>
               </div>
               <div class="p-4 space-y-3">

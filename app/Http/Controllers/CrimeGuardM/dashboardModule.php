@@ -753,6 +753,8 @@ class DashboardModule extends Controller
         try {
             $reports = Incidents::leftJoin('users', 'incidents.reported_by_user', '=', 'users.id')
                 ->join('incident-types', 'incidents.incident_type', '=', 'incident-types.id')
+                ->leftJoin('incident-sub-types', 'incident-types.sub_type_id', '=', 'incident-sub-types.id')
+                ->leftJoin('incident-categories', 'incident-types.category_id', '=', 'incident-categories.id')
                 ->select(
                     'incidents.id',
                     'incidents.message',
@@ -768,7 +770,8 @@ class DashboardModule extends Controller
                     'incidents.latitude',
                     'incidents.report_type',
                     //DB::raw('CONCAT(addresses.street, ", ", addresses.barangay, ", ", addresses.city) AS cur_address'),
-                    'incident-types.incident_name'
+                    'incident-types.incident_name',
+                    'incident-categories.category_name'
                 )
                 ->where('incidents.status', '!=', 'report')
                 ->where('incidents.status', '!=', 'reject')
@@ -805,7 +808,8 @@ class DashboardModule extends Controller
                     'time' => explode(' ', $report['time_reported'])[1],
                     'month' => explode('-', explode(' ', $report['time_reported'])[0])[1],
                     'date' => explode('-', explode(' ', $report['time_reported'])[0])[2] . ", " . explode('-', explode(' ', $report['time_reported'])[0])[0],
-                    'report_type' => $report['report_type']
+                    'report_type' => $report['report_type'],
+                    'category' => $report['category_name']
                 ];
                 array_push($data['data'], $cleaned);
             }
