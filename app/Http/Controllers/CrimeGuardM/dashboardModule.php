@@ -674,6 +674,8 @@ class DashboardModule extends Controller
                     'incidents.status',
                     'incident-categories.category_name'
                 )->where('incidents.incident_type', '!=', NULL)
+                ->whereNull('suspects.archived_at')
+                ->whereNull('suspects.deleted_by')
                 ->when($station != 100, fn($q) => $q->where('incidents.station', $station));
             if ($request->has('filter')) {
                 $filter = $request->input('filter');
@@ -778,6 +780,8 @@ class DashboardModule extends Controller
                 ->where('incidents.incident_type', '!=', NULL)
                 ->where('incidents.latitude', '>', 0)
                 ->where('incidents.longitude', '>', 0)
+                ->whereNull('suspects.archived_at')
+                ->whereNull('suspects.deleted_by')
                 ->get();
 
             foreach ($reports as $report) {
