@@ -11,6 +11,7 @@
       </p>
     </div>
     <monitoringmap />
+    <predicted-incident/>
     <div class="flex items-center justify-center col-span-4">
       <lineCharts></lineCharts>
     </div>
@@ -105,6 +106,8 @@ import pcGenderVictim from "./dashboardComponents/DashBoardLowerComponents/victi
 import pcVictimAge from "./dashboardComponents/DashBoardLowerComponents/victims/pieChartsMF.vue";
 import pcSuspectAge from "./dashboardComponents/DashBoardLowerComponents/Suspects/sPieChartsAge.vue";
 import pcGenderSuspect from "./dashboardComponents/DashBoardLowerComponents/Suspects/sPieChartsMF.vue";
+import predictedIncident from "./dashboardComponents/predictedIncident.vue";
+
 export default {
   components: {
     lineCharts,
@@ -116,6 +119,7 @@ export default {
     pcVictimAge,
     pcSuspectAge,
     pcGenderSuspect,
+    predictedIncident
   },
   data() {
     return {
