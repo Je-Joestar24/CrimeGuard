@@ -238,7 +238,7 @@ class IncidentModule extends Controller
                     'incidents.reported_by_user'
                 );
 
-            if ($station != 100) $reports = $reports->where('incidents.station', $station);
+            /* if ($station != 100) $reports = $reports->where('incidents.station', $station); */
             $reports = $reports->where(function ($query) use ($currentDate) {
                 $query->where('incidents.status', '=', 'report')
                     ->orWhere('incidents.status', '=', 'respond');
@@ -557,12 +557,12 @@ class IncidentModule extends Controller
             // Add this logic to check the station conditionally
 
             // Add this condition for station
-            if ($station != 100) {
+/*             if ($station != 100) {
                 $reports = $reports->where(function ($query) use ($station) {
                     $query->whereNull('incidents.station') // Load if station is NULL
                         ->orWhere('incidents.station', $station); // Otherwise, check if it matches the station
                 });
-            }
+            } */
             if ($request->has('status')) $reports = $reports->where('incidents.status', 'respond');
             else {
                 /* $reports = $reports->where(function ($query) use ($currentDate) {
@@ -692,7 +692,7 @@ class IncidentModule extends Controller
             // Validate request
             // Retrieve user data
             $user = User::with('citizenCredentials')->find($request->id);
-            //$closestStationId = $this->getClosestStationId($request->latitude, $request->longitude);
+            $closestStationId = $this->getClosestStationId($request->latitude, $request->longitude);
             // Map user data to reporting person data
             $reportingPersonData = [
                 'firstname' => $user->first_name,
@@ -733,8 +733,8 @@ class IncidentModule extends Controller
                 'street' => $request['address']['street'],
                 'city' => $request['address']['city'],
                 'province' => $request['address']['province'],
-                'report_type' => $request['report_type'],/* 
-                'station' => $closestStationId */
+                'report_type' => $request['report_type'],
+                'station' => $closestStationId
             ]);
 
             $inc_id = $incid->id;

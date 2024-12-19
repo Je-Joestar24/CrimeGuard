@@ -3505,14 +3505,6 @@ video {
     margin-top: 5rem;
   }
 
-  .sm\:mt-5 {
-    margin-top: 1.25rem;
-  }
-
-  .sm\:mt-6 {
-    margin-top: 1.5rem;
-  }
-
   .sm\:block {
     display: block;
   }
@@ -3555,10 +3547,6 @@ video {
 
   .sm\:max-w-lg {
     max-width: 32rem;
-  }
-
-  .sm\:max-w-sm {
-    max-width: 24rem;
   }
 
   .sm\:flex-1 {

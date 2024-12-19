@@ -540,7 +540,7 @@ class DashboardModule extends Controller
         $data = [];
         $inc = Incidents::whereDate('date_reported',  $currentDate->format('Y-m-d'))
             ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'latitude', 'longitude');
-        if ($station != 100) $inc = $inc->where('incidents.station', $station);
+        //if ($station != 100) $inc = $inc->where('incidents.station', $station);
         $inc = $inc->get();
 
         $send = [];
@@ -584,12 +584,12 @@ class DashboardModule extends Controller
 
 
         // Add this condition for station
-        if ($station != 100) {
+        /* if ($station != 100) {
             $init = $init->where(function ($query) use ($station) {
                 $query->whereNull('incidents.station') // Load if station is NULL
                     ->orWhere('incidents.station', $station); // Otherwise, check if it matches the station
             });
-        }
+        } */
 
 
 /*         if ($request->has('ind')  || !$request->has('id')) $init = $init->where('report_type', 1);

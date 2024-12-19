@@ -118,7 +118,7 @@ class TrackUser extends Controller
                     if (!$isSecured) {
                         // For station 100, add all unsecured incidents
                         // For other stations, only add if it matches their station
-                        if ($station == 100 || ($stationC != null && $station == $stationC)) {
+                        if ($station == 100 || ($stationC != null)) {
                             array_push($data['data'], $cleaned);
                             array_push($userNames, $report->user_name);
                         }
