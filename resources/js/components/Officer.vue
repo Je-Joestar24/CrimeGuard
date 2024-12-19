@@ -93,18 +93,21 @@
   </transition>
 
   <div
-    v-if="emergency && seenIncidents.length != incidents.length"
-    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 flex items-center justify-center"
+    v-if="emergency && currentIncident"
+    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50 flex items-center justify-center backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="emergency-modal-title"
   >
     <div
-      class="bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
+      class="bg-white rounded-xl px-6 pt-6 pb-6 text-left overflow-hidden shadow-2xl transform transition-all max-w-md w-full mx-4"
     >
-      <div>
+      <div class="flex flex-col items-center">
         <div
-          class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100"
+          class="flex items-center justify-center h-16 w-16 rounded-full bg-red-100 animate-pulse"
         >
           <svg
-            class="h-6 w-6 text-red-600"
+            class="h-8 w-8 text-red-600"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -119,33 +122,83 @@
             />
           </svg>
         </div>
-        <div class="mt-3 text-center sm:mt-5">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">
+
+        <div class="mt-4 text-center">
+          <h2
+            id="emergency-modal-title"
+            class="text-2xl font-bold text-gray-900 mb-2"
+          >
             {{
               cred.user_level == 1
                 ? "Emergency Report Detected"
                 : "New Assignment"
             }}
-          </h3>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">
-              {{
-                cred.user_level == 1
-                  ? "A new emergency report has been filed. Immediate attention is required."
-                  : "You have been assigned to a new incident. Please check your assignments for details."
-              }}
-            </p>
+          </h2>
+
+          <p class="text-gray-600">
+            {{
+              cred.user_level == 1
+                ? "A new emergency report has been filed. Immediate attention is required."
+                : "You have been assigned to a new incident. Please check your assignments for details."
+            }}
+          </p>
+
+          <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+            <div class="flex items-center justify-center space-x-2">
+              <svg
+                class="h-5 w-5 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <p class="font-semibold text-gray-900">
+                STATION {{ currentIncident.station }}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-center space-x-2">
+              <svg
+                class="h-5 w-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p class="text-gray-700">{{ currentIncident.time_reported }}</p>
+            </div>
+
+            <div class="flex items-center justify-center space-x-2">
+              <p class="text-gray-700">{{ currentIncident.location }}</p>
+            </div>
           </div>
+
+          <button
+            @click="addSeen"
+            type="button"
+            class="mt-6 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+          >
+            Acknowledge
+          </button>
         </div>
-      </div>
-      <div class="mt-5 sm:mt-6">
-        <button
-          @click="addSeen"
-          type="button"
-          class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
-        >
-          Acknowledge
-        </button>
       </div>
     </div>
   </div>
@@ -282,22 +335,87 @@ export default {
       soundA: null,
       emergency: false,
       seenIncidents: [],
-      cred: {},
+      cred: {
+        id: -1,
+        station: "",
+        rank: "",
+      },
+      markers: [],
+      currentIncident: null,
+      emergency: false,
     };
   },
   methods: {
-    toggleProfile() {
-      this.closeProfile = !this.closeProfile;
+    async checkIncidents() {
+      const credentials = JSON.parse(localStorage.getItem("credentials"));
+      try {
+        const data = { id: credentials.id, ind: false };
+        const response = await this.$store.dispatch("sendData", {
+          url: "api/dashboard/generate/emergency/reports",
+          data: data,
+        });
+
+        // Assuming the API response structure contains reported incidents
+        const fetchedIncidents = response.data["reportedIncidents"];
+
+        // Push new incidents if they do not exist
+        this.pushIfDoesnotExists(fetchedIncidents);
+
+        // Handle the newly updated incidents list
+        this.handleNewIncidents();
+      } catch (error) {
+        //alert("Error fetching incidents:", error);
+      }
     },
-    playAudio() {
-      if (this.soundA) {
-        this.soundA.play();
+    pushIfDoesnotExists(arr) {
+      let added = false;
+      arr.forEach((item) => {
+        const exists = this.incidents.some(
+          (incident) => incident.id === item.id
+        );
+        if (!exists) {
+          this.incidents.push({ ...item, seen: false });
+          added = true;
+        }
+      });
+
+      if (added) {
+        this.handleNewIncidents(); // Re-evaluate current incident
+      }
+    },
+
+    handleNewIncidents() {
+      this.emergency = this.incidents.length > 0;
+      this.$store.state.incidentmarker = this.emergency;
+
+      // Find the first unseen incident
+      const unseenIncident = this.incidents.find((incident) => !incident.seen);
+
+      // Set it as the current incident
+      if (unseenIncident) {
+        this.currentIncident = unseenIncident;
+      } else {
+        this.currentIncident = null;
+      }
+
+      // Stop audio if no emergencies
+      if (!this.emergency) {
+        this.stopAudio();
+      }
+    },
+    // Example dialog box trigger (not given, assuming a placeholder)
+    triggerDialogBox() {
+      if (this.incidents.length > 0) {
+        // Mark the latest incident as seen
+        this.incidents[this.incidents.length - 1].seen = true;
       }
     },
     addSeen() {
-      for (let i = 0; i < this.incidents.length; i++) {
-        if (!this.isSeen(this.incidents[i]))
-          this.seenIncidents.push(this.incidents[i]);
+      if (this.currentIncident) {
+        this.currentIncident.seen = true; // Mark the current incident as seen
+
+        // Move to the next unseen incident
+        this.handleNewIncidents();
       }
     },
     isSeen(param) {
@@ -308,41 +426,38 @@ export default {
       });
       return false;
     },
+    startPolling() {
+      this.interval = setInterval(() => {
+        this.checkIncidents();
+      }, 15000); // Poll every 2 seconds
+    },
+    toggleProfile() {
+      this.closeProfile = !this.closeProfile;
+    },
+    playAudio() {
+      if (this.soundA) {
+        this.soundA.play();
+      }
+    },
     stopAudio() {
       if (this.soundA) {
         this.soundA.pause();
         this.soundA.currentTime = 0; // Reset playback position
       }
     },
-    startPolling() {
-      this.interval = setInterval(() => {
-        this.checkIncidents();
-      }, 150000); // Poll every 2 seconds
-    },
-    async checkIncidents() {
-      const credentials = JSON.parse(localStorage.getItem("credentials"));
-      try {
-        const data = { id: credentials.id };
-        const response = await this.$store.dispatch("sendData", {
-          url: "api/dashboard/generate/emergency/reports",
-          data: data,
-        });
-        this.incidents = response.data["reportedIncidents"];
-        this.handleNewIncidents();
-      } catch (error) {
-        alert("Error fetching incidents:", error);
-      }
-    },
-    handleNewIncidents() {
-      // Handle new incidents (e.g., show notifications, update UI, etc.)
-      //console.log("New incidents:", this.incidents);
+    async generateData(rID) {
+      const send = await {
+        data: { id: rID },
+        url: "api/officer/basic/myaccount/view/request",
+      };
 
-      this.emergency = this.incidents.length > 0 ? true : false;
-      this.$store.state.incidentmarker = this.emergency;
-      
-      if (this.incidents.length <= 0) this.stopAudio();
-      if (this.incidents.length != this.seenIncidents.length)
-        this.seenIncidents = [];
+      const data = await this.$store.dispatch("sendData", send);
+
+      if (data.response == "Success") {
+        this.info = data.data;
+        this.cred.rank = data.data.rank;
+        this.cred.station = data.data.station ? data.data.station : "";
+      }
     },
   },
   unmounted() {

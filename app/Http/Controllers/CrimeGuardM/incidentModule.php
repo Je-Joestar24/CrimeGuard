@@ -254,7 +254,7 @@ class IncidentModule extends Controller
 
                 $cleaned = [
                     'id' => $report['id'],
-                    'user_name' => $report['user_name'], 
+                    'user_name' => $report['user_name'],
                     'name' => $report['first_name'] . " " . $report["last_name"],
                     'email' => $report['email'],
                     'message' => $report['message'],
@@ -409,51 +409,55 @@ class IncidentModule extends Controller
     public function respond(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
- 
+
         $data = [];
 
         try {
+            // Determine station for officers
+            $station = $request->has('edited_by')
+                ? $this->dynamic->getUserStation($request->input('edited_by'))
+                : ['response' => false];
+            $station = $station['response'] ? $station['station'] : 100;
             // Archive the incident with updated details
             $archive = [
                 'status' => 'respond',
                 'edited_by' => $request->input('edited_by'),
                 'rej_message' => null,
             ];
-    
+
+            if ($station != 100)
+                $archive["station"] = $station;
+
+
             $incident = Incidents::findOrFail($request->input('id'));
             $incident->update($archive);
-    
+
             // Notify the reporter
             $user = User::findOrFail($incident->reported_by_user);
             $message = "Wait for the police. Your report has already been noticed and police are now on the way to your location.";
             Mail::to($user->email)->send(new IncidentResponseMail($message));
-    
-            // Determine station for officers
-            $station = $request->has('edited_by') 
-                ? $this->dynamic->getUserStation($request->input('edited_by')) 
-                : ['response' => false];
-            $station = $station['response'] ? $station['station'] : 100;
-    
+
+
             // Fetch officers for the station
             $officers = User::join("officer-credentials as oc", "oc.user_id", "=", "users.id")
                 ->where("oc.station", $station)
                 ->get(); // Add get() to execute the query
-    
+
             // Notify officers
             foreach ($officers as $officer) {
                 Mail::to($officer->email)->send(new IncidentAssignedMail($officer, $incident));
             }
-    
+
             // Log the trail
             TrailLog::create(['user_id' => $user->id, 'item' => 'notify']);
-    
+
             $data['response'] = 'Success';
         } catch (\Exception $e) {
             // Log errors with proper debugging information
             $data['response'] = 'Error';
             $data['err'] = $e->getMessage();
         }
-    
+
         return response()->json($data);
     }
 
@@ -549,7 +553,16 @@ class IncidentModule extends Controller
                     DB::raw("CONCAT(assign.first_name, ' ', assign.last_name) AS assigned_to"),
                     'incidents.rej_message'
                 )->where('incidents.reported_by_user', '!=', NULL);
-            if ($station != 100) $reports = $reports->where('incidents.station', $station);
+
+            // Add this logic to check the station conditionally
+
+            // Add this condition for station
+            if ($station != 100) {
+                $reports = $reports->where(function ($query) use ($station) {
+                    $query->whereNull('incidents.station') // Load if station is NULL
+                        ->orWhere('incidents.station', $station); // Otherwise, check if it matches the station
+                });
+            }
             if ($request->has('status')) $reports = $reports->where('incidents.status', 'respond');
             else {
                 /* $reports = $reports->where(function ($query) use ($currentDate) {
@@ -670,8 +683,6 @@ class IncidentModule extends Controller
 
     public function reportIncident(Request $request)
     {
-
-
         date_default_timezone_set('Asia/Manila');
 
         $currentDate = new DateTime();
@@ -681,7 +692,7 @@ class IncidentModule extends Controller
             // Validate request
             // Retrieve user data
             $user = User::with('citizenCredentials')->find($request->id);
-            $closestStationId = $this->getClosestStationId($request->latitude, $request->longitude);
+            //$closestStationId = $this->getClosestStationId($request->latitude, $request->longitude);
             // Map user data to reporting person data
             $reportingPersonData = [
                 'firstname' => $user->first_name,
@@ -722,8 +733,8 @@ class IncidentModule extends Controller
                 'street' => $request['address']['street'],
                 'city' => $request['address']['city'],
                 'province' => $request['address']['province'],
-                'report_type' => $request['report_type'],
-                'station' => $closestStationId
+                'report_type' => $request['report_type'],/* 
+                'station' => $closestStationId */
             ]);
 
             $inc_id = $incid->id;

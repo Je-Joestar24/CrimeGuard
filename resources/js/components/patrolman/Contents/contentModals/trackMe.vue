@@ -858,7 +858,7 @@ export default {
         await this.track_me();
 
         await this.generateData2();
-      }, 100000);
+      }, 1000);
       this.myinterVal = setInterval(() => {
         if (this.user_track.latitude && this.user_track.longitude)
           this.focusOnMarker({

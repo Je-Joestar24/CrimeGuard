@@ -446,7 +446,7 @@ export default {
         } */
         this.track_me();
         // this.counter++;
-      }, 10000);
+      }, 1000);
     },
     stopLogging() {
       // Clear the interval if it exists

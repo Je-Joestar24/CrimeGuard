@@ -621,7 +621,7 @@ export default {
         } */
         await this.generateData2();
         // this.counter++;
-      }, 60000);
+      }, 1000);
     },
     stopLogging() {
       // Clear the interval if it exists

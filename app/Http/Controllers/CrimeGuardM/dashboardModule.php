@@ -582,10 +582,18 @@ class DashboardModule extends Controller
 
         $init = Incidents::where('status', '=', 'report');
 
-        if ($station != 100) $init = $init->where('incidents.station', $station);
 
-        if ($request->has('ind')  || !$request->has('id')) $init = $init->where('report_type', 1);
-        else $init = $init->where('assigned_to', $request->input('id'));
+        // Add this condition for station
+        if ($station != 100) {
+            $init = $init->where(function ($query) use ($station) {
+                $query->whereNull('incidents.station') // Load if station is NULL
+                    ->orWhere('incidents.station', $station); // Otherwise, check if it matches the station
+            });
+        }
+
+
+/*         if ($request->has('ind')  || !$request->has('id')) $init = $init->where('report_type', 1);
+        else $init = $init->where('assigned_to', $request->input('id')); */
 
         $init = $init->whereDate('date_reported',  $currentDate->format('Y-m-d'))
             ->select('id', 'time_reported', 'status', 'message', 'location', 'landmark', 'station')
@@ -674,8 +682,8 @@ class DashboardModule extends Controller
                     'incidents.status',
                     'incident-categories.category_name'
                 )->where('incidents.incident_type', '!=', NULL)
-                ->whereNull('suspects.archived_at')
-                ->whereNull('suspects.deleted_by')
+                ->whereNull('incidents.archived_at')
+                ->whereNull('incidents.deleted_by')
                 ->when($station != 100, fn($q) => $q->where('incidents.station', $station));
             if ($request->has('filter')) {
                 $filter = $request->input('filter');
@@ -780,8 +788,8 @@ class DashboardModule extends Controller
                 ->where('incidents.incident_type', '!=', NULL)
                 ->where('incidents.latitude', '>', 0)
                 ->where('incidents.longitude', '>', 0)
-                ->whereNull('suspects.archived_at')
-                ->whereNull('suspects.deleted_by')
+                ->whereNull('incidents.archived_at')
+                ->whereNull('incidents.deleted_by')
                 ->get();
 
             foreach ($reports as $report) {
