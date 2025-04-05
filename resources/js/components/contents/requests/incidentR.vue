@@ -272,11 +272,11 @@
       </button>
     </div>
   </div>
-
+<!-- 
   <div v-if="cred.user_level == 1" class="flex">
     <rejectedComponent />
     <respondedComponent />
-  </div>
+  </div> -->
   <!-- Modals -->
   <respondIncident
     v-show="!respondLoading"

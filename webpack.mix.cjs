@@ -10,6 +10,14 @@ mix.webpackConfig({
         headers: {
             'Access-Control-Allow-Origin': '*',
         }
+    },
+    resolve: {
+        alias: {
+            '@': path.resolve('resources/js')
+        },
+        fallback: {
+            fs: false  // 👈 Add this to suppress the face-api.js warning
+        }
     }
 });
 mix.js('resources/js/app.js', 'public/js')

@@ -65,7 +65,7 @@
           <span class="transition-all duration-300 group-hover:pl-2">Reported Incidents</span>
         </button>
       </nav>
-      <div class="mt-auto pt-6 border-t">
+      <div class="mb-auto pt-6 border-t">
         <button
           @click="logout"
           class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"

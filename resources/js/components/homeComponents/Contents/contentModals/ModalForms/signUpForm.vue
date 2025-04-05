@@ -11,6 +11,7 @@
     <img class="p-20" :src="'/images/system/logo.png'" alt="logo" />
   </div>
     <div class="w-full border-l">
+      <face-scanner v-if="face_detect" :checked="check_it" :toggle="toggle_checker"/>
       <div class="w-full flex justify-end p-4 mt-10">
         <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -27,7 +28,7 @@
         v-if="!isPhone || active == len"
         class="flex justify-center pb-6 border-b-2"
       >
-          </div>
+      </div>
 
       <form
         class="max-w-lg mx-auto pb-3 bg-white p-10"
@@ -69,7 +70,7 @@
             <circle cx="12" cy="12" r="9" />
             <path d="M9 12l2 2l4 -4" />
           </svg>
-          Account request sent, waiting for police station to approve...
+          Account request sent, Login now...
         </p>
         <!-- HERE -->
         <!-- Personal Information -->
@@ -137,12 +138,41 @@
               <label
                 class="block text-sm font-medium text-gray-600"
                 for="profile"
-                >PROFILE:</label
+                >PROFILE CHECK:</label
               >
+              <div class="flex items-center gap-2">
+                <button 
+                  v-if="face_checked"
+                  type="button"
+                  class="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 border border-green-300 rounded-lg hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
+                  <span class="flex items-center">
+                    <svg class="h-5 w-5 text-green-500 mr-2"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />  <polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    PROFILE VERIFIED
+                  </span>
+                </button>
+                <button
+                  v-else 
+                  @click.prevent="toggle_checker()"
+                  type="button"
+                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
+                  <span class="flex items-center">
+                    <svg class="h-5 w-5 text-red-500 mr-2"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" /></svg>
+                    VERIFY PROFILE
+                  </span>
+                </button>
+                <span class="text-sm text-gray-500" v-if="signUpForm.profile">
+                  {{ signUpForm.profile.name }}
+                </span>
+              </div>
               <input
-                class="block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                v-show="false"
+                ref="profileInput"
+                class="hidden"
                 type="file"
                 @change="onFileChange($event, 'profile')"
+                accept="image/*"
               />
             </div>
             <div class="relative z-0 w-full group">
@@ -886,7 +916,7 @@
           v-show="active != 1"
           class="bg-blue-600 px-10 py-2.5 text-sm font-semibold rounded-md text-white"
           :class="{ 'px-20 ': !isPhone, 'px-10 ': isPhone }"
-          @click="active--"
+          @click="active-=2"
         >
           <- BACK
         </button>
@@ -895,7 +925,7 @@
           v-show="active != len"
           class="bg-blue-600 py-2.5 text-sm font-semibold rounded-md text-white"
           :class="{ 'px-20 ': !isPhone, 'px-10 ': isPhone }"
-          @click="active++"
+          @click="active+=2"
         >
           NEXT->
         </button>
@@ -915,6 +945,7 @@
 
 <script>
 import axios from "axios";
+import FaceScanner from "./faceScanner.vue";
 
 export default {
   data() {
@@ -931,6 +962,7 @@ export default {
         gender: "",
         fb_name: "",
         profile: "",
+        accepted_by: 3,
       },
       current_address: {
         street: "",
@@ -966,7 +998,12 @@ export default {
       valid_id: null,
       profile: null,
       len: 3,
+      face_detect: false,
+      face_checked: false
     };
+  },
+  components: {
+    FaceScanner
   },
   computed: {
     passIncorrect() {
@@ -987,12 +1024,19 @@ export default {
   },
   methods: {
     async signUpRequest() {
-      const sf = this.signUpForm;
-      sf["current_address"] = this.current_address;
-      sf["other_address"] = this.other_address;
-
+      const sf = { 
+      user: this.signUpForm,
+      id: 3,
+      current_address: this.current_address,
+      other_address: this.other_address,
+      citizen_credentials: {
+        valid_id: this.valid_id,
+        fb_name: this.signUpForm.fb_name,
+        accepted_by: 3
+      }
+    }
       const toBESEND = {
-        url: "api/user/request/registration",
+        url: "api/citizenusers/add/item/request",
         data: sf,
       };
 
@@ -1033,9 +1077,12 @@ export default {
       }
     },
     async sendData() {
+      if(!this.face_checked){
+        alert("Please create a profile");
+        return;
+      }
       if (this.passIncorrect/*  || !this.formIncomplete */) {
         this.err = await true;
-        console.log(this.signUpForm, this.confirmPass);
         return;
       }
 
@@ -1207,6 +1254,12 @@ export default {
     isPhoneM() {
       return window.innerWidth <= 768;
     },
+    check_it(){
+      this.face_checked = true;
+    },
+    toggle_checker(){
+      this.face_detect = !this.face_detect;
+    }
   },
   mounted() {
     (async () => {

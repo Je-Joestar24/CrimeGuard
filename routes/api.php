@@ -77,6 +77,7 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     return response()->json(['message' => 'Logged out successfully'], 200);
 });
 
+Route::post('citizenusers/add/item/request', [CitizenUsersModule::class, 'addCitizen'])->name('json');
 /* ADMIN */
 Route::middleware('auth:sanctum', 'checkUserLevel:1')->group(function () {
 
@@ -92,7 +93,6 @@ Route::middleware('auth:sanctum', 'checkUserLevel:1')->group(function () {
     Route::post('users/accept/item/request', [CitizenUsersModule::class, 'acceptAccount'])->name('json');
     Route::post('users/view/addresses/details/request', [CitizenUsersModule::class, 'viewAddresses'])->name('json');
     /* add account */
-    Route::post('citizenusers/add/item/request', [CitizenUsersModule::class, 'addCitizen'])->name('json');
     Route::post('officerusers/add/item/request', [OfficerUsersModule::class, 'addUser'])->name('json');
     /* edit account */
     Route::post('citizenusers/edit/item/request', [CitizenUsersModule::class, 'editDisplayData'])->name('json');

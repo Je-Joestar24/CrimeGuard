@@ -20,7 +20,7 @@
           : 'bg-gray-200 text-gray-700',
       ]"
     >
-      Dscriptive Analytics
+      Descriptive Analytics
     </button>
   </div>
 
