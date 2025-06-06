@@ -7,28 +7,52 @@
       width: 100vw;
     "
   >
-  <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
-    <img class="p-20" :src="'/images/system/logo.png'" alt="logo" />
-  </div>
+    <div v-if="!isPhone" class="flex w-full flex-col bg-blue-300">
+      <img class="p-20" :src="'/images/system/logo.png'" alt="logo" />
+    </div>
     <div class="w-full border-l">
-      <face-scanner v-if="face_detect" :checked="check_it" :toggle="toggle_checker"/>
+      <face-scanner
+        v-if="face_detect"
+        :checked="check_it"
+        :toggle="toggle_checker"
+        :onCapture="handleFaceCapture"
+      />
       <div class="w-full flex justify-end p-4 mt-10">
-        <button @click.prevent="changeA()" class="text-gray-600 hover:text-gray-800 transition-colors duration-300">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <button
+          @click.prevent="changeA()"
+          class="text-gray-600 hover:text-gray-800 transition-colors duration-300"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
           </svg>
         </button>
       </div>
       <div class="text-center mb-8">
-        <img class="w-24 h-24 mx-auto mb-4" :src="'/images/system/bg.png'" alt="Crime Guard Logo" />
+        <img
+          class="w-24 h-24 mx-auto mb-4"
+          :src="'/images/system/bg.png'"
+          alt="Crime Guard Logo"
+        />
         <h1 class="text-3xl font-bold text-gray-800">Join Crime Guard</h1>
-        <p class="text-gray-600 mt-2">Create your account to help keep our community safe</p>
+        <p class="text-gray-600 mt-2">
+          Create your account to help keep our community safe
+        </p>
       </div>
       <div
         v-if="!isPhone || active == len"
         class="flex justify-center pb-6 border-b-2"
-      >
-      </div>
+      ></div>
 
       <form
         class="max-w-lg mx-auto pb-3 bg-white p-10"
@@ -77,58 +101,58 @@
         <div class="w-full" v-show="active == 1">
           <div class="grid md:grid-cols-3 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
-            <input
+              <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-              v-model="signUpForm.last_name"
-              required
-            />
+                v-model="signUpForm.last_name"
+                required
+              />
               <label
                 for="floating_phone"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >LAST NAME</label
               >
-          </div>
+            </div>
             <div class="relative z-0 w-full mb-5 group">
-            <input
+              <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-              v-model="signUpForm.first_name"
-              required
-            />
+                v-model="signUpForm.first_name"
+                required
+              />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >FIRST NAME</label
               >
-          </div>
+            </div>
             <div class="relative z-0 w-full mb-5 group">
-            <input
+              <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-              v-model="signUpForm.middle_name"
+                v-model="signUpForm.middle_name"
                 required
-            />
+              />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >MIDDLE NAME</label
               >
-          </div>
+            </div>
           </div>
           <div
             class="relative z-0 w-full mb-5 group grid md:grid-cols-2 md:gap-6"
           >
-          <div class="relative z-0 w-full group">
+            <div class="relative z-0 w-full group">
               <label
                 class="block text-sm font-medium text-gray-600"
                 for="valid_id"
                 >VALID ID:</label
               >
-            <input
+              <input
                 class="block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                 type="file"
                 @change="onFileChange($event, 'valid_id')"
@@ -141,24 +165,48 @@
                 >PROFILE CHECK:</label
               >
               <div class="flex items-center gap-2">
-                <button 
+                <button
                   v-if="face_checked"
                   type="button"
                   class="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 border border-green-300 rounded-lg hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 >
                   <span class="flex items-center">
-                    <svg class="h-5 w-5 text-green-500 mr-2"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />  <polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    <svg
+                      class="h-5 w-5 text-green-500 mr-2"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
                     PROFILE VERIFIED
                   </span>
                 </button>
                 <button
-                  v-else 
+                  v-else
                   @click.prevent="toggle_checker()"
                   type="button"
                   class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 >
                   <span class="flex items-center">
-                    <svg class="h-5 w-5 text-red-500 mr-2"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" /></svg>
+                    <svg
+                      class="h-5 w-5 text-red-500 mr-2"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" />
+                      <circle cx="12" cy="12" r="9" />
+                    </svg>
                     VERIFY PROFILE
                   </span>
                 </button>
@@ -166,14 +214,6 @@
                   {{ signUpForm.profile.name }}
                 </span>
               </div>
-              <input
-                v-show="false"
-                ref="profileInput"
-                class="hidden"
-                type="file"
-                @change="onFileChange($event, 'profile')"
-                accept="image/*"
-              />
             </div>
             <div class="relative z-0 w-full group">
               <label class="block text-sm font-medium text-gray-600">SEX</label>
@@ -203,34 +243,34 @@
           </div>
           <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
-            <input
+              <input
                 type="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-              v-model="signUpForm.contact"
-              required
-            />
+                v-model="signUpForm.contact"
+                required
+              />
               <label
                 for="floating_phone"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >MOBILE NUMBER</label
               >
-          </div>
+            </div>
             <div class="relative z-0 w-full mb-5 group">
               <input
                 type="text"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 v-model="signUpForm.fb_name"
-              required
+                required
               />
               <label
                 for="floating_company"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >FACEBOOK NAME</label
-            >
-          </div>
+              >
+            </div>
           </div>
         </div>
         <!-- Addresses -->
@@ -266,7 +306,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >PROVINCE</label
               >
-          </div>
+            </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -295,7 +335,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >CITY</label
               >
-        </div>
+            </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -324,8 +364,8 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >BARANGAY</label
               >
-      </div>
-    </div>
+            </div>
+          </div>
           <div
             v-if="
               places.length > 0 &&
@@ -349,7 +389,7 @@
                 >
               </li>
             </ul>
-    </div>
+          </div>
           <div class="grid md:grid-cols-3 md:gap-6">
             <div
               class="relative z-0 w-full group"
@@ -379,7 +419,7 @@
                 class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >SITIO</label
               >
-  </div>
+            </div>
             <div
               class="relative z-0 w-full group"
               :class="{
@@ -852,7 +892,9 @@
         </div>
         <!-- Account Information -->
         <div class="w-full" v-show="active == len">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Account Information</h2>
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+            Account Information
+          </h2>
           <div class="space-y-6">
             <div class="relative">
               <input
@@ -904,7 +946,13 @@
             </div>
           </div>
           <p class="mt-4 text-sm text-gray-600">
-            By creating an account, you agree to our <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>.
+            By creating an account, you agree to our
+            <a href="#" class="text-blue-600 hover:underline"
+              >Terms of Service</a
+            >
+            and
+            <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a
+            >.
           </p>
         </div>
       </form>
@@ -916,7 +964,7 @@
           v-show="active != 1"
           class="bg-blue-600 px-10 py-2.5 text-sm font-semibold rounded-md text-white"
           :class="{ 'px-20 ': !isPhone, 'px-10 ': isPhone }"
-          @click="active-=2"
+          @click="active -= 2"
         >
           <- BACK
         </button>
@@ -925,7 +973,7 @@
           v-show="active != len"
           class="bg-blue-600 py-2.5 text-sm font-semibold rounded-md text-white"
           :class="{ 'px-20 ': !isPhone, 'px-10 ': isPhone }"
-          @click="active+=2"
+          @click="active += 2"
         >
           NEXT->
         </button>
@@ -1030,7 +1078,7 @@ export default {
       current_address: this.current_address,
       other_address: this.other_address,
       citizen_credentials: {
-        valid_id: this.valid_id,
+        valid_id: this.signUpForm.valid_id,
         fb_name: this.signUpForm.fb_name,
         accepted_by: 3
       }
@@ -1043,6 +1091,44 @@ export default {
       const test = await this.$store.dispatch("sendData", toBESEND);
       return test["response"];
       //await console.log(test);
+    },
+    handleFaceCapture(blob) {
+      const formData = new FormData();
+      formData.append("file", blob, "face.jpg");
+
+      this.$store
+        .dispatch("sendData", {
+          url: "api/file/upload",
+          data: formData,
+        })
+        .then((response) => {
+          if (response.response === "Success") {
+            this.signUpForm.profile = response.file_path;
+          } else {
+            console.error("Upload error:", response);
+          }
+        })
+        .catch((err) => {
+          console.error("Upload failed:", err);
+        });
+    },
+    async compareFaces(imageUrl1, imageUrl2) {
+      const formData = new FormData();
+      formData.append("api_key", "PlIHDJfAT7IEOo6LUbNgwSaYOrq-ChnL");
+      formData.append("api_secret", "OWVdDPUaBVznrTehMxZeFFV2gkdPWl5I");
+      formData.append("image_url1", imageUrl1);
+      formData.append("image_url2", imageUrl2);
+
+      try {
+        const response = await axios.post(
+          "https://api-us.faceplusplus.com/facepp/v3/compare",
+          formData
+        );
+        console.log("Similarity confidence:", response.data.confidence);
+        return response.data;
+      } catch (err) {
+        console.error("Face++ Error:", err.response?.data || err.message);
+      }
     },
     changeA() {
       this.changeActive("Home");
@@ -1088,6 +1174,14 @@ export default {
 
       //this.$store.commit("addUser", this.signUpForm);
       //console.log(this.$store.state.userInfo);
+
+      const base_url = this.$store.state.axios.defaults.baseURL
+      const face_checked = await this.compareFaces(`${base_url}${this.signUpForm.valid_id}`, `${base_url}${this.signUpForm.profile}`)
+      if (!face_checked.confidence || face_checked.confidence < 80 /*  || !this.formIncomplete */) {
+        this.err = await true;
+        alert("Profile & Valid Id doesn't match! Try again");
+        return;
+      }
 
       const res = await this.signUpRequest();
 
@@ -1265,7 +1359,6 @@ export default {
       if (window.innerWidth <= 768) {
         this.len = 4;
       }
-      console.log(this.len);
     })();
     document.body.style.overflow = 'hidden';
   },

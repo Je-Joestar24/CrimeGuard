@@ -167,9 +167,10 @@
               <button
                 v-if="face_checked"
                 type="button"
+                style="height: 38px;"
                 class="px-4 py-2 text-xs font-medium text-green-700 bg-green-200 border border-green-300 rounded-lg hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
               >
-                <span class="flex items-center">
+                <span class="flex items-center m-auto">
                   <svg
                     class="h-5 w-5 text-green-500 mr-2"
                     viewBox="0 0 24 24"
@@ -189,9 +190,10 @@
                 v-else
                 @click.prevent="toggle_checker()"
                 type="button"
+                style="height: 38px;"
                 class="px-2 py-1 text-xs font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
               >
-                <span class="flex items-center">
+                <span class="flex items-center m-auto">
                   <svg
                     class="h-2 w-2 text-red-500 mr-1"
                     width="24"
@@ -927,7 +929,7 @@ export default {
       }
       const base_url = this.$store.state.axios.defaults.baseURL
       const face_checked = await this.compareFaces(`${base_url}${this.signUpForm.valid_id}`, `${base_url}${this.signUpForm.profile}`)
-      if (!face_checked.confidence || face_checked.confidence <= 80 /*  || !this.formIncomplete */) {
+      if (!face_checked.confidence || face_checked.confidence < 80 /*  || !this.formIncomplete */) {
         this.err = await true;
         alert("Profile & Valid Id doesn't match! Try again");
         return;
@@ -1145,10 +1147,6 @@ export default {
         .catch((err) => {
           console.error("Upload failed:", err);
         });
-    },
-    test(){
-      const base_url = this.$store.state.axios.defaults.baseURL
-      this.compareFaces(`${base_url}${this.signUpForm.valid_id}`, `${base_url}${this.signUpForm.profile}`);
     }
   },
   mounted() {

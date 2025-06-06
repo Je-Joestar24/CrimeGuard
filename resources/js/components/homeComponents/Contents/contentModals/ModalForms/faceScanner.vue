@@ -153,15 +153,15 @@ export default {
   },
 
   mounted() {
-    document.querySelector(".parent-con").style.overflow = "hidden";
+    if (window.innerWidth <= 786)document.querySelector(".parent-con").style.overflow = "hidden";
   },
 
   beforeDestroy() {
-    document.querySelector(".parent-con").style.overflow = "auto";
+    if (window.innerWidth <= 786)document.querySelector(".parent-con").style.overflow = "auto";
   },
 
   beforeUnmount() {
-    document.querySelector(".parent-con").style.overflow = "auto";
+    if (window.innerWidth <= 786)document.querySelector(".parent-con").style.overflow = "auto";
   },
 };
 </script>
