@@ -15,6 +15,6 @@
         <div id="app"></div>
 
         <script src="{{ mix('js/app.js') }}"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPnBHl9zP0ItFQpyVL6Vu5acM8bRWTPQc"></script>
     </body>
 </html>

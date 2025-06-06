@@ -1,8 +1,9 @@
 <template>
   <div>
     <div>
-      <accountR v-if="activePage == 'regRequests'"></accountR>
-      <incidentR v-if="'reportedIncidents' == activePage"></incidentR>
+      <!-- <accountR v-if="activePage == 'regRequests'"></accountR> 
+      <incidentR v-if="'reportedIncidents' == activePage"></incidentR> -->
+      <incidentR></incidentR>
     </div>
   </div>
 </template>

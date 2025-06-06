@@ -131,7 +131,7 @@ export default {
       return new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k";
+          "https://maps.googleapis.com/maps/api/js?key=AIzaSyDPnBHl9zP0ItFQpyVL6Vu5acM8bRWTPQc";
         script.async = true;
         script.defer = true;
         script.onload = resolve;
@@ -250,7 +250,7 @@ export default {
     async getAddress(lat, long) {
       try {
         const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCi6_67DxspQmKQhErlif7UYTmXOvcdO6k`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyDPnBHl9zP0ItFQpyVL6Vu5acM8bRWTPQc`
         );
 
         if (response.data.status === "OK") {

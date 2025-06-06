@@ -1235,9 +1235,6 @@ export default {
         console.error(error);
         this.responseMessage = `Upload of ${fileType} failed.`;
       }
-
-      console.log(this.signUpForm);
-      alert(this.responseMessage);
     },
     async loadAPI() {
       return new Promise((resolve, reject) => {
