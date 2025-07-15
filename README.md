@@ -36,7 +36,6 @@ CrimeGuard bridges the gap between citizens and police through a centralized cri
 - **Heatmap and Monitoring Map**: Visualizes active and historical crimes.
 - **Report Assignment**: Incidents are automatically routed to the nearest police station.
 - **Incident & User Tracking**: Police can track active reporters and their fellow officers on the map.
-- **Predictive Analytics**: View monthly and seasonal crime trends.
 - **Dashboard Analytics**: Charts and graphs for tracking crime frequency, victim/suspect demographics, and location-based data.
 - **Account Registration & Approval**: Only verified users (via valid ID) can report.
 - **Role-Based Access**: Admin, Officer, and Citizen dashboards with unique features.
@@ -147,12 +146,6 @@ Feel free to fork, open issues, or submit PRs. Contributions are welcome.
 
 ---
 
-## License
-
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
----
-
 ## Credits
 
 **Team CrimeGuard – Western Leyte College (CICTE)**
@@ -160,7 +153,7 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 * **Jejomar Parrilla** – Lead Developer / Fullstack (Laravel, Vue.js, Tailwind CSS)
 * **Dante Villalon** – Data Analyst / Project Manager
 * **Sammer Sanchez** – UX/UI Designer
-* **Engr. \[Adviser Name]** – Thesis Adviser, CICTE
+* **Mr. Joscoro Canter, MIT** – Thesis Adviser, CICTE
 
 ---
 
