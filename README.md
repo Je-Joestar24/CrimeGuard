@@ -1,66 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CrimeGuard: Crime Mapping and Incident Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[Project Repository](https://github.com/Je-Joestar24/CG-Lmix)
 
-## About Laravel
+CrimeGuard is a Single Page Application (SPA) designed to modernize the process of crime reporting and monitoring. It empowers law enforcement and civilians with tools for real-time incident reporting, heatmap visualization, predictive analytics, and streamlined coordination across police stations. Built with Laravel and Vue.js, the system follows the MVC and DTO architecture for efficient and secure data handling.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
+- [Credits](#credits)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Project Overview
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+CrimeGuard bridges the gap between citizens and police through a centralized crime reporting and analysis platform. Users can report incidents by pinpointing locations via Google Maps, which are then automatically routed to the nearest police station. Police can monitor real-time reports, track active users and officers on the map, and analyze crime trends with dynamic graphs.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Centralized Crime Reporting**: Citizens and officers submit incident reports to a unified system.
+- **Google Maps Integration**: Report exact crime locations through interactive map.
+- **Real-Time Notifications**: Officers receive immediate alerts when a new report is filed.
+- **Heatmap and Monitoring Map**: Visualizes active and historical crimes.
+- **Report Assignment**: Incidents are automatically routed to the nearest police station.
+- **Incident & User Tracking**: Police can track active reporters and their fellow officers on the map.
+- **Predictive Analytics**: View monthly and seasonal crime trends.
+- **Dashboard Analytics**: Charts and graphs for tracking crime frequency, victim/suspect demographics, and location-based data.
+- **Account Registration & Approval**: Only verified users (via valid ID) can report.
+- **Role-Based Access**: Admin, Officer, and Citizen dashboards with unique features.
+- **Activity Logs & Archives**: Full access logs and archive system for admin auditing.
+- **Secure REST API**: Built using DTOs and Laravel Sanctum for authentication.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Architecture
+
+### SPA (Single Page Application)
+- Built with Vue 3 for a smooth, reload-free user experience.
+
+### MVC (Model-View-Controller)
+- Laravel is used to enforce the separation of backend logic (Models), data handling (Controllers), and API endpoints (Views for SPA).
+
+### DTO (Data Transfer Object)
+- Every data exchange between frontend and backend uses DTOs to ensure efficiency and data security.
+
+---
+
+## Technology Stack
+
+- **Backend**: Laravel 10, PHP 8.1+, MySQL, Laravel Sanctum
+- **Frontend**: Vue 3, Tailwind CSS, Vue Router, Axios, V-Motion
+- **Analytics & Visualization**: Highcharts
+- **Maps & Location**: Google Maps API
+- **Face Verification** *(optional)*: Face++ API
+- **Local Testing**: XAMPP
+- **Version Control**: Git & GitHub
+
+---
+
+## Project Structure
+
+```
+
+/app
+/Http
+/Controllers
+/Requests
+/Middleware
+/Models
+/resources
+/js
+/components
+/maps
+/Analytics
+/public
+/build
+/routes
+api.php
+web.php
+
+````
+
+---
+
+## Installation
+
+### Requirements
+
+- PHP 8.1+
+- Composer
+- Node.js & npm
+- MySQL
+
+### Steps
+
+```bash
+git clone https://github.com/Je-Joestar24/CG-Lmix.git
+cd CG-Lmix
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm run dev
+php artisan serve
+````
+
+---
+
+## Usage
+
+* Launch: [http://localhost:8000](http://localhost:8000)
+* Citizens: Register with valid ID → wait for approval → report incidents
+* Officers: Monitor map → receive reports → respond
+* Admin: Manage users, analytics, logs, and reports
+
+---
+
+## API Endpoints (Examples)
+
+* `POST /api/login`
+* `POST /api/incidents/heat/map/marker/Display`
+* `POST /api/incidentNames/search/Display`
+* `POST /api/citizenusers/add/item/request`
+* `POST /api/incident/create/request`
+* `GET  /api/logs/retrieve`
+  *(Full list in `/routes/api.php`)*
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Feel free to fork, open issues, or submit PRs. Contributions are welcome.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+## Credits
+
+**Team CrimeGuard – Western Leyte College (CICTE)**
+
+* **Jejomar Parrilla** – Lead Developer / Fullstack (Laravel, Vue.js, Tailwind CSS)
+* **Dante Villalon** – Data Analyst / Project Manager
+* **Sammer Sanchez** – UX/UI Designer
+* **Engr. \[Adviser Name]** – Thesis Adviser, CICTE
+
+---
+
+> *CrimeGuard is a capstone project developed for community safety and research purposes in Ormoc City.*
