@@ -1,4 +1,3 @@
-
 <style>
 .redM {
   position: absolute;
@@ -193,7 +192,7 @@
         </section>
       </div>
       <div class="p-4">
-        <h2 class="text-lg font-bold text-gray-800 mb-2">Legend</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-2" @click.prevent="removeAllMarkers">Legend</h2>
         <div class="flex flex-col space-y-2">
           <div class="flex items-center">
             <span class="w-4 h-4 bg-red-600 rounded-full mr-2" aria-hidden="true" role="img" aria-label="Against Person"></span>
@@ -266,19 +265,22 @@ export default {
       this.loadMarkers();
     },
     removeAllMarkers() {
-      if (this.markers.length > 0) {
-        console.log(this.markers);
-        this.markers.forEach((marker) => {
-          marker.setVisible(false);
-          setTimeout(() => {
-            marker.setMap(null);
-          }, 50);
-        });
+      // Remove all marker overlays (custom markers)
+      const overlayElements = document.querySelectorAll('.mark__against-person, .mark__against-property, .mark__non-index-crimes, .mark__traffic-incidents, .mark__special-laws, .secured-dot, .pulsing2');
+      overlayElements.forEach(element => {
+        element.remove();
+      });
 
+      // Remove all Google Maps markers
+      if (this.markers.length > 0) {
+        this.markers.forEach(marker => {
+          marker.setMap(null);
+        });
         this.markers = [];
-      } else {
       }
-      this.users = [];
+
+      // Clear the data markers array
+      this.data.markers = [];
     },
     loadMarkers() {
       this.data.markers.forEach((mark) => {
@@ -314,7 +316,7 @@ export default {
           map: this.map,
           visible: false,
         });
-
+        this.markers.push(marker);
         const bg =
           mark.report_type == 1
             ? "border-red-600 bg-red-100"
@@ -382,6 +384,7 @@ export default {
 
       if (dt["response"] == "Success") {
         let data = dt["data"];
+        this.removeAllMarkers();
         for (let i = 0; i < data.length; i++) {
           this.data.markers.push({
             pos: {

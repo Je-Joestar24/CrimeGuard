@@ -84,7 +84,7 @@
               role="heading"
               aria-label="Allied Forces Section"
             >
-              ALLIED FORCES
+              Responding Officers
             </h2>
             <div class="overflow-auto flex-1 bg-white">
               <template

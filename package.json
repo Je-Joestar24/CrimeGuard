@@ -22,6 +22,7 @@
         "vue-loader": "^17.3.1"
     },
     "dependencies": {
+        "@faker-js/faker": "^9.8.0",
         "@vueuse/motion": "^2.2.5",
         "face-api.js": "^0.22.2",
         "highcharts": "^11.4.8",

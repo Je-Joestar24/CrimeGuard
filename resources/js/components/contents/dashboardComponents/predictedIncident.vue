@@ -6,7 +6,7 @@
     aria-label="Predicted Incidents for Police Officers"
   >
     <h2 class="text-2xl font-bold text-violet-800 mb-4 text-center" role="heading" aria-level="2">
-      Predicted Incidents for Today: {{ incidents.length }} incidents
+      Potential Incidents for Today: {{ incidents.length }} incidents
     </h2>
     <p class="text-gray-600 mb-6 text-center" aria-label="Description of predicted incidents">
       Based on historical data and current trends, we anticipate a total of {{ incidents.length }} potential incidents occurring today. Please review the details below for more information on each predicted incident.
