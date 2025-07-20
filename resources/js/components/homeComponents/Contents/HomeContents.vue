@@ -1,5 +1,7 @@
 <template>
-  <homeC v-if="active == 'Home'"></homeC>
+  <homeC v-if="active == 'Home'" 
+    :change-active="changeActive"
+    :active="active"></homeC>
   <div
     v-if="active == 1"
     class="max-w-screen-xl flex flex-wrap items-center bg-white justify-between mx-auto p-4"

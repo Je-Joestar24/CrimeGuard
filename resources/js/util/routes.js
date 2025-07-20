@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import Home from "@/components/Home.vue";
 import Patrolman from "@/components/PatrolMan.vue";
 import Admin from "@/components/Admin.vue";
@@ -17,7 +17,7 @@ import Officer from "@/components/Officer.vue";
 
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes: [
         { path: '/:index?', component: Home},
         { path: '/Admin', component: Admin, children:[

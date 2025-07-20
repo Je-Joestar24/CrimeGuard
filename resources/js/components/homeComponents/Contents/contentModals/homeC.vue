@@ -54,9 +54,10 @@
 }
 </style>
 <template>
-  <title-phone v-if="!loggedIn && isPhone" />
   <used-tech-phone  v-if="!loggedIn && isPhone" />
-  <title-e v-if="!loggedIn && !isPhone"></title-e>
+  <title-e v-if="!loggedIn" 
+    :change-active="changeActive"
+    :active="active"></title-e>
   <used-tech v-if="!loggedIn && !isPhone"></used-tech>
 
 
@@ -271,7 +272,6 @@ import pcSuspectAge from "./homeC/Suspects/sPieChartsAge.vue";
 import titleE from "./homeC/title.vue";
 import UsedTech from "./homeC/usedTech.vue";
 import researchers from "./homeC/researchers.vue";
-import titlePhone from "./homeC/titlePhone.vue";
 import usedTechPhone from "./homeC/usedTechPhone.vue";
 import researchersPhone from "./homeC/researchersPhone.vue";
 
@@ -286,10 +286,10 @@ export default {
     titleE,
     UsedTech,
     researchers,
-    titlePhone,
     usedTechPhone,
     researchersPhone
   },
+  props: ["active", "changeActive"],
   data() {
     return {
       data: { markers: [] },
