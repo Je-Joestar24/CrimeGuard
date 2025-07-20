@@ -54,14 +54,15 @@
 }
 </style>
 <template>
-  <used-tech-phone  v-if="!loggedIn && isPhone" />
   <title-e v-if="!loggedIn" 
     :change-active="changeActive"
     :active="active"></title-e>
   <used-tech v-if="!loggedIn && !isPhone"></used-tech>
+  <used-tech-phone  v-if="!loggedIn && isPhone" />
+  <about v-if="!loggedIn"/>
+  <feature v-if="!loggedIn" />
 
-
-  <div class="relative w-full h-[85vh] rounded-lg shadow-xl overflow-hidden">
+  <div v-if="loggedIn" class="relative w-full h-[85vh] rounded-lg shadow-xl overflow-hidden">
     <section class="absolute inset-0">
       <div id="residentMap" class="w-full h-full bg-gray-100"></div>
     </section>
@@ -106,8 +107,8 @@
       Yearly Overview of Crime Locations in Ormoc City
     </p>
   </div>
-  <section v-if="!loggedIn" class="py-t bg-gradient-to-b from-blue-100/70 to-white/70 ">
-    <div class="container mx-auto px-4">
+  <section class="py-t bg-gradient-to-b from-blue-100/70 to-white/70 ">
+    <div v-if="loggedIn" class="container mx-auto px-4">
       <div class="bg-gradient-to-r from-blue-100 to-blue-200 py-16 mt-12 rounded-lg shadow-md">
         <h2 class="text-4xl md:text-5xl font-bold text-center text-blue-800 mb-6 animate-fade-in-down">
           Dynamic Crime Analytics Dashboard
@@ -182,7 +183,7 @@
       </div>
     </div>
 
-    <div class="mt-16">
+    <div>
       <researchers v-if="!loggedIn && !isPhone" v-motion-slide-visible-bottom></researchers>
       <researchers-phone v-if="!loggedIn && isPhone" v-motion-slide-visible-bottom />
     </div>
@@ -274,6 +275,8 @@ import UsedTech from "./homeC/usedTech.vue";
 import researchers from "./homeC/researchers.vue";
 import usedTechPhone from "./homeC/usedTechPhone.vue";
 import researchersPhone from "./homeC/researchersPhone.vue";
+import about from "./homeC/about.vue";
+import feature from "./homeC/feature.vue";
 
 export default {
   components: {
@@ -287,7 +290,9 @@ export default {
     UsedTech,
     researchers,
     usedTechPhone,
-    researchersPhone
+    researchersPhone,
+    about,
+    feature
   },
   props: ["active", "changeActive"],
   data() {

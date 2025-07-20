@@ -1,8 +1,7 @@
 <template>
   <div
-    class="relative overflow-hidden"
+    class="relative overflow-hidden hero"
     style="
-      height: 100vh;
       background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
     "
   >
@@ -31,7 +30,7 @@
           <!-- Left Column - Content -->
           <div class="text-white space-y-8 animate-fade-in-left">
             <!-- Main Title -->
-            <div class="space-y-4">
+            <div class="space-y-4 app__main-title">
               <h1 class="text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 <span class="block animate-slide-in-up" style="animation-delay: 0.2s;">
                   REAL-TIME
@@ -42,13 +41,13 @@
                 <span class="block animate-slide-in-up" style="animation-delay: 0.6s;">
                   MONITORING
                 </span>
-              </h1>
+        </h1>
               
               <!-- Subtitle -->
               <p class="text-lg lg:text-xl text-blue-100 animate-fade-in-up" style="animation-delay: 0.8s;">
-                Empowering Law Enforcement and Citizens for a Safer Community
+          Empowering Law Enforcement and Citizens for a Safer Community
               </p>
-            </div>
+      </div>
 
             <!-- Description Card -->
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 animate-fade-in-up" style="animation-delay: 1s;">
@@ -57,15 +56,15 @@
                   <div class="w-12 h-12 bg-blue-400 rounded-xl flex items-center justify-center animate-pulse">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+          </svg>
                   </div>
                 </div>
                 <p class="text-blue-50 leading-relaxed">
-                  CrimeGuard is a cutting-edge, real-time crime reporting and monitoring platform
+            CrimeGuard is a cutting-edge, real-time crime reporting and monitoring platform
                   designed to revolutionize communication between citizens and law enforcement.
-                </p>
-              </div>
-            </div>
+          </p>
+        </div>
+      </div>
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style="animation-delay: 1.2s;">
@@ -114,7 +113,7 @@
                       <path d="M100 20L180 60V120C180 160 140 180 100 180C60 180 20 160 20 120V60L100 20Z" 
                             class="shield-path" 
                             stroke="rgba(255,255,255,0.3)" 
-                            stroke-width="2" 
+            stroke-width="2"
                             fill="rgba(255,255,255,0.1)"/>
                     </svg>
                   </div>
@@ -144,7 +143,7 @@
                 <div class="floating-icon icon-3">
                   <svg class="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                  </svg>
+          </svg>
                 </div>
               </div>
 
@@ -168,6 +167,10 @@
 </template>
 
 <style scoped>
+.hero{
+  height: 100vh;
+}
+
 /* Floating Circles */
 .floating-circle {
   position: absolute;
@@ -440,6 +443,12 @@
 }
 
 @media (max-width: 768px) {
+  .hero{
+    min-height: 100vh;
+  }
+  .app__main-title{
+    margin-top: 10em;
+  }
   .floating-circle {
     display: none;
   }
