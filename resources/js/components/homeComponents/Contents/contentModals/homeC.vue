@@ -57,8 +57,7 @@
   <title-e v-if="!loggedIn" 
     :change-active="changeActive"
     :active="active"></title-e>
-  <used-tech v-if="!loggedIn && !isPhone"></used-tech>
-  <used-tech-phone  v-if="!loggedIn && isPhone" />
+  <used-tech v-if="!loggedIn"></used-tech>
   <about v-if="!loggedIn"/>
   <feature v-if="!loggedIn" />
   <howitworks v-if="!loggedIn"/>
@@ -185,8 +184,7 @@
     </div>
 
     <div>
-      <researchers v-if="!loggedIn && !isPhone" v-motion-slide-visible-bottom></researchers>
-      <researchers-phone v-if="!loggedIn && isPhone" v-motion-slide-visible-bottom />
+      <researchers v-if="!loggedIn" v-motion-slide-visible-bottom></researchers>
       <footerSect v-if="!loggedIn" />
     </div>
   </section>
