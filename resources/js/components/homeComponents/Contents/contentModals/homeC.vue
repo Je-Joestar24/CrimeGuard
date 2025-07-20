@@ -61,6 +61,7 @@
   <used-tech-phone  v-if="!loggedIn && isPhone" />
   <about v-if="!loggedIn"/>
   <feature v-if="!loggedIn" />
+  <howitworks v-if="!loggedIn"/>
 
   <div v-if="loggedIn" class="relative w-full h-[85vh] rounded-lg shadow-xl overflow-hidden">
     <section class="absolute inset-0">
@@ -186,6 +187,7 @@
     <div>
       <researchers v-if="!loggedIn && !isPhone" v-motion-slide-visible-bottom></researchers>
       <researchers-phone v-if="!loggedIn && isPhone" v-motion-slide-visible-bottom />
+      <footerSect v-if="!loggedIn" />
     </div>
   </section>
   <div v-if="loggedIn" class="bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -277,6 +279,8 @@ import usedTechPhone from "./homeC/usedTechPhone.vue";
 import researchersPhone from "./homeC/researchersPhone.vue";
 import about from "./homeC/about.vue";
 import feature from "./homeC/feature.vue";
+import howitworks from "./homeC/howitworks.vue";
+import footerSect from "./homeC/footer.vue";
 
 export default {
   components: {
@@ -292,7 +296,9 @@ export default {
     usedTechPhone,
     researchersPhone,
     about,
-    feature
+    feature,
+    howitworks,
+    footerSect
   },
   props: ["active", "changeActive"],
   data() {

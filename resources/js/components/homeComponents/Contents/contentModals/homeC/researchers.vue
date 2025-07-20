@@ -4,8 +4,6 @@
     <div class="absolute floating-circle circle-1"></div>
     <div class="absolute floating-circle circle-2"></div>
     <div class="absolute floating-circle circle-3"></div>
-    <!-- Decorative blue gradient background at the bottom -->
-    <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-blue-500 to-blue-300 opacity-80 -z-10"></div>
     <div class="container mx-auto px-4 lg:px-8 relative z-10">
       <div class="text-center mb-12">
         <h2 class="text-3xl lg:text-5xl font-bold text-blue-900 mb-4 animate-fade-in-up">Our Dedicated Team</h2>
@@ -52,9 +50,6 @@
             </a>
           </div>
         </div>
-      </div>
-      <div class="text-center text-blue-900 font-medium mt-16 opacity-80 animate-fade-in-up" style="animation-delay: 1.5s;">
-        &copy; 2024 CrimeGuard. All rights reserved.
       </div>
     </div>
   </div>

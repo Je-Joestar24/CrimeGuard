@@ -444,10 +444,11 @@
 
 @media (max-width: 768px) {
   .hero{
-    min-height: 100vh;
+    height: 100%;
   }
+
   .app__main-title{
-    margin-top: 10em;
+    margin-top: 5em;
   }
   .floating-circle {
     display: none;

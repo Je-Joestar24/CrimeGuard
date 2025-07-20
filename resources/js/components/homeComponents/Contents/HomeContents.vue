@@ -94,7 +94,7 @@ export default {
     about,
     homeC,
     lists,
-    myAccount,
+    myAccount
   },
   methods: {
     checkIfLogged() {
